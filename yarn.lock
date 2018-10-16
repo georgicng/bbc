@@ -6810,6 +6810,14 @@ vue-clickaway@^2.2.2:
   dependencies:
     loose-envify "^1.2.0"
 
+vue-form-generator@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/vue-form-generator/-/vue-form-generator-2.3.1.tgz#3bde1570c36110372e72bd5fb85dcf227702b21e"
+
+vue-form-wizard@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/vue-form-wizard/-/vue-form-wizard-0.8.4.tgz#ddf864c9709b7ba2a6323f59e5d6d17536b7800e"
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.1.tgz#b2d3d95402a811602380783ea4f566eb875569a2"

@@ -3,7 +3,7 @@
     <div class="title">
       <h1><i class="fa fa-braille"></i> In Stock</h1>
     </div>
-    <product-list></product-list>
+    <product-list :products="products"></product-list>
   </div>
 </template>
 
@@ -14,6 +14,17 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App'
+      }
+    },
+    props: ['limit', 'offset', 'depth', 'filters'],
+    created () {
+      if (this.products.length === 0) {
+        this.$store.dispatch('allProducts')
+      }
+    },
+    computed: {
+      products () {
+        return this.$store.getters.allProducts
       }
     },
     components: {

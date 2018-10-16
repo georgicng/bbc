@@ -6,7 +6,7 @@
     </div>
       <div class="row mb-3">
     <div class="col">
-          <cart-items />
+          <cart-items :orders="orders" />
     </div>
   </div>
 <div class="row mb-3">
@@ -30,25 +30,28 @@
 </template>
 
 <script>
-import {
-    CLEAR_CART
-  } from '../store/mutation-types'
-  import CartItems from '../components/productos/CartItems'
-  import CartTotals from '../components/productos/CartTotals'
-  export default {
-    data () {
-      return {
-        cart: this.$store.state.cart.items
-      }
-    },
-    components: {
-      cartItems: CartItems,
-      cartTotals: CartTotals
-    },
-    methods: {
-		clear() {
-				this.$store.commit(CLEAR_CART)
-		}
+import { CLEAR_CART } from "../store/mutation-types";
+import CartItems from "../components/productos/CartItems";
+import CartTotals from "../components/productos/CartTotals";
+export default {
+  data() {
+    return {
+      cart: this.$store.state.cart.items
+    };
+  },
+  computed: {
+    orders() {
+      return this.$store.getters.allItems;
+    }
+  },
+  components: {
+    cartItems: CartItems,
+    cartTotals: CartTotals
+  },
+  methods: {
+    clear() {
+      this.$store.commit(CLEAR_CART);
+    }
   }
-  }
+};
 </script>

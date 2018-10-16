@@ -2,9 +2,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { productGetters, manufacturerGetters, cartGetters  } from './getters'
-import { productMutations, cartMutations, manufacturerMutations, initialisationMutations } from './mutations'
-import { productActions, manufacturerActions } from './actions'
+import { productGetters, manufacturerGetters, cartGetters, orderGetters  } from './getters'
+import { productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations } from './mutations'
+import { productActions, manufacturerActions, orderActions } from './actions'
 
 Vue.use(Vuex)
 
@@ -12,6 +12,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     strict: true,
     state: {
+      //order items
+      order: {},
       // bought items
       cart: { items: [] },
       // ajax loader
@@ -23,9 +25,9 @@ const store = new Vuex.Store({
       // all manufacturers
       manufacturers: []
     },
-    mutations: Object.assign({}, productMutations, cartMutations, manufacturerMutations, initialisationMutations),
-    getters: Object.assign({}, productGetters, manufacturerGetters, cartGetters),
-    actions: Object.assign({}, productActions, manufacturerActions)
+    mutations: Object.assign({}, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations),
+    getters: Object.assign({}, productGetters, manufacturerGetters, cartGetters, orderGetters),
+    actions: Object.assign({}, productActions, manufacturerActions, orderActions)
   })
   
   store.subscribe((mutation, state) => {

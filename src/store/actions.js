@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE } from "../config";
+import { client } from "../api";
 
 import {
   ADD_PRODUCT,
@@ -14,15 +14,13 @@ import {
   ALL_PRODUCTS_SUCCESS,
   ALL_MANUFACTURERS,
   ALL_MANUFACTURERS_SUCCESS,
+  ALL_SHIPPING_METHODS_SUCCESS,
+  ALL_PAYMENT_METHODS_SUCCESS,
+  CONFIRM_ORDER_SUCCESS,
+  CONFIRM_ORDER,
+  COMPLETE_ORDER_SUCCESS,
+  COMPLETE_ORDER,
 } from "./mutation-types";
-
-import { RemoteInstance } from "directus-sdk-javascript";
-
-const client = new RemoteInstance({
-  url: API_BASE,
-  version: "1.1", // optional, only need to update if different from default
-  accessToken: "vpqBqeRX4CGw2OgDdZxv9H26Rw8mIo4Z" // optional, can be used without on public routes
-});
 
 export const productActions = {
   allProducts({ commit }) {
@@ -66,6 +64,39 @@ export const manufacturerActions = {
     client
     .getItems("categories", {depth: 2})
     .then(res => commit(ALL_MANUFACTURERS_SUCCESS, res.data))
+    .catch(err => console.log(err));
+  }
+};
+
+export const orderActions = {
+  allShippingMethods({ commit }) {
+    client
+    .getItems("shipping_rates")
+    .then(res => {
+      commit(ALL_SHIPPING_METHODS_SUCCESS, res.data)
+    })
+    .catch(err => console.log(err));
+  },
+  allPaymentMethods({ commit }, payload) {
+    client
+    .getItems("payment_methods")
+    .then(res => {
+      commit(ALL_PAYMENT_METHODS_SUCCESS, res.data)
+    })
+    .catch(err => console.log(err));
+  },
+  confirmOrder({ commit }, payload) {
+    commit(CONFIRM_ORDER);
+    client
+    .createItems("order", payload)
+    .then(res => commit(CONFIRM_ORDER_SUCCESS, res.data))
+    .catch(err => console.log(err));
+  },
+  completeOrder({ commit }, payload) {
+    commit(COMPLETE_ORDER);
+    client
+    .createItems("order", payload)
+    .then(res => commit(COMPLETE_ORDER_SUCCESS, res.data))
     .catch(err => console.log(err));
   }
 };

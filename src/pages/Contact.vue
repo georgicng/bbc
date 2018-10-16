@@ -12,25 +12,27 @@
 
             <!--Grid column-->
             <div class="col-lg-6 mb-4">
-                <form id="contact-form" name="contact-form" action="mail.php" method="POST">
+                <form id="contact-form" @submit.prevent="processForm">
 
                     <!--Grid row-->
                     <div class="row">
 
                         <!--Grid column-->
                         <div class="col-md-6">
-                            <div class="md-form mb-0">
-                                <input type="text" id="name" name="name" class="form-control">
+                            <div class="md-form mb-0">                                
                                 <label for="name" class="">Your name</label>
+                                <input type="text"  v-validate="'required'" name="name" v-model="model.name" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('name') }">
+                                <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span>
                             </div>
                         </div>
                         <!--Grid column-->
 
                         <!--Grid column-->
                         <div class="col-md-6">
-                            <div class="md-form mb-0">
-                                <input type="text" id="email" name="email" class="form-control">
+                            <div class="md-form mb-0">                                
                                 <label for="email" class="">Your email</label>
+                                <input type="text"  v-validate="'required|email'" name="email" v-model="model.email" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('email') }">
+                                <span v-show="errors.has('email')" class="text-danger">{{ errors.first('email') }}</span>
                             </div>
                         </div>
                         <!--Grid column-->
@@ -41,9 +43,10 @@
                     <!--Grid row-->
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="md-form mb-0">
-                                <input type="text" id="subject" name="subject" class="form-control">
+                            <div class="md-form mb-0">                           
                                 <label for="subject" class="">Subject</label>
+                                <input type="text"  v-validate="'required'" name="subject" v-model="model.subject" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('subject') }">
+                                <span v-show="errors.has('subject')" class="text-danger">{{ errors.first('subject') }}</span>
                             </div>
                         </div>
                     </div>
@@ -56,20 +59,22 @@
                         <div class="col-md-12">
 
                             <div class="md-form">
-                                <textarea type="text" id="message" name="message" rows="2" class="form-control md-textarea"></textarea>
                                 <label for="message">Your message</label>
+                                <textarea type="text"  v-validate="'required'" name="message" v-model="model.message" rows="2" class="form-control md-textarea" v-bind:class="{'form-control': true, 'error': errors.has('message') }"></textarea>
+                                <span v-show="errors.has('message')" class="text-danger">{{ errors.first('message') }}</span>
                             </div>
 
                         </div>
                     </div>
                     <!--Grid row-->
+                    <div class="text-center text-md-left">
+                    <button type="submit" class="btn" :disabled="errors.any()">Send</button>
+                </div>
 
                 </form>
 
-                <div class="text-center text-md-left">
-                    <a class="btn btn-primary" onclick="document.getElementById('contact-form').submit();">Send</a>
-                </div>
-                <div class="status"></div>
+                
+                <div class="status" v-html="status"></div>
             </div>
             <!--Grid column-->
 
@@ -101,16 +106,47 @@
 </template>
 
 <script>
+import VeeValidate from "vee-validate";
+import { client } from "../api";
 export default {
   name: "contact",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App"
-    };
+        model : {
+            name: "Welcome to Your Vue.js App",
+            subject: "",
+            email: "",
+            message: "",
+        },
+        status: ""
+    }
+  },
+  methods: {
+    processForm: function() {
+      this.$validator.validate().then(result => {
+        if (result) {
+          console.log(this.model);
+          client
+            .createItem("enquiries", this.model)
+            .then(res => {
+              this.model = {}
+              this.status = `Your message has been sent`;
+            })
+            .catch(err => {
+              console.log(err);
+              this.status = `Could't process your request, please try again`;
+            });
+        }
+      });
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+ .form-control.error {
+      border-color: #E84444;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(232,68,68,.6);
+    }
 </style>

@@ -1,230 +1,248 @@
 <template>
-<section class="section">
-      <div class="py-5 text-center">
-        <h2>Checkout form</h2>
-        <p class="lead">Below is an example form built entirely with Bootstrap's form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill">3</span>
-          </h4>
-          <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Product name</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$12</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Second product</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$8</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Third item</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between bg-light">
-              <div class="text-success">
-                <h6 class="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
-              </div>
-              <span class="text-success">-$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Total (USD)</span>
-              <strong>$20</strong>
-            </li>
-          </ul>
-
-          <form class="card p-2">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code">
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-secondary">Redeem</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-8 order-md-1">
-          <h4 class="mb-3">Billing address</h4>
-          <form class="needs-validation" novalidate="">
+  <section class="section">
+    <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
+          <tab-content title="Shipping Address" icon="ti-user" :before-change="validateFirstTab">
+              <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
+              </vue-form-generator>
+          </tab-content>
+          <tab-content title="Shipping and Payment Method" icon="ti-settings" :before-change="validateSecondTab">
             <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                <div class="invalid-feedback">
-                  Valid first name is required.
+              <div class="col-lg-6">
+                <h1>Shipping Method</h1>
+                <div id="accordion">
+                  <div class="card" v-for="(value, key, index) in shipping_options" :key="key">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" aria-controls="collapseOne">
+                          {{key}}
+                        </button>
+                      </h5>
+                    </div>
+                    <div :id="'collapse'+index" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                         <template v-if="key == 'Store Pickup'">
+                          <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
+                            <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
+                            <label class="custom-control-label" :for="'customRadio'+item.id">
+                              <h3>{{ item.title }} </h3> @ {{item.cost}}
+                            </label>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <div class="form-group">
+                          <label for="formGroupExampleInput">{{key}}</label>
+                          <select name="shipping_method" class="myClass form-control" v-model="shipping">
+                            <option>select shipping</option>
+                                <option v-for="item in value" :value="item.id" :key="item.id">
+                                {{ item.title }} - {{item.cost}}
+                                </option>
+                            </select>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6 mb-3">
-                <label for="lastName">Last name</label>
-                <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-                <div class="invalid-feedback">
-                  Valid last name is required.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="username">Username</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">@</span>
-                </div>
-                <input type="text" class="form-control" id="username" placeholder="Username" required="">
-                <div class="invalid-feedback" style="width: 100%;">
-                  Your username is required.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="email">Email <span class="text-muted">(Optional)</span></label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com">
-              <div class="invalid-feedback">
-                Please enter a valid email address for shipping updates.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-              <div class="invalid-feedback">
-                Please enter your shipping address.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-              <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
-            </div>
-
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="country">Country</label>
-                <select class="custom-select d-block w-100" id="country" required="">
-                  <option value="">Choose...</option>
-                  <option>United States</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid country.
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="state">State</label>
-                <select class="custom-select d-block w-100" id="state" required="">
-                  <option value="">Choose...</option>
-                  <option>California</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please provide a valid state.
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label for="zip">Zip</label>
-                <input type="text" class="form-control" id="zip" placeholder="" required="">
-                <div class="invalid-feedback">
-                  Zip code required.
+              <div class="col-lg-6">
+                <h1>Payment Method</h1>
+                <div v-for="item in payment_options"  class="custom-control custom-radio" :key="item.id">
+                  <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
+                  <label class="custom-control-label" :for="'customRadio'+item.id">                    
+                    <h3>{{ item.name }}</h3>
+                    <p>{{item.description}}</p>
+                  </label>
                 </div>
               </div>
             </div>
-            <hr class="mb-4">
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="same-address">
-              <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-            </div>
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="save-info">
-              <label class="custom-control-label" for="save-info">Save this information for next time</label>
-            </div>
-            <hr class="mb-4">
-
-            <h4 class="mb-3">Payment</h4>
-
-            <div class="d-block my-3">
-              <div class="custom-control custom-radio">
-                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked="" required="">
-                <label class="custom-control-label" for="credit">Credit card</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required="">
-                <label class="custom-control-label" for="debit">Debit card</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required="">
-                <label class="custom-control-label" for="paypal">Paypal</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="cc-name">Name on card</label>
-                <input type="text" class="form-control" id="cc-name" placeholder="" required="">
-                <small class="text-muted">Full name as displayed on card</small>
-                <div class="invalid-feedback">
-                  Name on card is required
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="cc-number">Credit card number</label>
-                <input type="text" class="form-control" id="cc-number" placeholder="" required="">
-                <div class="invalid-feedback">
-                  Credit card number is required
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3 mb-3">
-                <label for="cc-expiration">Expiration</label>
-                <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
-                <div class="invalid-feedback">
-                  Expiration date required
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label for="cc-expiration">CVV</label>
-                <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
-                <div class="invalid-feedback">
-                  Security code required
-                </div>
-              </div>
-            </div>
-            <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-          </form>
-        </div>
-      </div>
-
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2018 Company Name</p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="#">Privacy</a></li>
-          <li class="list-inline-item"><a href="#">Terms</a></li>
-          <li class="list-inline-item"><a href="#">Support</a></li>
-        </ul>
-      </footer>
-    </section>
+          </tab-content>
+          <tab-content title="Confirm Order" icon="ti-settings" :before-change="validateThirdTab">
+            <h1>Confirm Order</h1>
+            <cart-items :orders="orders" />
+            <cart-totals />
+          
+          </tab-content>
+          <tab-content title="Complete Order" icon="ti-check">
+          </tab-content>
+      </form-wizard>
+  </section>
 </template>
 
 <script>
-import ProductDetails from "../components/productos/ProductDetails";
+import VueFormGenerator from "vue-form-generator";
+import { FormWizard, TabContent } from "vue-form-wizard";
+import 'vue-form-wizard/dist/vue-form-wizard.min.css';
+import CartItems from "../components/productos/CartItems";
+import CartTotals from "../components/productos/CartTotals";
+import {
+    ADD_SHIPPING_ADDRESS,
+    ADD_SHIPPING_METHOD,
+    ADD_PAYMENT_METHOD
+  } from '../store/mutation-types'
 export default {
   data() {
     return {
-      cart: this.$store.state.cart
+      payment: "",
+      shipping: "",
+      model: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        address: "",
+        landmark: "",
+        city: "",
+        alt_city: ""
+      },
+      formOptions: {
+        validationErrorClass: "has-error",
+        validationSuccessClass: "has-success",
+        validateAfterChanged: true
+      },
+      contactSchema: {
+        fields: [
+          {
+            type: "input",
+            inputType: "text",
+            label: "First name",
+            model: "first_name",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Last name",
+            model: "last_name",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Email",
+            model: "email",
+            required: true,
+            validator: VueFormGenerator.validators.email,
+            styleClasses: "col-xs-12"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Phone",
+            model: "phone",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-9"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Address",
+            model: "address",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-3"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Nearest Landmark",
+            model: "landmark",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "select",
+            label: "City",
+            model: "city",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            values: this.$store.getters.shippingCities,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Your City",
+            model: "alt_city",
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6",
+            visible(model) {
+                return model.city == "Other";
+            }
+          }
+        ]
+      }
     };
   },
+  beforeCreate () {
+    this.$store.dispatch('allShippingMethods')
+    this.$store.dispatch('allPaymentMethods')
+      
+    },
+    created() {
+      if(this.$store.getters.shippingInfo) {
+        this.model = this.$store.getters.shippingInfo
+      }
+    },
+    computed: {
+      shipping_options () {
+        return this.$store.getters.shippingList
+      },
+      payment_options () {
+        return this.$store.getters.paymentMethods
+      },
+      orders() {
+        return this.$store.getters.allItems;
+      }
+    },
+  methods: {
+    onComplete: function() {
+      alert("Yay. Done!");
+    },
+    validateFirstTab: function() {
+      this.$store.commit(ADD_SHIPPING_ADDRESS, this.model)
+      return this.$refs.firstTabForm.validate();
+    },
+    validateSecondTab: function() {
+      this.$store.commit(ADD_SHIPPING_METHOD, this.shipping)
+      this.$store.commit(ADD_PAYMENT_METHOD, this.payment)
+      return true
+    },
+    validateThirdTab: function() {
+    },
+  },
   components: {
-    productDetails: ProductDetails
+    "vue-form-generator": VueFormGenerator.component,
+    FormWizard,
+    TabContent,
+    cartItems: CartItems,
+    cartTotals: CartTotals
   }
 };
 </script>
+
+<style scoped>
+pre {
+  overflow: auto;
+}
+pre .string {
+  color: #885800;
+}
+pre .number {
+  color: blue;
+}
+pre .boolean {
+  color: magenta;
+}
+pre .null {
+  color: red;
+}
+pre .key {
+  color: green;
+}
+</style>

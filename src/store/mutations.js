@@ -16,7 +16,16 @@ import {
     ALL_PRODUCTS_SUCCESS,
     ALL_MANUFACTURERS,
     ALL_MANUFACTURERS_SUCCESS,
-    ERROR_MSG
+    ERROR_MSG,
+    ADD_SHIPPING_ADDRESS,
+    ADD_SHIPPING_METHOD,
+    ALL_SHIPPING_METHODS_SUCCESS,
+    ADD_PAYMENT_METHOD,
+    ALL_PAYMENT_METHODS_SUCCESS,
+    CONFIRM_ORDER,
+    CONFIRM_ORDER_SUCCESS,
+    COMPLETE_ORDER,
+    COMPLETE_ORDER_SUCCESS,
   } from './mutation-types' 
   
   export const productMutations = {
@@ -82,6 +91,39 @@ import {
     },
     [CLEAR_CART]: (state) => {
       state.cart.items = []
+    }
+  }
+
+  export const orderMutations = {
+    [ADD_SHIPPING_ADDRESS]: (state, payload) => state.order.address = payload,
+    [ADD_SHIPPING_METHOD]: (state, payload) => {
+      state.order.shipping = payload
+    },
+    [ADD_PAYMENT_METHOD]: (state, payload) => {
+      state.order.payment = payload
+    },
+    [ALL_SHIPPING_METHODS_SUCCESS]: (state, payload) => {
+      state.shipping_methods = payload
+    },
+    [ALL_PAYMENT_METHODS_SUCCESS]: (state, payload) => {
+      state.payment_methods = payload
+    },
+    [CONFIRM_ORDER]: (state) => {
+      state.showLoader = true
+    },
+    [CONFIRM_ORDER_SUCCESS]: (state, payload) => {
+      state.showLoader = false
+      state.order.id = payload.id
+      state.order.total = payload.total
+      state.order.shipping = payload.shipping
+    },
+    [COMPLETE_ORDER]: (state) => {
+      state.showLoader = true
+    },
+    [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
+      state.showLoader = false
+      state.cart.items = []
+      state.order = {}
     }
   }
   

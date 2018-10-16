@@ -22,11 +22,7 @@
   import CartItem from './CartItem.vue'
   export default {
     name: 'cart-items',
-    computed: {
-      orders () {
-        return this.$store.getters.allItems
-      }
-    },
+    props: ["orders"],
     data () {
       return {
       }

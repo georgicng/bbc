@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import Hello from '@/components/Hello'
-import VeeValidate from 'vee-validate'
 import HomeRoutes from './home'
 import CategoriesRoutes from './categories'
 import ProductsRoutes from './products'
@@ -14,7 +13,6 @@ import ComplaintRoutes from './complaint'
 import TermsRoutes from './terms'
 
 Vue.use(Router)
-Vue.use(VeeValidate)
 
 export default new Router({
   routes: [
