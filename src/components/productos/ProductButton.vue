@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button v-if="!added" class="btn  btn-outline-primary" @click="addToCart"><i class="fa fa-cart-plus"></i> Add to Cart</button>
-    <button v-else class="btn  btn-outline-success"><i class="fa fa-check"></i> Added to Cart</button>
+    <button v-if="!added" @click="addToCart" class="btn">Add to cart<span><i class="fa fa-shopping-cart"></i></span></button>
+    <button v-else class="btn btn-outline-success">Added to cart<span><i class="fa fa-shopping-cart"></i></span></button>
   </div>
 </template>
 

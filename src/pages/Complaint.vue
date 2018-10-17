@@ -1,37 +1,36 @@
 <template>
       <!--Section: Contact v.2-->
-    <section class="section">
-
-        <!--Section heading-->
-        <h2 class="h1-responsive font-weight-bold text-center my-5">Lodge a Complaint</h2>
-        <!--Section description-->
-        <p class="text-center w-responsive mx-auto mb-5">Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
+    <section class="page-wrapper innerpage-section-padding">
+      <div id="complaint-page">
+            <div class="container-fluid text-center">
+                <div class="innerpage-heading">
+                    <h3>Lodge a Complaint</h3>
+                    <p>Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
             matter of hours to help you.</p>
+                </div><!-- end innerpage-heading -->
                 <form id="support-ticket"  @submit.prevent="processForm">
-
                     <!--Grid row-->
-            <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form">
-              </vue-form-generator>
+                    <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form">
+                    </vue-form-generator>
                     <!--Grid row-->
-                    <div class="row">
-                        <!--Grid column-->
-                        <div class="col-md-12">
-                            <div class="custom-file">                                
+                                                   
                                 <vue-base64-file-upload 
-                                    class="v1"
+                                    class="v1 form-group"
                                     accept="image/png,image/jpeg"
                                     image-class="v1-image"
-                                    input-class="v1-input"
+                                    input-class="v1-input form-control"
                                     :max-size="customImageMaxSize"
                                     @size-exceeded="onSizeExceeded"
                                     @file="onFile"
                                     @load="onLoad" />
-                            </div>
-                        </div>
-                    </div>
+                        
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-                <div class="status" v-html="status"></div>
+                <div class="status form-group" v-html="status"></div>
+                
+            </div><!-- end container-fluid -->
+        </div>
+                
     </section>
 </template>
 
@@ -63,37 +62,37 @@ export default {
           {
             type: "input",
             inputType: "text",
-            label: "Name",
+            placeholder: "Name",
             model: "name",
             required: true,
             validator: VueFormGenerator.validators.string,
-            styleClasses: "col-xs-6"
+            styleClasses: ""
           },
           {
             type: "input",
             inputType: "text",
-            label: "Subject",
+            placeholder: "Subject",
             model: "subject",
             required: true,
             validator: VueFormGenerator.validators.string,
-            styleClasses: "col-xs-6"
+            styleClasses: ""
           },
           {
             type: "input",
             inputType: "text",
-            label: "Email",
+            placeholder: "Email",
             model: "email",
             required: true,
             validator: VueFormGenerator.validators.email,
-            styleClasses: "col-xs-12"
+            styleClasses: ""
           },
           {
             type: "textArea",
-            label: "Description",
+            placeholder: "Description",
             model: "description",
             required: true,
             validator: VueFormGenerator.validators.string,
-            styleClasses: "col-xs-9"
+            styleClasses: ""
           }
         ]
       },

@@ -1,42 +1,23 @@
 <template>
-  <div class="card">
-<table class="table table-hover shopping-cart-wrap">
-
-<tr>
-  <td scope="col">Subtotal</td>
-  <td scope="col" width="120">{{subtotal}}</td>
-</tr>
-<tr>
-  <td scope="col">Shipping</td>
-  <td scope="col" width="120">{{shipping}}</td>
-</tr>
-<tr>
-  <td scope="col">Tax</td>
-  <td scope="col" width="120">{{tax}}</td>
-</tr>
-<tr>
-  <td scope="col">Total</td>
-  <td scope="col" width="120">{{total}}</td>
-</tr>
-</table>
-</div> <!-- card.// -->
+  <div class="cart-info text-right">
+      <h4>Item(s) : <span>{{count}}</span></h4>
+      <h4>Total Price: <span>N{{subtotal}}</span></h4>
+      <router-link v-if="link == 'cart'" to="/cart" class="btn btn-black">View Cart</router-link>
+      <router-link v-if="link == 'products'" to="/products" class="btn btn-black">Continue Shopping</router-link>
+      <router-link to="/checkout" class="btn btn-orange">Checkout</router-link>
+  </div>
 </template>
 
 <script>
   export default {
     name: 'cart-totals',
+    props: ['link'],
     computed: {
       subtotal () {
         return this.$store.getters.subtotal
       },
-      shipping () {
-        return this.$store.getters.shipping
-      },
-      tax () {
-        return this.$store.getters.tax
-      },
-      total() {
-        return this.$store.getters.cartTotal
+      count() {
+        return this.$store.getters.count
       },
     },
     data () {

@@ -1,27 +1,15 @@
 <template>
-  <div class="col-md-6 col-lg-4 col-xl-3">
-    <div class="product">
-      <router-link :to="'/details/'+product.id" class="product-link">
-        <div class="product__image">
-          <img
-            class="img-responsive" :src="getImage(product)" alt="">
-        </div>
-        <div class="product__description">
-          <div class="product__info">
-            <small>{{product.category_id.data.name}}</small>
-            <h4>{{product.name}}</h4>
-          </div>
-          <div class="product__price-cart">
-            ${{product.price}}
-          </div>
-        </div>
-      </router-link>
-      <div class="product__action">
-        <product-button :product="product"></product-button>
-        <!--<button class="button"><i class="fa fa-cart-plus"></i> Add to Cart</button>-->
-      </div>
-    </div>
-  </div>
+  <li>
+      <div class="dish-list">
+          <router-link :to="'/details/'+product.id"><img :src="getImage(product)" class="img-responsive" alt="dish-menu"></router-link>
+          <div class="dish-list-text">
+              <h4><router-link :to="'/details/'+product.id">{{product.name}}</router-link></h4>
+              <h5>N{{product.price}}</h5>
+              <p>{{product.category_id.data.name}}</p>
+              <product-button :product="product"></product-button>              
+          </div><!-- end dish-list-text -->
+      </div><!-- end dish-list -->
+  </li>
 </template>
 
 <script>

@@ -1,9 +1,15 @@
 <template>
-  <div>
-    <div class="title">
-      <h1><i class="fa fa-braille"></i> In Stock</h1>
-    </div>
-    <product-list :products="products"></product-list>
+  <div id="menu-page" class="menu-grid">
+      <div class="container-fluid text-center menu">
+          <div class="innerpage-heading">
+              <h3>Cakes</h3>
+          </div><!-- end innerpage-heading -->
+          
+          <div id="breakfast-dishes" class="tab-content">                  
+            <product-list :products="products"></product-list>
+          </div>
+              
+      </div><!-- end container-fluid -->
   </div>
 </template>
 

@@ -1,32 +1,21 @@
 <template>
-<section class="section">
-  <div v-if="count > 0">
-    <div class="title">
-      <h1><i class="fa fa-superpowers"></i> Your Cart <button @click="clear()">clear cart</button></h1>
+  <section class="page-wrapper innerpage-section-padding">  
+    <div id="shopping-cart-page">
+        <div class="container-fluid">
+            <div class="innerpage-heading text-center">
+                <h3>Your Cart</h3>
+            </div><!-- end innerpage-heading -->
+            <template v-if="count > 0">
+              <cart-items :orders="orders" />
+              <cart-totals link="products" /> 
+            </template> 
+            <template v-else>
+              <h1><i class="fab fa-superpowers"></i> Your Cart is Empty</h1>
+              <router-link to="/products" class="btn btn-orange"><i class="fa fa-home"></i> Go Shopping</router-link> 
+            </template>     
+        </div><!-- end container-fluid -->
     </div>
-      <div class="row mb-3">
-    <div class="col">
-          <cart-items :orders="orders" />
-    </div>
-  </div>
-<div class="row mb-3">
-  <div class="col-sm-6 offset-sm-6">
-    <cart-totals />
-  </div>
-</div>
-<div class="row mb-3">
-  <div class="col-sm-6 text-left">
-        <router-link to="/products" class="btn"><i class="fa fa-home"></i> Continue Shopping</router-link>
-  </div>
-  <div class="col-sm-6 text-right">
-    <router-link to="/checkout" class="btn"><i class="fa fa-home"></i> Checkout</router-link>
-  </div>
-</div>
-    
-
-  </div>
-  <div v-else class="title"><h1><i class="fa fa-superpowers"></i> Your Cart is Empty</h1></div>
-  </section>
+    </section>
 </template>
 
 <script>

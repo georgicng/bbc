@@ -40,10 +40,7 @@ export const cartGetters = {
     } else {
       return 0;
     }
-  },
-  tax: state => state.order.tax || 0,
-  cartTotal: (state, getters) =>
-    parseFloat(getters.subtotal) + parseFloat(getters.shipping) + parseFloat(getters.tax)
+  }
 };
 
 export const orderGetters = {
@@ -78,5 +75,8 @@ export const orderGetters = {
       return 0;
     }
   },
-  paymentMethod: state => state.order.payment || {}
+  paymentMethod: state => state.order.payment || {},
+  tax: state => state.order.tax || 0,
+  orderTotal: (state, getters) =>
+    parseFloat(getters.subtotal) + parseFloat(getters.shippingRate) + parseFloat(getters.tax)
 };

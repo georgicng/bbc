@@ -14,8 +14,6 @@ const store = new Vuex.Store({
     state: {
       //order items
       order: { cart: [] },
-      // bought items
-      cart: { items: [] },
       // ajax loader
       showLoader: false,
       // selected product

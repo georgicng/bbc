@@ -1,21 +1,7 @@
 <template>
-  <div class="card">
-<table class="table table-hover shopping-cart-wrap">
-<thead class="text-muted">
-<tr>
-  <th scope="col">Product</th>
-  <th scope="col" width="120">Quantity</th>
-  <th scope="col" width="120">Price</th>
-  <th scope="col" width="200" class="text-right">Action</th>
-</tr>
-</thead>
-<tbody>
-        <template v-for="(line, index) in orders">
-          <cart-item :index="index" :line="line"></cart-item>
-        </template>
-      </tbody>
-</table>
-</div> <!-- card.// -->
+  <ul class="list-unstyled cart-list">
+    <cart-item v-for="(line, index) in orders" :index="index" :line="line" :key="index"></cart-item>
+  </ul> <!-- card.// -->
 </template>
 
 <script>

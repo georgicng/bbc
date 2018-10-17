@@ -1,13 +1,9 @@
 <template>
-  <section class="section">
-    <div class="products">
-      <div class="row">
-        <template v-for="product in products">
-          <product-item :product="product"></product-item>
-        </template>
-      </div>
-    </div>
-  </section>
+  <ul class="list-unstyled">
+      <template >
+        <product-item v-for="(product, index) in products" :product="product" :key="index"></product-item>
+      </template>
+  </ul>
 </template>
 
 <script>

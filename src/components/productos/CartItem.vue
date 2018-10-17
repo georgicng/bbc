@@ -1,34 +1,23 @@
 <template>
- <tr>
-	<td>
-<figure class="media">
-	<div class="img-wrap"><img :src="getImage(product)" class="img-thumbnail img-sm"></div>
-	<figcaption class="media-body">
-		<h6 class="title text-truncate">{{product.name}} </h6>
-		<dl v-if="line.options !== undefined" class="dlist-inline small">
-		  <dt>Size: </dt>
-		  <dd>{{line.options['size']}}</dd>
-		</dl>
-		<dl v-if="line.options !== undefined " class="dlist-inline small">
-		  <dt>Color: </dt>
-		  <dd>{{line.options['color']}}</dd>
-		</dl>
-	</figcaption>
-</figure> 
-	</td>
-	<td> 
-		<input type="number" v-model="quantity" @change="update()" class="form-control">
-	</td>
-	<td> 
-		<div class="price-wrap"> 
-			<var class="price">{{price}}</var> 
-			<small class="text-muted">({{product.price}} each)</small> 
-		</div> <!-- price-wrap .// -->
-	</td>
-	<td class="text-right"> 
-	<a @click="remove()" class="btn btn-outline-danger"> × Remove</a>
-	</td>
-</tr>
+	<li>
+		<div class="cart-item">
+				<div class="item-text dish-list-text">
+						<h4><a href="#">{{product.name}}</a></h4>
+						<p>category</p>
+						<h5>Qty: <input type="number" min="1" v-model="quantity" @change="update()" class="form-control"> x N{{product.price}}</h5>
+				</div><!-- end item-text -->
+
+				<div class="item-img">
+						<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
+				</div><!-- end item-img -->
+				
+				<h4 class="total">Total: <span>N{{price}}</span></h4>
+				
+				<div class="item-close">
+						<button class="btn" @click="remove()"><span><i class="fa fa-times-circle"></i></span></button>
+				</div><!-- end item-close -->
+		</div><!-- end cart-item -->
+	</li>
 </template>
 
 <script>

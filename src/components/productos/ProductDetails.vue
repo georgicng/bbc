@@ -1,77 +1,32 @@
 <template>
-  <section class="product-details">
-    
-<div class="card">
-	<div class="row no-gutters">
-		<aside class="col-sm-5 border-right">
-<article class="gallery-wrap"> 
-<div class="img-big-wrap">
-  <div><img :src="getImage(product)"></div>
-</div> <!-- slider-product.// -->
-</article> <!-- gallery-wrap .end// -->
-		</aside>
-		<aside class="col-sm-7">
-<article class="p-5">
-	<h3 class="title mb-3">{{product.name}}</h3>
-
-<div class="mb-3"> 
-	<var class="price h3 text-warning"> 
-		<span class="currency">NGN N</span><span class="num">{{product.price}}</span>
-	</var> 
-</div> <!-- price-detail-wrap .// -->
-<dl>
-  <dt>Description</dt>
-  <dd>{{product.description || 'This is for sale'}}</dd>
-</dl>
-
-
-<hr>
-	<div class="row">
-		<div class="col">
-			<dl class="dlist-inline">
-			  <dt>Quantity: </dt>
-			  <dd> 
-			  	<select class="form-control form-control-sm" style="width:70px;">
-			  		<option> 1 </option>
-			  		<option> 2 </option>
-			  		<option> 3 </option>
-			  	</select>
-			  </dd>
-			</dl>  <!-- item-property .// -->
-		</div> <!-- col.// -->
-		<div class="col">
-			<dl class="dlist-inline">
-				  <dt>Size: </dt>
-				  <dd>
-				  	<select class="form-control form-control-sm" style="width:70px;">
-					  <option> 8 inches </option>
-			  		<option> 10 inches </option>
-			  		<option> 12 inches </option>
-			  	</select>
-				  </dd>
-			</dl>  <!-- item-property .// -->
-		</div> <!-- col.// -->
-    <div class="col">
-			<dl class="dlist-inline">
-				  <dt>Color: </dt>
-				  <dd>
-				  	<select class="form-control form-control-sm" style="width:70px;">
-					  <option> Yellow </option>
-			  		<option> White </option>
-			  		<option> Blue </option>
-			  	</select>
-				  </dd>
-			</dl>  <!-- item-property .// -->
-		</div> <!-- col.// -->
-	</div> <!-- row.// -->
-	<hr>
-	<buy-button :product="product"></buy-button>
-  <product-button :product="product"></product-button>
-</article> <!-- card-body.// -->
-		</aside> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-
+  <section class="page-wrapper innerpage-section-padding">
+    <div id="menu-detail-page">
+      <div class="container-fluid">
+          <div class="menu-detail">
+              <div class="menu-title">
+                  <div class="menu-name">
+                      <p>Product Name</p>
+                      <h3>{{product.name}}</h3>
+                  </div>
+                  <div class="menu-price">
+                      <p>Price</p>
+                      <h3>NGN {{product.price}}</h3>
+                  </div>
+              </div><!-- end page-title -->
+              <ul id="menu-gallery" class="gallery list-unstyled cS-hidden menu-gallery text-center">
+                  <li :data-thumb="getImage(product)">
+                      <div class="p-img">
+                          <img :src="getImage(product)" :alt="product.name"/>
+                      </div>
+                  </li>
+              </ul>                            
+              <div class="menu-info">                  
+                  <div>{{product.description || 'This is for sale'}}</div>
+                  <product-button :product="product"></product-button>
+              </div><!-- end menu-info -->              
+          </div>
+      </div><!-- end container-fluid -->
+    </div>
   </section>
 </template>
 
