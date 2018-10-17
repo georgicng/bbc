@@ -82,15 +82,15 @@ import {
   }
   
   export const cartMutations = {
-    [ADD_TO_CART]: (state, payload) => state.cart.items.push(payload),
+    [ADD_TO_CART]: (state, payload) => state.order.cart.push(payload),
     [UPDATE_CART]: (state, payload) => {
-      state.cart.items[payload.index].quantity = payload.quantity
+      state.order.cart[payload.index].quantity = payload.quantity
     },
     [REMOVE_FROM_CART]: (state, payload) => {
-      state.cart.items.splice(payload, 1)
+      state.order.cart.splice(payload, 1)
     },
     [CLEAR_CART]: (state) => {
-      state.cart.items = []
+      state.order.cart = []
     }
   }
 
@@ -115,15 +115,14 @@ import {
       state.showLoader = false
       state.order.id = payload.id
       state.order.total = payload.total
-      state.order.shipping = payload.shipping
+      state.order.meta = payload.shipping
     },
     [COMPLETE_ORDER]: (state) => {
       state.showLoader = true
     },
     [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
       state.showLoader = false
-      state.cart.items = []
-      state.order = {}
+      state.order = { cart: [] }
     }
   }
   

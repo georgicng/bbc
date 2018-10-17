@@ -13,7 +13,7 @@ import ComplaintRoutes from './complaint'
 import TermsRoutes from './terms'
 
 Vue.use(Router)
-
+//Vue.use(VueFormGenerator)
 export default new Router({
   routes: [
     HomeRoutes,

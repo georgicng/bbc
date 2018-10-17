@@ -28,6 +28,16 @@
                             </label>
                           </div>
                         </template>
+                         <template v-if="key == 'City Shipping'">                         
+                            <template v-for="item in value" v-if="model.city == item.title">
+                              <div class="custom-control custom-radio" :key="item.id">
+                              <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
+                              <label class="custom-control-label" :for="'customRadio'+item.id">
+                                <h3>{{ item.title }} </h3> @ {{item.cost}}
+                              </label>
+                              </div>
+                            </template>
+                        </template>
                         <template v-else>
                           <div class="form-group">
                           <label for="formGroupExampleInput">{{key}}</label>
@@ -69,21 +79,21 @@
 </template>
 
 <script>
-import VueFormGenerator from "vue-form-generator";
+import VueFormGenerator from "vue-form-generator"
 import { FormWizard, TabContent } from "vue-form-wizard";
-import 'vue-form-wizard/dist/vue-form-wizard.min.css';
+import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import CartItems from "../components/productos/CartItems";
 import CartTotals from "../components/productos/CartTotals";
 import {
-    ADD_SHIPPING_ADDRESS,
-    ADD_SHIPPING_METHOD,
-    ADD_PAYMENT_METHOD
-  } from '../store/mutation-types'
+  ADD_SHIPPING_ADDRESS,
+  ADD_SHIPPING_METHOD,
+  ADD_PAYMENT_METHOD
+} from "../store/mutation-types";
 export default {
   data() {
     return {
-      payment: "",
       shipping: "",
+      paymment: "",
       model: {
         first_name: "",
         last_name: "",
@@ -172,49 +182,53 @@ export default {
             validator: VueFormGenerator.validators.string,
             styleClasses: "col-xs-6",
             visible(model) {
-                return model.city == "Other";
+              return model.city == "Other";
             }
           }
         ]
       }
     };
   },
-  beforeCreate () {
-    this.$store.dispatch('allShippingMethods')
-    this.$store.dispatch('allPaymentMethods')
-      
+  beforeCreate() {
+    this.$store.dispatch("allShippingMethods");
+    this.$store.dispatch("allPaymentMethods");
+  },
+  created() {
+    if (this.$store.getters.shippingInfo) {
+      this.model = this.$store.getters.shippingInfo;
+    }
+    if ((this.payment = this.$store.getters.paymentMethod)) {
+      this.payment = this.$store.getters.paymentMethod;
+    }
+    if (this.$store.getters.shippingMethod) {
+      this.shipping = this.$store.getters.shippingMethod;
+    }
+  },
+  computed: {
+    shipping_options() {
+      return this.$store.getters.shippingList;
     },
-    created() {
-      if(this.$store.getters.shippingInfo) {
-        this.model = this.$store.getters.shippingInfo
-      }
+    payment_options() {
+      return this.$store.getters.paymentMethods;
     },
-    computed: {
-      shipping_options () {
-        return this.$store.getters.shippingList
-      },
-      payment_options () {
-        return this.$store.getters.paymentMethods
-      },
-      orders() {
-        return this.$store.getters.allItems;
-      }
-    },
+    orders() {
+      return this.$store.getters.allItems;
+    }
+  },
   methods: {
     onComplete: function() {
       alert("Yay. Done!");
     },
     validateFirstTab: function() {
-      this.$store.commit(ADD_SHIPPING_ADDRESS, this.model)
+      this.$store.commit(ADD_SHIPPING_ADDRESS, this.model);
       return this.$refs.firstTabForm.validate();
     },
     validateSecondTab: function() {
-      this.$store.commit(ADD_SHIPPING_METHOD, this.shipping)
-      this.$store.commit(ADD_PAYMENT_METHOD, this.payment)
-      return true
+      this.$store.commit(ADD_SHIPPING_METHOD, this.shipping);
+      this.$store.commit(ADD_PAYMENT_METHOD, this.payment);
+      return true;
     },
-    validateThirdTab: function() {
-    },
+    validateThirdTab: function() {}
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,

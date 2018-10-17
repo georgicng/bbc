@@ -22,6 +22,7 @@
     "vue-base64-file-upload": "^1.0.4",
     "vue-form-generator": "^2.3.1",
     "vue-form-wizard": "^0.8.4",
+    "vue-paystack": "^1.0.2",
     "vue-router": "^2.7.0",
     "vuex": "^3.0.0"
   },

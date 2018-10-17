@@ -6846,6 +6846,10 @@ vue-numeric@^2.3.0:
   dependencies:
     accounting-js "^1.1.1"
 
+vue-paystack@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/vue-paystack/-/vue-paystack-1.0.2.tgz#21d048443db4ec949dda26eb1f1c6c05067ead6b"
+
 vue-perfect-scrollbar@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/vue-perfect-scrollbar/-/vue-perfect-scrollbar-0.1.0.tgz#be12c23d1753a013fa81ceb9872cb5fc0b1b4960"

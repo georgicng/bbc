@@ -10,57 +10,8 @@
                 <form id="support-ticket"  @submit.prevent="processForm">
 
                     <!--Grid row-->
-                    <div class="row">
-
-                        <!--Grid column-->
-                        <div class="col-md-6">
-                            <div class="md-form mb-0">
-                                 <label for="name" class="">Your name</label>
-                                <input type="text"  v-validate="'required'" name="name" v-model="model.name" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('name') }">
-                                <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span>
-                            </div>
-                        </div>
-                        <!--Grid column-->
-
-                        <!--Grid column-->
-                        <div class="col-md-6">
-                            <div class="md-form mb-0">
-                                <label for="email" class="">Your email</label>
-                                <input type="text"  v-validate="'required|email'" name="email" v-model="model.email" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('email') }">
-                                <span v-show="errors.has('email')" class="text-danger">{{ errors.first('email') }}</span>
-                            </div>
-                        </div>
-                        <!--Grid column-->
-
-                    </div>
-                    <!--Grid row-->
-
-                    <!--Grid row-->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="md-form mb-0">
-                                <label for="subject" class="">Issue</label>
-                                <input type="text"  v-validate="'required'" name="subject" v-model="model.subject" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('subject') }">
-                                <span v-show="errors.has('subject')" class="text-danger">{{ errors.first('subject') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Grid row-->
-
-                    <!--Grid row-->
-                    <div class="row">
-
-                        <!--Grid column-->
-                        <div class="col-md-12">
-
-                            <div class="md-form">
-                                <label for="message">Describe the problem</label>
-                                <textarea type="text"  v-validate="'required'" name="description" v-model="model.description" rows="2" class="form-control md-textarea" v-bind:class="{'form-control': true, 'error': errors.has('description') }"></textarea>
-                                <span v-show="errors.has('message')" class="text-danger">{{ errors.first('description') }}</span>
-                            </div>
-
-                        </div>
-                    </div>
+            <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form">
+              </vue-form-generator>
                     <!--Grid row-->
                     <div class="row">
                         <!--Grid column-->
@@ -78,17 +29,17 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" :disabled="errors.any()">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 <div class="status" v-html="status"></div>
     </section>
 </template>
 
 <script>
-import Vue from "vue";
-import VeeValidate from "vee-validate";
+
 import { client } from "../api";
 import VueBase64FileUpload from "vue-base64-file-upload";
+import VueFormGenerator from "vue-form-generator";
 export default {
   name: "complaint",
   data() {
@@ -96,17 +47,63 @@ export default {
       msg: "Welcome to Your Vue.js App",
       customImageMaxSize: 3, // megabytes
       model: {
-        name: "Welcome to Your Vue.js App",
+        name: "",
         subject: "",
         email: "",
         description: ""
+      },
+      formOptions: {
+        validationErrorClass: "has-error",
+        validationSuccessClass: "has-success",
+        validateAfterChanged: true,
+        validateAfterLoad: true,
+      },
+      contactSchema: {
+        fields: [
+          {
+            type: "input",
+            inputType: "text",
+            label: "Name",
+            model: "name",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Subject",
+            model: "subject",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-6"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Email",
+            model: "email",
+            required: true,
+            validator: VueFormGenerator.validators.email,
+            styleClasses: "col-xs-12"
+          },
+          {
+            type: "textArea",
+            label: "Description",
+            model: "description",
+            required: true,
+            validator: VueFormGenerator.validators.string,
+            styleClasses: "col-xs-9"
+          }
+        ]
       },
       status: "",
       file: ""
     };
   },
   components: {
-    VueBase64FileUpload
+    VueBase64FileUpload,
+    "vue-form-generator": VueFormGenerator.component,
   },
   methods: {
     onFile(file) {
@@ -123,9 +120,8 @@ export default {
       );
     },
     processForm() {
-      this.$validator.validate().then(result => {
-        if (result) {
-          if (this.base) {
+      if (this.$refs.form.validate()){
+        if (this.base) {
             client
               .createFile({
                 title: this.file.name,
@@ -156,8 +152,7 @@ export default {
                 this.status = `Could't process your request, please try again`;
               });
           }
-        }
-      });
+      }
     }
   }
 };

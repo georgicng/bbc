@@ -1,6 +1,6 @@
 <template>
 <section class="section">
-  <div v-if="cart && cart.length > 0">
+  <div v-if="count > 0">
     <div class="title">
       <h1><i class="fa fa-superpowers"></i> Your Cart <button @click="clear()">clear cart</button></h1>
     </div>
@@ -36,7 +36,7 @@ import CartTotals from "../components/productos/CartTotals";
 export default {
   data() {
     return {
-      cart: this.$store.state.cart.items
+      count: this.$store.getters.count
     };
   },
   computed: {

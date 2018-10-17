@@ -21,15 +21,15 @@ export const manufacturerGetters = {
 };
 
 export const cartGetters = {
-  allItems: state => state.cart.items || [],
-  count: state => (state.cart.items ? state.cart.items.length : 0),
+  allItems: state => state.order.cart || [],
+  count: state => (state.order.cart ? state.order.cart.length : 0),
   itemByIndex: (state, getters) => id => getters.allItems[id] || {},
   subtotal: state => {
-    if (!state.cart.items || state.cart.items.length == 0) {
+    if (!state.order.cart || state.order.cart.length == 0) {
       return 0;
     } else {
       var sum = 0;
-      state.cart.items.forEach(item => (sum += item.price * item.quantity));
+      state.order.cart.forEach(item => (sum += item.price * item.quantity));
       return sum;
     }
   },
@@ -41,7 +41,7 @@ export const cartGetters = {
       return 0;
     }
   },
-  tax: state => state.cart.tax || 0,
+  tax: state => state.order.tax || 0,
   cartTotal: (state, getters) =>
     parseFloat(getters.subtotal) + parseFloat(getters.shipping) + parseFloat(getters.tax)
 };
@@ -55,13 +55,16 @@ export const orderGetters = {
     cities.push("Other");
     return cities;
   },
-  shippingList: (state, getters) => {
-    return state.shipping_methods.reduce((groups, y) => {
-      const val = y.shipping_method.data.name;
-      groups[val] = groups[val] || [];
-      groups[val].push({ id: y.id, title: y.title, cost: y.cost });
-      return groups;
-    }, {});
+  shippingList: (state) => {
+    if (state.shipping_methods.length > 0) {
+      return state.shipping_methods.reduce((groups, y) => {
+        const val = y.shipping_method.data.name;
+        groups[val] = groups[val] || [];
+        groups[val].push({ id: y.id, title: y.title, cost: y.cost });
+        return groups;
+      }, {});
+    }
+    return [];
   },
   paymentMethods: state => state.payment_methods || [],
   orderID: state => state.order.id || false,
@@ -75,7 +78,5 @@ export const orderGetters = {
       return 0;
     }
   },
-  paymentMethod: state => state.order.payment || {},
-  taxRate: state => state.order.tax || 0,
-  orderTotal: (state, getters) => 0
+  paymentMethod: state => state.order.payment || {}
 };

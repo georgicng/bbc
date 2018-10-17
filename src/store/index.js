@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     strict: true,
     state: {
       //order items
-      order: {},
+      order: { cart: [] },
       // bought items
       cart: { items: [] },
       // ajax loader
