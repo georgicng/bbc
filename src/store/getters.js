@@ -37,7 +37,6 @@ export const cartGetters = {
 export const orderGetters = {
   shippingMethods: state => state.shipping_methods || [],
   shippingCities: (state, getters) => {
-    console.log('getter: ', getters.shippingMethods, 'state: ', state.shipping_methods);
     const cities = getters.shippingMethods
       .filter(x => x.shipping_method.data.id === 3)
       .map(y => y.title);

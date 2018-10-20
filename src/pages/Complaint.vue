@@ -110,7 +110,6 @@ export default {
       this.file = file;
     },
     onLoad(dataUri) {
-      console.log(dataUri); // data-uri string
       this.base = dataUri;
     },
     onSizeExceeded(size) {
@@ -136,7 +135,6 @@ export default {
                 this.status = `Your message has been sent`;
               })
               .catch(err => {
-                console.log(err);
                 this.status = `Could't process your request, please try again`;
               });
           } else {

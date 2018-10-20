@@ -37,7 +37,6 @@ import {
       // this[]
     },
     [ALL_PRODUCTS_SUCCESS] (state, payload) {
-      console.log('success', payload);
       state.showLoader = false;
       state.products.entries.push({ page: payload.page, items: payload.items });
       state.products.total = payload.total;
@@ -108,9 +107,10 @@ import {
     },
     [CONFIRM_ORDER_SUCCESS]: (state, payload) => {
       state.showLoader = false
-      state.order.id = payload.id
+      state.order.id = payload.order_id
       state.order.total = payload.total
       state.order.meta = payload.payment_meta
+      state.order.reference = payload.reference
     },
     [CONFIRM_ORDER_FAILURE]: (state, payload) => {
       state.showLoader = false
@@ -141,16 +141,6 @@ import {
   }
 
   export const initialisationMutations = {
-    initialiseStore(state) {
-      // Check if the ID exists
-      if(localStorage.getItem('store')) {
-        // Replace the state object with the stored item
-        console.log('store: ', localStorage.getItem('store'));
-        this.replaceState(
-          Object.assign(state, JSON.parse(localStorage.getItem('store')))
-        );
-      }
-    },
     loader(state, payload) {
       state.showLoader = payload
     },

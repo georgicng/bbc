@@ -109,7 +109,6 @@ export default {
   methods: {
     processForm: function() {
         if (this.$refs.form.validate()) {
-          console.log(this.model);
           client
             .createItem("enquiries", this.model)
             .then(res => {
@@ -117,7 +116,6 @@ export default {
               this.status = `Your message has been sent`;
             })
             .catch(err => {
-              console.log(err);
               this.status = `Could't process your request, please try again`;
             });
         }

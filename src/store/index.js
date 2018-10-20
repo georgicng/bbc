@@ -1,19 +1,25 @@
 // ./src/store/index
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import VuexPersist from 'vuex-persist';
 import { productGetters, manufacturerGetters, cartGetters, orderGetters  } from './getters'
 import { productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations } from './mutations'
 import { productActions, manufacturerActions, orderActions } from './actions'
 
 Vue.use(Vuex)
-
-
+const vuexLocalStorage = new VuexPersist({
+  key: 'vuex', // The key to store the state on in the storage provider.
+  storage: window.localStorage, // or window.sessionStorage or localForage
+  // Function that passes the state and returns the state with only the objects you want to store.
+  // reducer: state => state,
+  // Function that passes a mutation and lets you decide if it should update the state in localStorage.
+  // filter: mutation => (true)
+});
 const store = new Vuex.Store({
     strict: true,
     state: {
       //order items
-      order: { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} },
+      order: { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {}, reference: 0 },
       // ajax loader
       showLoader: true,
       // sidebar
@@ -35,12 +41,8 @@ const store = new Vuex.Store({
     },
     mutations: Object.assign({}, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations),
     getters: Object.assign({}, productGetters, manufacturerGetters, cartGetters, orderGetters),
-    actions: Object.assign({}, productActions, manufacturerActions, orderActions)
-  })
-  
-  store.subscribe((mutation, state) => {
-    // Store the state object as a JSON string
-    localStorage.setItem('store', JSON.stringify(state));
+    actions: Object.assign({}, productActions, manufacturerActions, orderActions),
+    plugins: [vuexLocalStorage.plugin]
   })
 
   export default store

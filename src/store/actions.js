@@ -77,7 +77,7 @@ export const orderActions = {
   confirmOrder({ commit }, payload) {
     commit(CONFIRM_ORDER);
     client
-    .createItems("order", payload)
+    .postApi("orders", payload)
     .then(res => commit(CONFIRM_ORDER_SUCCESS, res.data))
     .catch(err => commit(CONFIRM_ORDER_FAILURE, err));
   },

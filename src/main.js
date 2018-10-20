@@ -14,7 +14,4 @@ new Vue({
   store,
   template: '<App/>', // Definimos el HTML que se renderizara
   components: { App },
-  beforeCreate() {
-    this.$store.commit('initialiseStore')
-  },
 });

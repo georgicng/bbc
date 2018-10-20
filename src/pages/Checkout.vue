@@ -69,7 +69,7 @@
           
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
-            <template v-if="false">
+            <template v-if="payment_mode == 'paystack'">
                 <paystack
                     :amount="orderTotal * 100"
                     :email="model.email"
@@ -82,6 +82,9 @@
                   <i class="fas fa-money-bill-alt"></i>
                   Make Payment
                 </paystack>
+            </template>
+             <template v-if="payment_mode == 'bank'">
+                <div class="bank-message" v-html="note"></div>
             </template>
           </tab-content>
       </form-wizard>
@@ -108,6 +111,7 @@ export default {
     return {
       shipping: "",
       payment: "",
+      payment_mode: false,
       model: {
         first_name: "",
         last_name: "",
@@ -255,22 +259,19 @@ export default {
       return true;
     },
     validateThirdTab: function() {
-      console.log('order: ', this.$store.state.order)
-      this.$store.dispatch(CONFIRM_ORDER, this.$store.state.order)
-      .then(res => {
-        console.log(res);
-        return true;
-      })
-      .catch(err => {
-        console.log(err);
-        return false;
-      });
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('confirmOrder', this.$store.state.order)
+          .then(res => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });      
     },
     callback: function(response){
-      console.log(response)
     },
     close: function(){
-        console.log("Payment closed")
     }
   },
   components: {
