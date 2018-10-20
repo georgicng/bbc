@@ -2,59 +2,50 @@ import axios from "axios";
 import { client } from "../api";
 
 import {
-  ADD_PRODUCT,
-  ADD_PRODUCT_SUCCESS,
   PRODUCT_BY_ID,
   PRODUCT_BY_ID_SUCCESS,
-  UPDATE_PRODUCT,
-  UPDATE_PRODUCT_SUCCESS,
-  REMOVE_PRODUCT,
-  REMOVE_PRODUCT_SUCCESS,
+  PRODUCT_BY_ID_FAILURE,
   ALL_PRODUCTS,
   ALL_PRODUCTS_SUCCESS,
+  ALL_PRODUCTS_FAILURE,
   ALL_MANUFACTURERS,
   ALL_MANUFACTURERS_SUCCESS,
+  ALL_MANUFACTURERS_FAILURE,
+  ALL_PAYMENT_METHODS,
+  ALL_SHIPPING_METHODS,
   ALL_SHIPPING_METHODS_SUCCESS,
+  ALL_SHIPPING_METHODS_FAILURE,
   ALL_PAYMENT_METHODS_SUCCESS,
-  CONFIRM_ORDER_SUCCESS,
+  ALL_PAYMENT_METHODS_FAILURE,
   CONFIRM_ORDER,
-  COMPLETE_ORDER_SUCCESS,
+  CONFIRM_ORDER_SUCCESS,
+  CONFIRM_ORDER_FAILURE,
   COMPLETE_ORDER,
+  COMPLETE_ORDER_SUCCESS,
+  COMPLETE_ORDER_FAILURE,
 } from "./mutation-types";
 
 export const productActions = {
-  allProducts({ commit }) {
+  allProducts({ commit }, payload) {
     commit(ALL_PRODUCTS);
+    const page = (payload && payload.page) ? payload.page - 1 : 0;
+    const offset = page * 10;
+    const args = {
+      depth: 2,
+      limit: 10,
+      offset: offset,
+    };
     client
-      .getItems("products", {depth: 2})
-      .then(res => commit(ALL_PRODUCTS_SUCCESS, res.data))
-      .catch(err => console.log(err));
+      .getItems("products", args)
+      .then(res => commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total: res.meta.total_entries }))
+      .catch(err => commit(ALL_PRODUCTS_FAILURE, err));
   },
   productById({ commit }, payload) {
     commit(PRODUCT_BY_ID);
     client
       .getItem("products", payload)
       .then(res => commit(PRODUCT_BY_ID_SUCCESS, res.data))
-      .catch(err => console.log(err));
-  },
-  addProduct({ commit }, payload) {
-    commit(ADD_PRODUCT);
-    axios.post(`${API_BASE}/products`, payload).then(response => {
-      commit(ADD_PRODUCT_SUCCESS, response.data);
-    });
-  },
-  updateProduct({ commit }, payload) {
-    commit(UPDATE_PRODUCT);
-    axios.put(`${API_BASE}/products/${payload._id}`, payload).then(response => {
-      commit(UPDATE_PRODUCT_SUCCESS, response.data);
-    });
-  },
-  removeProduct({ commit }, payload) {
-    commit(REMOVE_PRODUCT);
-    axios.delete(`${API_BASE}/products/${payload}`, payload).then(response => {
-      console.debug("response", response.data);
-      commit(REMOVE_PRODUCT_SUCCESS, response.data);
-    });
+      .catch(err => commit(PRODUCT_BY_ID_FAILURE, err));
   }
 };
 
@@ -64,39 +55,37 @@ export const manufacturerActions = {
     client
     .getItems("categories", {depth: 2})
     .then(res => commit(ALL_MANUFACTURERS_SUCCESS, res.data))
-    .catch(err => console.log(err));
+    .catch(err => commit(ALL_MANUFACTURERS_FAILURE, err));
   }
 };
 
 export const orderActions = {
   allShippingMethods({ commit }) {
+    commit(ALL_SHIPPING_METHODS);
     client
     .getItems("shipping_rates")
-    .then(res => {
-      commit(ALL_SHIPPING_METHODS_SUCCESS, res.data)
-    })
-    .catch(err => console.log(err));
+    .then(res => commit(ALL_SHIPPING_METHODS_SUCCESS, res.data))
+    .catch(err => commit(ALL_SHIPPING_METHODS_FAILURE, err));
   },
-  allPaymentMethods({ commit }, payload) {
+  allPaymentMethods({ commit }) {
+    commit(ALL_PAYMENT_METHODS);
     client
     .getItems("payment_methods")
-    .then(res => {
-      commit(ALL_PAYMENT_METHODS_SUCCESS, res.data)
-    })
-    .catch(err => console.log(err));
+    .then(res => commit(ALL_PAYMENT_METHODS_SUCCESS, res.data))
+    .catch(err => commit(ALL_PAYMENT_METHODS_FAILURE, err));
   },
   confirmOrder({ commit }, payload) {
     commit(CONFIRM_ORDER);
     client
     .createItems("order", payload)
     .then(res => commit(CONFIRM_ORDER_SUCCESS, res.data))
-    .catch(err => console.log(err));
+    .catch(err => commit(CONFIRM_ORDER_FAILURE, err));
   },
   completeOrder({ commit }, payload) {
     commit(COMPLETE_ORDER);
     client
     .createItems("order", payload)
     .then(res => commit(COMPLETE_ORDER_SUCCESS, res.data))
-    .catch(err => console.log(err));
+    .catch(err => commit(COMPLETE_ORDER_FAILURE, err));
   }
 };

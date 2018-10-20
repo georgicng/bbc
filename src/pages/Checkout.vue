@@ -69,6 +69,20 @@
           
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
+            <template v-if="false">
+                <paystack
+                    :amount="orderTotal * 100"
+                    :email="model.email"
+                    :paystackkey="paystackkey"
+                    :reference="reference"
+                    :callback="callback"
+                    :close="close"
+                    :embed="false"
+                >
+                  <i class="fas fa-money-bill-alt"></i>
+                  Make Payment
+                </paystack>
+            </template>
           </tab-content>
       </form-wizard>
       </div>
@@ -81,16 +95,19 @@ import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import OrderItems from "../components/productos/OrderItems";
 import OrderTotals from "../components/productos/OrderTotals";
+import paystack from 'vue-paystack';
 import {
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
-  ADD_PAYMENT_METHOD
+  ADD_PAYMENT_METHOD,
+  CONFIRM_ORDER,
+  COMPLETE_ORDER
 } from "../store/mutation-types";
 export default {
   data() {
     return {
       shipping: "",
-      paymment: "",
+      payment: "",
       model: {
         first_name: "",
         last_name: "",
@@ -213,6 +230,15 @@ export default {
     },
     orders() {
       return this.$store.getters.allItems;
+    },
+    total() {
+      return this.$store.getters.orderTotal;
+    },
+    paystack() {
+      return this.$store.getters.meta('paystack');
+    },
+    reference() {
+      return this.$store.getters.orderID;
     }
   },
   methods: {
@@ -228,14 +254,32 @@ export default {
       this.$store.commit(ADD_PAYMENT_METHOD, this.payment);
       return true;
     },
-    validateThirdTab: function() {}
+    validateThirdTab: function() {
+      console.log('order: ', this.$store.state.order)
+      this.$store.dispatch(CONFIRM_ORDER, this.$store.state.order)
+      .then(res => {
+        console.log(res);
+        return true;
+      })
+      .catch(err => {
+        console.log(err);
+        return false;
+      });
+    },
+    callback: function(response){
+      console.log(response)
+    },
+    close: function(){
+        console.log("Payment closed")
+    }
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,
     FormWizard,
     TabContent,
     orderItems: OrderItems,
-    orderTotals: OrderTotals
+    orderTotals: OrderTotals,
+    paystack
   }
 };
 </script>

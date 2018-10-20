@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 // import Hello from '@/components/Hello'
 import HomeRoutes from './home'
 import CategoriesRoutes from './categories'
@@ -14,7 +15,7 @@ import TermsRoutes from './terms'
 
 Vue.use(Router)
 //Vue.use(VueFormGenerator)
-export default new Router({
+const router = new Router({
   routes: [
     HomeRoutes,
     CategoriesRoutes,
@@ -27,4 +28,15 @@ export default new Router({
     ComplaintRoutes,
     TermsRoutes,
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  store.commit('toggleNav', false);
+  store.commit('toggleCart', false);
+  if(to.path == '/checkout' && store.state.order.cart.length == 0){
+    next('/cart');
+  }
+  next();
+});
+
+export default router;

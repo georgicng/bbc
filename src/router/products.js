@@ -4,7 +4,8 @@ export default {
   path: '/products',
   name: 'Products',
   component: Products,
-  props(route) {
-    return  route.query || {}
-  }
-}
+  props: route => ({
+    page: route.query.page || 1,
+    filter: route.query.filter,
+  }),
+};

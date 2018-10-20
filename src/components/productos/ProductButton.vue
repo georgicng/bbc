@@ -14,7 +14,7 @@
     props: ['product'],
     data () {
       return {
-        cart: this.$store.state.cart.items,
+        cart: this.$store.state.order.cart,
         added: false
       }
     },

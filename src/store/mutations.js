@@ -1,41 +1,50 @@
 //Importamos nuestras constantes 
 import {
-    ADD_PRODUCT,
-    ADD_PRODUCT_SUCCESS,
     PRODUCT_BY_ID,
     PRODUCT_BY_ID_SUCCESS,
-    UPDATE_PRODUCT,
-    UPDATE_PRODUCT_SUCCESS,
-    REMOVE_PRODUCT,
-    REMOVE_PRODUCT_SUCCESS,
+    PRODUCT_BY_ID_FAILURE,
     ADD_TO_CART,
     REMOVE_FROM_CART,
     UPDATE_CART,
     CLEAR_CART,
     ALL_PRODUCTS,
     ALL_PRODUCTS_SUCCESS,
+    ALL_PRODUCTS_FAILURE,
     ALL_MANUFACTURERS,
     ALL_MANUFACTURERS_SUCCESS,
-    ERROR_MSG,
+    ALL_MANUFACTURERS_FAILURE,
     ADD_SHIPPING_ADDRESS,
     ADD_SHIPPING_METHOD,
+    ALL_SHIPPING_METHODS,
     ALL_SHIPPING_METHODS_SUCCESS,
+    ALL_SHIPPING_METHODS_FAILURE,
     ADD_PAYMENT_METHOD,
+    ALL_PAYMENT_METHODS,
     ALL_PAYMENT_METHODS_SUCCESS,
+    ALL_PAYMENT_METHODS_FAILURE,
     CONFIRM_ORDER,
     CONFIRM_ORDER_SUCCESS,
+    CONFIRM_ORDER_FAILURE,
     COMPLETE_ORDER,
     COMPLETE_ORDER_SUCCESS,
+    COMPLETE_ORDER_FAILURE,
+    ERROR_MSG,
   } from './mutation-types' 
   
   export const productMutations = {
     [ALL_PRODUCTS] (state) {
-      state.showLoader = true
+      state.showLoader = true;
       // this[]
     },
     [ALL_PRODUCTS_SUCCESS] (state, payload) {
+      console.log('success', payload);
+      state.showLoader = false;
+      state.products.entries.push({ page: payload.page, items: payload.items });
+      state.products.total = payload.total;
+      state.products.current_page = payload.page;
+    },
+    [ALL_PRODUCTS_FAILURE] (state, payload) {
       state.showLoader = false
-      state.products = payload
     },
     [PRODUCT_BY_ID] (state) {
       state.showLoader = true
@@ -44,39 +53,8 @@ import {
       state.showLoader = false
       state.product = payload
     },
-     /* ejemplo estandar de mutacion que es reemplazado por la constante ADD_PRODUCT
-        addProduct (state, payload) {
-            state.showLoader = true
-            state.products.push(payload)
-    }*/
-    [ADD_PRODUCT]: (state, payload) => { //ETAPA INTERMEDIA DE LA MUTACION (ESTADO DE ESPERA)
-      state.showLoader = true
-    },
-    [ADD_PRODUCT_SUCCESS]: (state, payload) => { //ETAPA FINAL, AQUI SE ACTUALIZAN LOS DATOS
+    [PRODUCT_BY_ID_FAILURE] (state, payload) {
       state.showLoader = false
-      state.products.push(payload)
-    },
-    [UPDATE_PRODUCT]: (state, payload) => {
-      state.showLoader = true
-    },
-    [UPDATE_PRODUCT_SUCCESS]: (state, payload) => {
-      state.showLoader = false
-      state.products = state.products.map(p => {
-        if (p.id === payload.id) {
-          payload = {...payload, manufacturer: state.manufacturers.filter(x => x.id === payload.category_id)[0]}
-          return payload
-        }
-        return p
-      })
-    },
-    [REMOVE_PRODUCT]: (state, payload) => {
-      state.showLoader = true
-    },
-    [REMOVE_PRODUCT_SUCCESS]: (state, payload) => {
-      state.showLoader = false
-      const index = state.products.findIndex(p => p.id === payload)
-      console.debug('index', index)
-      state.products.splice(index, 1)
     },
     [ERROR_MSG] (state, payload) {}
   }
@@ -102,11 +80,28 @@ import {
     [ADD_PAYMENT_METHOD]: (state, payload) => {
       state.order.payment = payload
     },
+    [ALL_SHIPPING_METHODS]: (state) => {
+      state.showLoader = true
+    },
     [ALL_SHIPPING_METHODS_SUCCESS]: (state, payload) => {
+      state.showLoader = false
       state.shipping_methods = payload
     },
+    [ALL_SHIPPING_METHODS_FAILURE]: (state, payload) => {
+      state.showLoader = false
+    },
+    [ALL_SHIPPING_METHODS]: (state) => {
+      state.showLoader = true
+    },
+    [ALL_PAYMENT_METHODS]: (state) => {
+      state.showLoader = true
+    },
     [ALL_PAYMENT_METHODS_SUCCESS]: (state, payload) => {
+      state.showLoader = false
       state.payment_methods = payload
+    },
+    [ALL_PAYMENT_METHODS_FAILURE]: (state, payload) => {
+      state.showLoader = false
     },
     [CONFIRM_ORDER]: (state) => {
       state.showLoader = true
@@ -115,14 +110,20 @@ import {
       state.showLoader = false
       state.order.id = payload.id
       state.order.total = payload.total
-      state.order.meta = payload.shipping
+      state.order.meta = payload.payment_meta
+    },
+    [CONFIRM_ORDER_FAILURE]: (state, payload) => {
+      state.showLoader = false
     },
     [COMPLETE_ORDER]: (state) => {
       state.showLoader = true
     },
     [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
       state.showLoader = false
-      state.order = { cart: [] }
+      state.order = { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} }
+    },
+    [COMPLETE_ORDER_FAILURE]: (state, payload) => {
+      state.showLoader = false
     }
   }
   
@@ -133,6 +134,9 @@ import {
     [ALL_MANUFACTURERS_SUCCESS] (state, payload) {
       state.showLoader = false
       state.manufacturers = payload
+    },
+    [ALL_MANUFACTURERS_FAILURE] (state, payload) {
+      state.showLoader = false
     }
   }
 
@@ -141,9 +145,19 @@ import {
       // Check if the ID exists
       if(localStorage.getItem('store')) {
         // Replace the state object with the stored item
+        console.log('store: ', localStorage.getItem('store'));
         this.replaceState(
           Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
-    }
+    },
+    loader(state, payload) {
+      state.showLoader = payload
+    },
+    toggleNav(state, payload) {
+      state.showNav = payload
+    },
+    toggleCart(state, payload) {
+      state.showCart = payload
+    },
   }

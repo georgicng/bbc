@@ -13,13 +13,23 @@ const store = new Vuex.Store({
     strict: true,
     state: {
       //order items
-      order: { cart: [] },
+      order: { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} },
       // ajax loader
-      showLoader: false,
+      showLoader: true,
+      // sidebar
+      showNav: false,
+      // cart
+      showCart: false,
       // selected product
       product: {},
       // all products
-      products: [],
+      products: {
+        total: 0,
+        entries: [],
+      },
+      shipping_methods: [],
+      payment_methods: [],
+      cities: [],
       // all manufacturers
       manufacturers: []
     },
