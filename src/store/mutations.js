@@ -30,7 +30,7 @@ import {
     COMPLETE_ORDER_FAILURE,
     ERROR_MSG,
   } from './mutation-types' 
-  
+  import Vue from 'vue' 
   export const productMutations = {
     [ALL_PRODUCTS] (state) {
       state.showLoader = true;
@@ -106,24 +106,24 @@ import {
       state.showLoader = true
     },
     [CONFIRM_ORDER_SUCCESS]: (state, payload) => {
-      state.showLoader = false
-      state.order.id = payload.order_id
-      state.order.total = payload.total
-      state.order.meta = payload.payment_meta
-      state.order.reference = payload.reference
+      state.showLoader = false;
+      Vue.set(state.order, 'id', payload.order_id);
+      Vue.set(state.order, 'total', payload.total);
+      Vue.set(state.order, 'meta', payload.payment_meta);
+      Vue.set(state.order, 'reference', payload.reference);
     },
     [CONFIRM_ORDER_FAILURE]: (state, payload) => {
-      state.showLoader = false
+      state.showLoader = false;
     },
     [COMPLETE_ORDER]: (state) => {
-      state.showLoader = true
+      state.showLoader = true;
     },
     [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
-      state.showLoader = false
-      state.order = { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} }
+      state.showLoader = false;
+      Vue.set(state, 'order', { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} });
     },
     [COMPLETE_ORDER_FAILURE]: (state, payload) => {
-      state.showLoader = false
+      state.showLoader = false;
     }
   }
   

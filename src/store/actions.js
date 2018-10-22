@@ -33,7 +33,7 @@ export const productActions = {
     const args = {
       depth: 2,
       limit: 10,
-      offset: offset,
+      offset,
     };
     client
       .getItems("products", args)
@@ -78,14 +78,14 @@ export const orderActions = {
     commit(CONFIRM_ORDER);
     client
     .postApi("orders", payload)
-    .then(res => commit(CONFIRM_ORDER_SUCCESS, res.data))
+    .then(res => commit(CONFIRM_ORDER_SUCCESS, res))
     .catch(err => commit(CONFIRM_ORDER_FAILURE, err));
   },
   completeOrder({ commit }, payload) {
     commit(COMPLETE_ORDER);
     client
-    .createItems("order", payload)
-    .then(res => commit(COMPLETE_ORDER_SUCCESS, res.data))
+    .postApi(`order/${payload.order}`, payload)
+    .then(res => commit(COMPLETE_ORDER_SUCCESS, res))
     .catch(err => commit(COMPLETE_ORDER_FAILURE, err));
-  }
+  },
 };

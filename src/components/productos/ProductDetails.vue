@@ -21,7 +21,8 @@
                   </li>
               </ul>                            
               <div class="menu-info">                  
-                  <div>{{product.description || 'This is for sale'}}</div>
+                  <div class="mb-3">{{product.description || 'This is for sale'}}</div>
+                  <div class="mb-3"><routerlink>Size Guide</routerlink></div>
                   <form @submit.prevent="" id="productform">
                     <template v-for="(product_option, key) in getOptions()">
                       <div class="form-group" :key="key" :data-option="product_option.option_id">

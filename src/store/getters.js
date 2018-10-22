@@ -98,19 +98,32 @@ export const orderGetters = {
   },
   paymentMethods: state => state.payment_methods || [],
   orderID: state => state.order.id || false,
+  orderReference: state => state.order.reference || false,
   shippingInfo: state => state.order.address || false,
   shippingMethod: state => state.order.shipping || false,
-  shippingRate: state => {
+  shippingRate: (state) => {
     if (state.order.shipping !== 0) {
-      var shipping = state.shipping_methods.find(y => y.id == state.order.shipping)
-      return shipping.cost;
-    } else {
-      return 0;
+      const shipping = state.shipping_methods.find(y => y.id == state.order.shipping);
+      return shipping ? shipping.cost : 0;
     }
+    return 0;
   },
-  paymentMethod: state => state.order.payment || {},
+  paymentMethod: state => state.order.payment || false,
+  paymentName: (state, getters) => (id) => {
+    if (state.payment_methods && state.payment_methods.length > 0) {
+      const method = getters.paymentMethods.find(item => item.id == id);
+      return method ? method.name : '';
+    }
+    return '';
+  },
   tax: state => state.order.tax || 0,
   orderTotal: (state, getters) =>
     parseFloat(getters.subtotal) + parseFloat(getters.shippingRate) + parseFloat(getters.tax),
-  meta: state => key => state.order.meta[key] || 0,
+  orderMeta: state => (key) => {
+    if (state.order.meta && state.order.meta.length > 0) {
+      const meta = state.order.meta.find(item => item.key == key);
+      return meta.value ? meta.value : '';
+    }
+    return '';
+  },
 };

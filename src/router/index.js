@@ -12,6 +12,7 @@ import AboutRoutes from './about'
 import ContactRoutes from './contact'
 import ComplaintRoutes from './complaint'
 import TermsRoutes from './terms'
+import SuccessRoutes from './success'
 
 Vue.use(Router)
 //Vue.use(VueFormGenerator)
@@ -27,6 +28,7 @@ const router = new Router({
     ContactRoutes,
     ComplaintRoutes,
     TermsRoutes,
+    SuccessRoutes,
   ]
 });
 

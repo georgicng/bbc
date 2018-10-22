@@ -1,7 +1,7 @@
 <template>
   <section class="page-wrapper innerpage-section-padding">
      <div class="container-fluid">
-    <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
+    <form-wizard @on-complete="onComplete" @on-change="onChange" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
           <tab-content title="Shipping Address" icon="ti-user" :before-change="validateFirstTab">
               <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
               </vue-form-generator>
@@ -60,7 +60,7 @@
 
             <div class="innerpage-heading text-center">
                 <h3>Confirm Order</h3>
-                <p>for processing</p>
+                <p>We need to register your order</p>
             </div>
             <div class="order-list">
               <order-items :orders="orders" />
@@ -69,22 +69,21 @@
           
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
-            <template v-if="payment_mode == 'paystack'">
-                <paystack
-                    :amount="orderTotal * 100"
-                    :email="model.email"
-                    :paystackkey="paystackkey"
-                    :reference="reference"
-                    :callback="callback"
-                    :close="close"
-                    :embed="false"
+            <div class="innerpage-heading text-center">
+                <h3>Complete Order</h3>
+                <p>We need to confirm your Order</p>
+            </div>
+            <template v-if="paymentProvider == 'Paystack'">
+              <div class="payment-messag">Please click on the button below to make payment and complete the transaction</div>
+                <paystack v-bind="paymentProviderOption"
                 >
                   <i class="fas fa-money-bill-alt"></i>
                   Make Payment
                 </paystack>
             </template>
-             <template v-if="payment_mode == 'bank'">
-                <div class="bank-message" v-html="note"></div>
+             <template v-if="paymentProvider  == 'Bank Transfer'">
+               <div class="payment-messag">Find our bank transfer details below and <strong> click on the complete button to confirm the order</strong></div>
+                <div class="bank-message" v-html="getKey('bank_details')"></div>
             </template>
           </tab-content>
       </form-wizard>
@@ -111,7 +110,8 @@ export default {
     return {
       shipping: "",
       payment: "",
-      payment_mode: false,
+      paymentProvider: false,
+      paymentProviderOption: {},
       model: {
         first_name: "",
         last_name: "",
@@ -238,17 +238,17 @@ export default {
     total() {
       return this.$store.getters.orderTotal;
     },
+    email() {
+      return this.model.email;
+    },
     paystack() {
       return this.$store.getters.meta('paystack');
     },
     reference() {
-      return this.$store.getters.orderID;
+      return this.$store.getters.orderReference;
     }
   },
   methods: {
-    onComplete: function() {
-      alert("Yay. Done!");
-    },
     validateFirstTab: function() {
       this.$store.commit(ADD_SHIPPING_ADDRESS, this.model);
       return this.$refs.firstTabForm.validate();
@@ -262,6 +262,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.$store.dispatch('confirmOrder', this.$store.state.order)
           .then(res => {
+
             resolve(true);
           })
           .catch(err => {
@@ -269,10 +270,54 @@ export default {
           });
       });      
     },
-    callback: function(response){
+    onChange: function(prev, next) {
+      if (next == 3) {
+        this.paymentProvider = this.$store.getters.paymentName(this.payment);
+        if (this.paymentProvider == 'Paystack') {
+          this.$set(this.paymentProviderOption, 'amount', parseFloat(this.total) * 100);
+          this.$set(this.paymentProviderOption, 'email', this.email);
+          this.$set(this.paymentProviderOption, 'paystackkey', this.getKey('test_public_key'));
+          this.$set(this.paymentProviderOption, 'reference', this.reference);
+          this.$set(this.paymentProviderOption, 'callback', this.paystackCallback);
+          this.$set(this.paymentProviderOption, 'close', this.paystackClose);
+          this.$set(this.paymentProviderOption, 'embed', false);
+        }
+      }
     },
-    close: function(){
-    }
+    getKey(key) {
+      return this.$store.getters.orderMeta(key);
+    },
+    paystackCallback: function(response){
+      const payload = {
+        order: this.$store.getters.orderID,
+        reference: response
+      };
+        this.$store.dispatch('completeOrder', payload)
+          .then(res => {
+            console.log('goto success');
+            this.$router.push('/success');
+          })
+          .catch(err => {
+            console.log('try again');
+          });
+    },
+    paystackClose: function(){
+      console.log('close');
+    },    
+    onComplete: function() {
+      const payload = {
+        order: this.$store.getters.orderID,
+        status: 'Pending'
+      };
+      this.$store.dispatch('completeOrder', payload)
+          .then(res => {
+            console.log('goto success');
+            this.$router.push('/success');
+          })
+          .catch(err => {
+            console.log('try again');
+          });
+    },
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,
