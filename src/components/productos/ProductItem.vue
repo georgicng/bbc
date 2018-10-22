@@ -6,7 +6,7 @@
               <h4><router-link :to="'/details/'+product.id">{{product.name}}</router-link></h4>
               <h5>N{{product.price}}</h5>
               <p>{{product.category_id.data.name}}</p>
-              <product-button :product="product"></product-button>              
+              <router-link :to="'/details/'+product.id" class="btn">Buy Now<span><i class="fa fa-shopping-cart"></i></span></router-link>            
           </div><!-- end dish-list-text -->
       </div><!-- end dish-list -->
   </li>

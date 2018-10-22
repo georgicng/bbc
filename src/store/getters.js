@@ -15,6 +15,48 @@ export const productGetters = {
     }
     return state.product;
   },
+  productOptions: (state, getters) => (id) => {
+    const product = getters.productById(id);
+    if (product.options && product.options.data.length > 0) {
+      return product.options.data.reduce((groups, y) => {
+        const name = y.option_id.data.name;
+        if (groups[name] === undefined) {
+          groups[name] = {
+            option_id: y.option_id.data.id,
+            type: y.option_id.data.type,
+            name,
+          };
+        }
+        return groups;
+      }, {});
+    }
+    return {};
+  },
+  optionValues: (state, getters) => (id, optionId) => {
+    const product = getters.productById(id);
+    if (product.options && product.options.data.length > 0) {
+      return product.options.data
+        .filter(item => item.option_id.data.id == optionId)
+        .map((item) => {
+          return {
+            id: item.id,
+            name: item.option_value_id.data.value,
+            increment: item.price_increment,
+          };
+        });
+    }
+    return [];
+  },
+  optionIncrement: (state, getters) => (id, productOptionId) =>  {
+    const product = getters.productById(id);
+    if (product.options && product.options.data.length > 0) {
+      const item = product.options.data.find(obj => obj.id == productOptionId);
+      if (item && item.price_increment) {
+        return parseFloat(item.price_increment);
+      }
+    }
+    return 0;
+  },
   productCount: state => state.products.total,
 };
 

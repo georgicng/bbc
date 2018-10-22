@@ -4,7 +4,7 @@
     <!--enter-active-class="animated zoomIn"-->
   <!--&gt;-->
   <div class="page-wrapper innerpage-section-padding">
-    <product-details :product="product" :isAdding="true"></product-details>
+    <product-details :product="product"></product-details>
   </div>
   <!--</transition>-->
 </template>
@@ -47,11 +47,6 @@
     computed: {
       product () {
         return this.$store.getters.productById(this.$route.params['id'])
-      }
-    },
-    data () {
-      return {
-//        product: this.$store.getters.productById(this.$route.params['id'])
       }
     },
     components: {
