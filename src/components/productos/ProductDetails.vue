@@ -27,12 +27,12 @@
                       <div class="form-group" :key="key" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
                             <label :for="key">{{key}}</label>
-                            <input type="text" class="form-control" :id="key">                         
+                            <input type="text" class="form-control" :id="key" :name="key">                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
                         <label :for="key">{{key}}</label>
-                        <select class="form-control" :id="key" @change="updateIncrement()">
-                            <option value="*" :key="index">Select {{key}}</option>
+                        <select class="form-control" :id="key" :name="key" @change="updateIncrement()">
+                            <option value="*">Select {{key}}</option>
                                 <template v-for="(value, index) in getValues(product_option.option_id)">
                                   <option :value="value.id" :key="index">{{value.name}} (+ {{value.increment}})</option>
                                 </template>
@@ -42,7 +42,7 @@
                          <label :for="key">{{key}}</label>
                           <template v-for="(value, index) in getValues(product, product_option.option_id)">
                             <div class="radio" :key="index">
-                              <label><input type="radio" name="optradio" :value="value.id" @change="updateIncrement()">{{value.name}} (+ {{value.increment}})</label>
+                              <label><input type="radio" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} (+ {{value.increment}})</label>
                             </div>
                          </template>
                       </template>
@@ -50,7 +50,7 @@
                         <label :for="key">{{key}}</label>
                         <template v-for="(value, index) in getValues(product, product_option.option_id)">
                           <div class="checkbox" :key="index">
-                            <label><input type="checkbox" :value="value.id" @change="updateIncrement()">{{value.name}} (+ {{value.increment}})</label>
+                            <label><input type="checkbox" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} (+ {{value.increment}})</label>
                           </div>
                         </template>
                       </template>
@@ -76,10 +76,6 @@ import {
 import { API_ROOT } from "../../config";
 export default {
   props: ["product"],
-  mounted () {
-    console.log('product', this.product);
-    console.log('options', this.getOptions(this.product));
-  },
   data() {
     return {
       quantity: 1,
@@ -88,7 +84,8 @@ export default {
   },
   computed: {
     options() {
-      return {};
+      //add or item.value != '' or '*' to filter
+      return $('#productform').serializeArray().filter(item => item.name !== 'quantity');
     },
     price () {
       return (parseFloat(this.product.price)  + parseFloat(this.increment)) * parseInt(this.quantity);
@@ -160,12 +157,10 @@ export default {
         .each(function() {
           const value = $(this).val();
           if (value !== "*" && value !== "") {
-            console.log(value);
             price += self.getIncrement(value);
           }
         });
       this.increment = price;
-      console.log(price);
     }
   }
 };
