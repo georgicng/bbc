@@ -4,7 +4,7 @@
 				<div class="item-text dish-list-text">
 						<h4><a href="#">{{product.name}}</a></h4>
 						<p>category</p>
-						<h5>Qty: <input type="number" min="1" v-model="quantity" @change="update()" class="form-control"> x N{{product.price}}</h5>
+						<h5>Qty: <input type="number" min="1" v-model="quantity" @change="update()" class="form-control"> x N{{line.price}}</h5>
 				</div><!-- end item-text -->
 
 				<div class="item-img">

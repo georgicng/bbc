@@ -92,6 +92,9 @@ export default {
     },
     price () {
       return (parseFloat(this.product.price)  + parseFloat(this.increment)) * parseInt(this.quantity);
+    },
+    unitPrice () {
+      return parseFloat(this.product.price)  + parseFloat(this.increment);
     }
   },
   methods: {
@@ -105,7 +108,7 @@ export default {
       this.$store.commit(ADD_TO_CART, {
         productid: this.product.id,
         quantity: this.quantity,
-        price: this.price,
+        price: this.unitPrice,
         options: this.options
       }),
       this.$router.push("/cart");
