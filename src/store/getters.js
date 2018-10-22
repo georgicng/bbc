@@ -72,13 +72,7 @@ export const cartGetters = {
     if (!state.order.cart || state.order.cart.length == 0) {
       return 0;
     }
-    return state.order.cart.reduce((sum, item) => {
-      let increment = 0;
-      if (item.options && item.options.lenth > 0) {
-        increment = item.options.reduce((incrementTotal, option) => incrementTotal + parseFloat(option.increment), 0);
-      }
-      return sum + ((item.price + increment) * item.quantity);
-    }, 0);
+    return state.order.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   },
 };
 
