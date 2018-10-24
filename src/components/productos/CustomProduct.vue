@@ -10,10 +10,10 @@
                   </div>
                   <div class="menu-price">
                       <p>Price from</p>
-                      <h3>NGN {{price}}</h3>
+                      <h3>N{{product.price}}</h3>
                   </div>
               </div><!-- end page-title -->
-              <ul id="menu-gallery" class="gallery list-unstyled cS-hidden menu-gallery text-center">
+              <ul id="menu-gallery" class="gallery list-unstyled cS-hidden menu-gallery text-center mb-3">
                   <li :data-thumb="getImage(product)">
                       <div class="p-img">
                           <img :src="getImage(product)" :alt="product.name"/>
@@ -43,7 +43,7 @@
                          <label :for="key">{{key}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
                             <div class="radio" :key="index">
-                              <label><input type="radio" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} ...{{getTotal(value.increment)}}</label>
+                              <label><input type="radio" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
                             </div>
                          </template>
                       </template>
@@ -51,19 +51,23 @@
                         <label :for="key">{{key}}</label>
                         <template v-for="(value, index) in getValues(product_option.option_id)">
                           <div class="checkbox" :key="index">
-                            <label><input type="checkbox" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} ...{{getTotal(value.increment)}}</label>
+                            <label><input type="checkbox" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
                           </div>
                         </template>
                       </template>
                        </div>
                     </template>
-                     <div class="form-group">
-                            <label>Total :</label>
-                            <div class="price">N{{price}}</div>
+                      <div class="form-group">
+                            <label>Quantity :</label>
+                            <input type="text" class="form-control"  id="quantity" name="quantity" min="1" max="100" v-model="quantity">
                         </div>
+                        <div class="form-group">
+                            <label>Total :</label>
+                            <span class="price">N{{price}}</span>
+                        </div>                        
                         <button @click="addToCart" class="btn">Add to cart<span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
-                    </div>
+                  </div>
                   <div class="panel-group mb-3">
                     <div class="panel panel-default">
                       <div class="panel-heading">
@@ -216,7 +220,7 @@ export default {
 }
 .price {
   color: red;
-  font-size: 1.2rem;
+  font-size: 2rem;
   font-weight: 600;
 }
 </style>

@@ -1,7 +1,7 @@
-import Contact from '@/pages/Contact'
+import Contact from '@/pages/Contact';
 
 export default {
   path: '/contact',
   name: 'Contact',
-  component: Contact
-}
+  component: Contact,
+};

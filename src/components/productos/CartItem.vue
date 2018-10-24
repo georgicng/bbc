@@ -36,8 +36,11 @@ export default {
 	},
   computed: {
     product() {
-        return this.$store.getters.productById(this.line.productid)
-			},
+			if(this.line.productid == 12) {
+				return this.$store.getters.customProduct;
+			}
+      return this.$store.getters.productById(this.line.productid);
+		},
 		price() {
 			return this.line.price * this.quantity
 		}

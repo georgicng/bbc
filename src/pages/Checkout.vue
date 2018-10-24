@@ -11,7 +11,8 @@
               <div class="col-md-6">
                 <h1>Shipping Method</h1>
                 <div class="panel-group" id="accordion">
-                  <div class="panel panel-default" v-for="(value, key, index) in shipping_options" :key="key">
+                  <template v-for="(value, key, index) in shipping_options">
+                  <div class="panel panel-default"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
                     <div class="panel-heading" id="headingOne">
                       <h4 class="panel-title">
                         <a  data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
@@ -26,7 +27,7 @@
                               <div class="custom-control custom-radio" :key="item.id">
                               <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
                               <label class="custom-control-label" :for="'customRadio'+item.id">
-                                <h3>{{ item.title }} </h3> @ {{item.cost}}
+                                <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                               </label>
                               </div>
                             </template>
@@ -35,13 +36,25 @@
                           <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
                             <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
                             <label class="custom-control-label" :for="'customRadio'+item.id">
-                              <h3>{{ item.title }} </h3> @ {{item.cost}}
+                              <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                             </label>
                             </div>
-                        </template>
+                        </template>                        
                       </div>
                     </div>
                   </div>
+                  </template>
+                </div>
+                <div class="custom-control checkbox mb-3">
+                  <h4><label class="custom-control-label" for="express"><input type="checkbox" name="express" id="express" v-model="express">Express Delivery <span class="badge">N1000</span></label></h4>
+                  <div><strong>ETA:</strong> {{ETA}}</div>
+                </div>
+                <div class="custom-control custom-radio mb-3">
+                  <label class="custom-control-label" for="delivery_date">Delivery Date</label>
+                  <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date"></datepicker>
+                </div>
+                <div class="row checkbox">
+                  <h3>Total Shipping: <span class="label label-default">N{{shippingRate}}</span></h3>
                 </div>
               </div>
               <div class="col-md-6">
@@ -75,8 +88,7 @@
             </div>
             <template v-if="paymentProvider == 'Paystack'">
               <div class="payment-messag">Please click on the button below to make payment and complete the transaction</div>
-                <paystack v-bind="paymentProviderOption"
-                >
+                <paystack v-bind="paymentProviderOption">
                   <i class="fas fa-money-bill-alt"></i>
                   Make Payment
                 </paystack>
@@ -95,6 +107,7 @@
 import VueFormGenerator from "vue-form-generator"
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
+import Datepicker from 'vuejs-datepicker';
 import OrderItems from "../components/productos/OrderItems";
 import OrderTotals from "../components/productos/OrderTotals";
 import paystack from 'vue-paystack';
@@ -102,14 +115,14 @@ import {
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
   ADD_PAYMENT_METHOD,
+  ADD_EXPRESS_SHIPPING,
+  ADD_DELIVERY_DATE,
   CONFIRM_ORDER,
   COMPLETE_ORDER
 } from "../store/mutation-types";
 export default {
   data() {
     return {
-      shipping: "",
-      payment: "",
       paymentProvider: false,
       paymentProviderOption: {},
       model: {
@@ -120,7 +133,7 @@ export default {
         address: "",
         landmark: "",
         city: "",
-        alt_city: ""
+        alt_city: "",
       },
       formOptions: {
         validationErrorClass: "has-error",
@@ -152,7 +165,7 @@ export default {
             inputType: "text",
             placeholder: "Email",
             model: "email",
-            required: true,
+            required: false,
             validator: VueFormGenerator.validators.email,
             styleClasses: ""
           },
@@ -179,7 +192,7 @@ export default {
             inputType: "text",
             placeholder: "Nearest Landmark",
             model: "landmark",
-            required: true,
+            required: false,
             validator: VueFormGenerator.validators.string,
             styleClasses: ""
           },
@@ -246,6 +259,54 @@ export default {
     },
     reference() {
       return this.$store.getters.orderReference;
+    },
+    ETA() {
+      const today = new Date();
+      const time = today.getHours() ;
+      if (time < 13) {
+        return `Today after ${time < 8 ? 11 + ' AM' : time + 3 + ' PM' }`;
+      } else {
+        return "Tomorrow after 11 AM";
+      }
+      
+    },
+    disabledDates() {
+      return { days: [0], to: this.getDate() };
+    },
+    shipping: {
+      get () {
+        return this.$store.state.order.shipping;
+      },
+      set (value) {
+        this.$store.commit(ADD_SHIPPING_METHOD, value);
+      }
+    },
+    payment: {
+      get () {
+        return this.$store.state.order.payment;
+      },
+      set (value) {
+        this.$store.commit(ADD_PAYMENT_METHOD, value);
+      }
+    },
+    express: {
+      get () {
+        return this.$store.state.order.express || false;
+      },
+      set (value) {
+        this.$store.commit(ADD_EXPRESS_SHIPPING, value);
+      }
+    },
+    deliveryDate: {
+      get () {
+        return this.$store.state.order.delivery_date || this.getDate();
+      },
+      set (value) {
+        this.$store.commit(ADD_DELIVERY_DATE, value)
+      }
+    },
+    shippingRate() {
+      return this.$store.getters.shippingRate;
     }
   },
   methods: {
@@ -254,15 +315,18 @@ export default {
       return this.$refs.firstTabForm.validate();
     },
     validateSecondTab: function() {
-      this.$store.commit(ADD_SHIPPING_METHOD, this.shipping);
-      this.$store.commit(ADD_PAYMENT_METHOD, this.payment);
+      if(this.shipping == 0 || this.shipping == false) {
+        return false;
+      }
+      if(this.payment == 0 || this.payment == false) {
+        return false;
+      }
       return true;
     },
     validateThirdTab: function() {
       return new Promise((resolve, reject) => {
         this.$store.dispatch('confirmOrder', this.$store.state.order)
           .then(res => {
-
             resolve(true);
           })
           .catch(err => {
@@ -272,8 +336,8 @@ export default {
     },
     onChange: function(prev, next) {
       if (next == 3) {
-        this.paymentProvider = this.$store.getters.paymentName(this.payment);
-        if (this.paymentProvider == 'Paystack') {
+        const paymentProvider = this.$store.getters.paymentName(this.payment);
+        if (paymentProvider == 'Paystack') {
           this.$set(this.paymentProviderOption, 'amount', parseFloat(this.total) * 100);
           this.$set(this.paymentProviderOption, 'email', this.email);
           this.$set(this.paymentProviderOption, 'paystackkey', this.getKey('test_public_key'));
@@ -281,7 +345,9 @@ export default {
           this.$set(this.paymentProviderOption, 'callback', this.paystackCallback);
           this.$set(this.paymentProviderOption, 'close', this.paystackClose);
           this.$set(this.paymentProviderOption, 'embed', false);
+          console.log('paystack options', this.paymentProviderOption);
         }
+        this.paymentProvider = paymentProvider;
       }
     },
     getKey(key) {
@@ -294,7 +360,7 @@ export default {
       };
         this.$store.dispatch('completeOrder', payload)
           .then(res => {
-            console.log('goto success');
+            console.log('goto success', res);
             this.$router.push('/success');
           })
           .catch(err => {
@@ -318,6 +384,16 @@ export default {
             console.log('try again');
           });
     },
+    getDate() {
+      const today = new Date(); 
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate()+1);
+      if (tomorrow.getDay() == 0 || today.getHours() > 17) {
+        tomorrow.setDate(today.getDate()+2);
+      }
+      console.log('tomorrow', tomorrow);
+      return tomorrow;
+    }
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,
@@ -325,11 +401,14 @@ export default {
     TabContent,
     orderItems: OrderItems,
     orderTotals: OrderTotals,
-    paystack
+    paystack,
+    Datepicker
   }
 };
 </script>
 
 <style scoped>
-
+.mb-3 {
+  margin-bottom: 3rem;
+}
 </style>

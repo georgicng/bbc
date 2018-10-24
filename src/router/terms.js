@@ -1,7 +1,7 @@
-import Terms from '@/pages/Terms'
+import Terms from '@/pages/Terms';
 
 export default {
   path: '/terms',
   name: 'Terms',
-  component: Terms
-}
+  component: Terms,
+};

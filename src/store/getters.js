@@ -9,12 +9,13 @@ export const productGetters = {
     }
     return [];
   },
-  productById: (state, getters) => id => {
+  productById: (state, getters) => (id) => {
     if (getters.allProducts.length > 0) {
       return getters.allProducts.filter(p => p.id == id)[0];
     }
     return state.product;
   },
+  customProduct: state => state.custom,
   productOptions: (state, getters) => (id) => {
     const product = getters.productById(id);
     if (product.options && product.options.data.length > 0) {
@@ -82,7 +83,7 @@ export const orderGetters = {
     const cities = getters.shippingMethods
       .filter(x => x.shipping_method.data.id === 3)
       .map(y => y.title);
-    cities.push("Other");
+    cities.push('Other');
     return cities;
   },
   shippingList: (state) => {
@@ -104,9 +105,22 @@ export const orderGetters = {
   shippingRate: (state) => {
     if (state.order.shipping !== 0) {
       const shipping = state.shipping_methods.find(y => y.id == state.order.shipping);
+      if (shipping && state.order.express) {
+        return parseFloat(shipping.cost) + 1000;
+      }
       return shipping ? shipping.cost : 0;
     }
     return 0;
+  },
+  shippingName: (state, getters) => (id) => {
+    if (state.shipping_methods && state.shipping_methods.length > 0) {
+      const method = getters.shippingMethods.find(item => item.id == id);
+      if (method && state.order.express) {
+        return `Shipping: (${method.shipping_method.data.name} + Express)`;
+      }
+      return method ? method.shipping_method.data.name : '';
+    }
+    return '';
   },
   paymentMethod: state => state.order.payment || false,
   paymentName: (state, getters) => (id) => {

@@ -1,7 +1,7 @@
-import About from '@/pages/About'
+import About from '@/pages/About';
 
 export default {
   path: '/about',
   name: 'About',
-  component: About
-}
+  component: About,
+};

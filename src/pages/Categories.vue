@@ -35,12 +35,12 @@
 						</figure>
 					</div> <!-- card.// -->
 				</router-link>
-				<router-link :to="'/products'">
+				<router-link :to="'/custom'">
 					<div class="card shadow-lg my-3 border-0">
 						<figure class="itemside">
 							<img class="img-bg" height="120" src="static/images/items/item-sm.png">
 							<figcaption class="card-body">
-								<h2 class="title">Do something nice for me </h2>
+								<h2 class="title">Custom Cake</h2>
 								<span>Shop Now</span>
 							</figcaption>
 						</figure>
