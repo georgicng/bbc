@@ -27,12 +27,12 @@
                     <template v-for="(product_option, key) in getOptions()">
                       <div class="form-group" :key="key" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
-                            <label :for="key">{{key}}</label>
-                            <input type="text" class="form-control" :id="key" :name="key">                         
+                            <label :for="$options.filters.slugify(key)">{{key}}</label>
+                            <input type="text" class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)">                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
-                        <label :for="key">{{key}}</label>
-                        <select class="form-control" :id="key" :name="key" @change="updateIncrement()">
+                        <label :for="$options.filters.slugify(key)">{{key}}</label>
+                        <select class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)" @change="updateIncrement()">
                             <option value="*">Select {{key}}</option>
                                 <template v-for="(value, index) in getValues(product_option.option_id)">
                                   <option :value="value.id" :key="index">{{value.name}} ...{{getTotal(value.increment)}}</option>
@@ -43,7 +43,7 @@
                          <label :for="key">{{key}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
                             <div class="radio" :key="index">
-                              <label><input type="radio" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
+                              <label :for="$options.filters.slugify(key)+index"><input type="radio" :name="$options.filters.slugify(key)" :id="$options.filters.slugify(key)+index" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
                             </div>
                          </template>
                       </template>
@@ -51,10 +51,21 @@
                         <label :for="key">{{key}}</label>
                         <template v-for="(value, index) in getValues(product_option.option_id)">
                           <div class="checkbox" :key="index">
-                            <label><input type="checkbox" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
+                            <label :for="$options.filters.slugify(key)+index">
+                              <input type="checkbox" 
+                                :name="$options.filters.slugify(key)" 
+                                :id="$options.filters.slugify(key)+index" 
+                                :value="value.id" @change="updateIncrement()">
+                              {{value.name}}
+                            </label>
                           </div>
                         </template>
                       </template>
+                      <template v-if="product_option.type == 'textarea'">                         
+                            <label :for="$options.filters.slugify(key)">{{key}}</label>
+                            <textarea class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)"></textarea>                         
+                      </template>
+                      <div class="comment">{{product_option.comment}}</div>
                        </div>
                     </template>
                       <div class="form-group">
@@ -142,6 +153,7 @@ export default {
             groups[name] = {
               option_id: y.option_id.data.id,
               type: y.option_id.data.type,
+              comment: y.option_id.data.comment || '',
               name: name
             };
           }
@@ -184,6 +196,19 @@ export default {
             price += self.getIncrement(value);
           }
         });
+      
+      //add 1000 if all flavour selected
+      if ($('input[name=flavour]:checked').size() == 3) {
+        price += 1000;
+      }
+
+      //ensure not more than two sizes are selected
+      if($('input[name=color]:checked').length == 3) {
+          $('input[name=color]:not(:checked)').attr('disabled', 'disabled');
+      } else {
+        $('input[name=color]').removeAttr('disabled');
+      }
+
       this.increment = price;
     }
   }

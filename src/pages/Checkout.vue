@@ -22,7 +22,7 @@
                     </div>
                     <div :id="'collapse'+index" class="panel-collapse collapse in">
                       <div class="panel-body">
-                         <template v-if="key == 'City Shipping'">                         
+                         <template v-if="key == 'Deliver to me'">                         
                             <template v-for="item in value" v-if="model.city == item.title">
                               <div class="custom-control custom-radio" :key="item.id">
                               <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
@@ -30,7 +30,10 @@
                                 <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                               </label>
                               </div>
-                            </template>
+                            </template>                            
+                            <div class="custom-control checkbox mb-3" v-show="shippingName == 'Deliver to me'">
+                              <h4><label class="custom-control-label" for="express"><input type="checkbox" name="express" id="express" v-model="express">Express Delivery <span class="badge">N1000</span></label></h4>
+                            </div>
                         </template>
                         <template v-else>
                           <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
@@ -45,13 +48,17 @@
                   </div>
                   </template>
                 </div>
-                <div class="custom-control checkbox mb-3">
-                  <h4><label class="custom-control-label" for="express"><input type="checkbox" name="express" id="express" v-model="express">Express Delivery <span class="badge">N1000</span></label></h4>
-                  <div><strong>ETA:</strong> {{ETA}}</div>
-                </div>
                 <div class="custom-control custom-radio mb-3">
                   <label class="custom-control-label" for="delivery_date">Delivery Date</label>
                   <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date"></datepicker>
+                </div>
+                <div class="custom-control custom-radio mb-3">
+                  <label class="custom-control-label" for="delivery_date">Delivery Time</label>
+                  <select v-model="deliveryTime" name="delivery_date" id="delivery_date">
+                    <option value="*">Select delivery time</option>
+                    <option value="12-2">12 Noon - 2 PM</option>
+                    <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
+                  </select>
                 </div>
                 <div class="row checkbox">
                   <h3>Total Shipping: <span class="label label-default">N{{shippingRate}}</span></h3>
@@ -79,7 +86,11 @@
               <order-items :orders="orders" />
               <order-totals />              
             </div>
-          
+            <h4>
+              <label class="custom-control-label" for="tos">
+                <input type="checkbox" name="toc" id="tos" v-model="tos">I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link>
+              </label>
+            </h4>
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
             <div class="innerpage-heading text-center">
@@ -117,6 +128,7 @@ import {
   ADD_PAYMENT_METHOD,
   ADD_EXPRESS_SHIPPING,
   ADD_DELIVERY_DATE,
+  ADD_DELIVERY_TIME,
   CONFIRM_ORDER,
   COMPLETE_ORDER
 } from "../store/mutation-types";
@@ -125,6 +137,7 @@ export default {
     return {
       paymentProvider: false,
       paymentProviderOption: {},
+      tos: true,
       model: {
         first_name: "",
         last_name: "",
@@ -192,7 +205,7 @@ export default {
             inputType: "text",
             placeholder: "Nearest Landmark",
             model: "landmark",
-            required: false,
+            required: true,
             validator: VueFormGenerator.validators.string,
             styleClasses: ""
           },
@@ -273,12 +286,17 @@ export default {
     disabledDates() {
       return { days: [0], to: this.getDate() };
     },
+    shippingName() {
+      return this.$store.getters.shippingName(this.shipping);
+    },
     shipping: {
       get () {
         return this.$store.state.order.shipping;
       },
       set (value) {
-        this.$store.commit(ADD_SHIPPING_METHOD, value);
+        const payload = { id: value, type: this.getShippingName(value) };
+        console.log({payload});
+        this.$store.commit(ADD_SHIPPING_METHOD, payload);
       }
     },
     payment: {
@@ -299,15 +317,23 @@ export default {
     },
     deliveryDate: {
       get () {
-        return this.$store.state.order.delivery_date || this.getDate();
+        return this.$store.state.order.delivery_date || '*';
       },
       set (value) {
         this.$store.commit(ADD_DELIVERY_DATE, value)
       }
     },
+    deliveryTime: {
+      get () {
+        return this.$store.state.order.delivery_date || this.getDate();
+      },
+      set (value) {
+        this.$store.commit(ADD_DELIVERY_TIME, value)
+      }
+    },
     shippingRate() {
       return this.$store.getters.shippingRate;
-    }
+    },
   },
   methods: {
     validateFirstTab: function() {
@@ -324,15 +350,19 @@ export default {
       return true;
     },
     validateThirdTab: function() {
-      return new Promise((resolve, reject) => {
-        this.$store.dispatch('confirmOrder', this.$store.state.order)
-          .then(res => {
-            resolve(true);
-          })
-          .catch(err => {
-            reject(false);
-          });
-      });      
+       if (this.tos) {
+        return new Promise((resolve, reject) => {
+          this.$store.dispatch('confirmOrder', this.$store.state.order)
+            .then(res => {
+              resolve(true);
+            })
+            .catch(err => {
+              reject(false);
+            });
+        }); 
+      } else {
+        return false;
+      }    
     },
     onChange: function(prev, next) {
       if (next == 3) {
@@ -393,7 +423,10 @@ export default {
       }
       console.log('tomorrow', tomorrow);
       return tomorrow;
-    }
+    },
+    getShippingName(id) {
+      return this.$store.getters.shippingName(id);
+    },
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,

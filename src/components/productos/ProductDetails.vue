@@ -55,6 +55,10 @@
                           </div>
                         </template>
                       </template>
+                      <template v-if="product_option.type == 'textarea'">                         
+                            <label :for="key">{{key}}</label>
+                            <textarea class="form-control" :id="key" :name="key"></textarea>                         
+                      </template>
                        </div>
                     </template>
                      <div class="form-group">

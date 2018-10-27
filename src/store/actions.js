@@ -19,6 +19,9 @@ import {
   ALL_SHIPPING_METHODS_FAILURE,
   ALL_PAYMENT_METHODS_SUCCESS,
   ALL_PAYMENT_METHODS_FAILURE,
+  GET_COUPON_VALUE,
+  GET_COUPON_VALUE_SUCCESS,
+  GET_COUPON_VALUE_FAILURE,
   CONFIRM_ORDER,
   CONFIRM_ORDER_SUCCESS,
   CONFIRM_ORDER_FAILURE,
@@ -35,6 +38,7 @@ export const productActions = {
     const args = {
       depth: 2,
       limit: 10,
+      'filters[name][neq]': 'custom',
       offset,
     };
     client
@@ -82,6 +86,17 @@ export const orderActions = {
     .getItems('payment_methods')
     .then(res => commit(ALL_PAYMENT_METHODS_SUCCESS, res.data))
     .catch(err => commit(ALL_PAYMENT_METHODS_FAILURE, err));
+  },
+  getCouponValue({ commit }, payload) {
+    const query = {
+      single: 1,
+      'filters[code][eq]': payload,
+    };
+    commit(GET_COUPON_VALUE);
+    client
+    .getItems('coupons', query)
+    .then(res => commit(GET_COUPON_VALUE_SUCCESS, res.data))
+    .catch(err => commit(GET_COUPON_VALUE_FAILURE, err));
   },
   confirmOrder({ commit }, payload) {
     commit(CONFIRM_ORDER);

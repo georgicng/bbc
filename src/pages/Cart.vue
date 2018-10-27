@@ -7,6 +7,7 @@
             </div><!-- end innerpage-heading -->
             <template v-if="count > 0">
               <cart-items :orders="orders" />
+              <coupon v-show="discount <= 0" /> 
               <cart-totals link="products" /> 
             </template> 
             <template v-else>
@@ -22,20 +23,23 @@
 import { CLEAR_CART } from "../store/mutation-types";
 import CartItems from "../components/productos/CartItems";
 import CartTotals from "../components/productos/CartTotals";
+import Coupon from "../components/productos/Coupon";
 export default {
-  data() {
-    return {
-      count: this.$store.getters.count
-    };
-  },
   computed: {
+    count() {
+      return this.$store.getters.count;
+    },
     orders() {
       return this.$store.getters.allItems;
+    },
+    discount() {
+      return this.$store.getters.discount;
     }
   },
   components: {
     cartItems: CartItems,
-    cartTotals: CartTotals
+    cartTotals: CartTotals,
+    Coupon: Coupon
   },
   methods: {
     clear() {

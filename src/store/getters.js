@@ -115,9 +115,9 @@ export const orderGetters = {
   shippingName: (state, getters) => (id) => {
     if (state.shipping_methods && state.shipping_methods.length > 0) {
       const method = getters.shippingMethods.find(item => item.id == id);
-      if (method && state.order.express) {
+      /*if (method && state.order.express) {
         return `Shipping: (${method.shipping_method.data.name} + Express)`;
-      }
+      }*/
       return method ? method.shipping_method.data.name : '';
     }
     return '';
@@ -131,8 +131,18 @@ export const orderGetters = {
     return '';
   },
   tax: state => state.order.tax || 0,
+  discount: (state, getters) => {
+    if (state.order.coupon && state.coupon) {
+      if (state.coupon.type == 'amount') {
+        return parseFloat(state.coupon.discount);
+      } else if (state.coupon.type == 'percentage') {
+        return parseFloat(getters.subtotal) * (parseFloat(state.coupon.discount) / 100);
+      }
+    }
+    return 0;
+  },
   orderTotal: (state, getters) =>
-    parseFloat(getters.subtotal) + parseFloat(getters.shippingRate) + parseFloat(getters.tax),
+    (parseFloat(getters.subtotal) + parseFloat(getters.shippingRate) + parseFloat(getters.tax)) - parseFloat(getters.discount),
   orderMeta: state => (key) => {
     if (state.order.meta && state.order.meta.length > 0) {
       const meta = state.order.meta.find(item => item.key == key);

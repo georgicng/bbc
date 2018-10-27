@@ -19,7 +19,7 @@ const store = new Vuex.Store({
   strict: true,
   state: {
     //order items
-    order: { cart: [], shipping: 0, payment: 0, express: false },
+    order: { cart: [], shipping: 0, payment: 0, express: false, coupon: false },
     // ajax loader
     showLoader: true,
     // sidebar

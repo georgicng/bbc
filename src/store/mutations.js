@@ -20,6 +20,11 @@ import {
   ADD_SHIPPING_METHOD,
   ADD_EXPRESS_SHIPPING,
   ADD_DELIVERY_DATE,
+  ADD_DELIVERY_TIME,
+  ADD_COUPON,
+  GET_COUPON_VALUE,
+  GET_COUPON_VALUE_SUCCESS,
+  GET_COUPON_VALUE_FAILURE,
   ALL_SHIPPING_METHODS,
   ALL_SHIPPING_METHODS_SUCCESS,
   ALL_SHIPPING_METHODS_FAILURE,
@@ -87,9 +92,14 @@ export const cartMutations = {
 };
 
 export const orderMutations = {
-  [ADD_SHIPPING_ADDRESS]: (state, payload) => state.order.address = payload,
+  [ADD_SHIPPING_ADDRESS]: (state, payload) => {
+    Vue.set(state.order, 'address', payload);
+  },
   [ADD_SHIPPING_METHOD]: (state, payload) => {
-    state.order.shipping = payload;
+    if (payload.type != 'City Shipping') {
+      Vue.set(state.order, 'express', false);
+    }
+    Vue.set(state.order, 'shipping', payload.id);
   },
   [ADD_PAYMENT_METHOD]: (state, payload) => {
     state.order.payment = payload;
@@ -99,6 +109,9 @@ export const orderMutations = {
   },
   [ADD_DELIVERY_DATE]: (state, payload) => {
     Vue.set(state.order, 'delivery_date', payload);
+  },
+  [ADD_DELIVERY_TIME]: (state, payload) => {
+    Vue.set(state.order, 'delivery_time', payload);
   },
   [ALL_SHIPPING_METHODS]: (state) => {
     state.showLoader = true;
@@ -142,8 +155,22 @@ export const orderMutations = {
   [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
     state.showLoader = false;
     Vue.set(state, 'order', { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} });
+    delete state.coupon;
   },
   [COMPLETE_ORDER_FAILURE]: (state, payload) => {
+    state.showLoader = false;
+  },
+  [ADD_COUPON]: (state, payload) => {
+    Vue.set(state.order, 'coupon', payload);
+  },
+  [GET_COUPON_VALUE]: (state) => {
+    state.showLoader = true;
+  },
+  [GET_COUPON_VALUE_SUCCESS]: (state, payload) => {
+    state.showLoader = false;
+    Vue.set(state, 'coupon', payload);
+  },
+  [GET_COUPON_VALUE_FAILURE]: (state, payload) => {
     state.showLoader = false;
   },
 };
