@@ -10,10 +10,14 @@
 </template>
 
 <script>
-  import CustomProduct from '../components/productos/CustomProduct'
+  import CustomProduct from '../components/productos/CustomProduct';
+  import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
         this.$store.dispatch('customProduct')
+    },
+    mounted() {
+      this.$store.commit(PAGE_COVER, false);
     },
     computed: {
       product () {

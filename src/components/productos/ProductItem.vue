@@ -1,15 +1,15 @@
 <template>
-  <li>
-      <div class="dish-list">
-          <router-link :to="'/details/'+product.id"><img :src="getImage(product)" class="img-responsive" alt="dish-menu"></router-link>
+  <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="dish-list my-3">
+          <router-link :to="'/details/'+product.id"><img :src="getImage(product)" class="img-fluid" alt="dish-menu"></router-link>
           <div class="dish-list-text">
               <h4><router-link :to="'/details/'+product.id">{{product.name}}</router-link></h4>
               <h5>N{{product.price}}</h5>
-              <p>{{product.category_id.data.name}}</p>
+              <!--p>{{product.category_id.data.name}}</p-->
               <router-link :to="'/details/'+product.id" class="btn">Buy Now<span><i class="fa fa-shopping-cart"></i></span></router-link>            
           </div><!-- end dish-list-text -->
       </div><!-- end dish-list -->
-  </li>
+  </div>
 </template>
 
 <script>

@@ -10,7 +10,8 @@
 </template>
 
 <script>
-  import ProductDetails from '../components/productos/ProductDetails'
+  import ProductDetails from '../components/productos/ProductDetails';
+  import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
       if (!this.product.name) {
@@ -18,6 +19,7 @@
       }
     },
     mounted () {
+      this.$store.commit(PAGE_COVER, false);
       (function($) {
 	
         "use strict";

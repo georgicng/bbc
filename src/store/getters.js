@@ -1,5 +1,11 @@
 // ./src/store/getters
 //Con esto podemos traer la data de los productos (todos o por id) y de los manufacturers
+export const pageGetters = {
+  pageTitle: state => state.pageTitle,
+  pageIcon: state => state.pageIcon,
+  pageCover: state => state.pageCover,
+};
+
 export const productGetters = {
   allProducts: state => state.products.entries.reduce((acc, val) => acc.concat(val.items), []),
   productByPage: state => (pagenum) => {

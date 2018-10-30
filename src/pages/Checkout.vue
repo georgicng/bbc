@@ -1,6 +1,9 @@
 <template>
   <section class="page-wrapper innerpage-section-padding">
      <div class="container-fluid">
+       <div class="no-back">
+             <div class="row">
+                 <div class="col-sm-12 offset-lg-2 col-lg-8"> 
     <form-wizard @on-complete="onComplete" @on-change="onChange" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
           <tab-content title="Shipping Address" icon="ti-user" :before-change="validateFirstTab">
               <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
@@ -8,19 +11,19 @@
           </tab-content>
           <tab-content title="Shipping and Payment Method" icon="ti-settings" :before-change="validateSecondTab">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <h1>Shipping Method</h1>
-                <div class="panel-group" id="accordion">
+                <div class="panel-group my-3" id="accordion">
                   <template v-for="(value, key, index) in shipping_options">
-                  <div class="panel panel-default"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
+                  <div class="panel panel-default mb-3"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
                     <div class="panel-heading" id="headingOne">
-                      <h4 class="panel-title">
+                      <h4 class="panel-title font-weight-bold">
                         <a  data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
                           {{key}}
                         </a>
                       </h4>
                     </div>
-                    <div :id="'collapse'+index" class="panel-collapse collapse in">
+                    <div :id="'collapse'+index" class="panel-collapse collapse in show">
                       <div class="panel-body">
                          <template v-if="key == 'Deliver to me'">                         
                             <template v-for="item in value" v-if="model.city == item.title">
@@ -32,7 +35,7 @@
                               </div>
                             </template>                            
                             <div class="custom-control checkbox mb-3" v-show="shippingName == 'Deliver to me'">
-                              <h4><label class="custom-control-label" for="express"><input type="checkbox" name="express" id="express" v-model="express">Express Delivery <span class="badge">N1000</span></label></h4>
+                              <h4><input type="checkbox" name="express" id="express" v-model="express" class="custom-control-input"><label class="custom-control-label" for="express">Express Delivery <span class="badge">N1000</span></label></h4>
                             </div>
                         </template>
                         <template v-else>
@@ -48,25 +51,26 @@
                   </div>
                   </template>
                 </div>
-                <div class="custom-control custom-radio mb-3">
-                  <label class="custom-control-label" for="delivery_date">Delivery Date</label>
-                  <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date"></datepicker>
+                <h1>Shipping Date</h1>
+                <div class="form-group mb-3">
+                  <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
+                  <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
                 </div>
-                <div class="custom-control custom-radio mb-3">
-                  <label class="custom-control-label" for="delivery_date">Delivery Time</label>
-                  <select v-model="deliveryTime" name="delivery_date" id="delivery_date">
+                <div class="form-group mb-3">
+                  <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
+                  <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
                     <option value="*">Select delivery time</option>
                     <option value="12-2">12 Noon - 2 PM</option>
                     <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
                   </select>
                 </div>
-                <div class="row checkbox">
-                  <h3>Total Shipping: <span class="label label-default">N{{shippingRate}}</span></h3>
+                <div class="form-group">
+                  <label class="text-lilac font-weight-bold">Total Shipping: <span class="label label-default">N{{shippingRate}}</span></label>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <h1>Payment Method</h1>
-                <div v-for="item in payment_options"  class="custom-control custom-radio panel" :key="item.id">
+                <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
                   <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
                   <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
                     <h3>{{ item.name }}</h3>
@@ -80,17 +84,20 @@
 
             <div class="innerpage-heading text-center">
                 <h3>Confirm Order</h3>
-                <p>We need to register your order</p>
+                <p>We need to save your order</p>
             </div>
             <div class="order-list">
               <order-items :orders="orders" />
               <order-totals />              
             </div>
-            <h4>
-              <label class="custom-control-label" for="tos">
-                <input type="checkbox" name="toc" id="tos" v-model="tos">I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link>
-              </label>
-            </h4>
+            <div class="custom-control checkbox my-3">
+              <h4>
+                <input type="checkbox" name="toc" id="tos" v-model="tos" class="custom-control-input">
+                <label class="custom-control-label" for="tos">
+                  I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link>
+                </label>
+              </h4>
+            </div>
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
             <div class="innerpage-heading text-center">
@@ -110,6 +117,9 @@
             </template>
           </tab-content>
       </form-wizard>
+       </div>
+             </div>
+    </div>  
       </div>
   </section>
 </template>
@@ -130,7 +140,10 @@ import {
   ADD_DELIVERY_DATE,
   ADD_DELIVERY_TIME,
   CONFIRM_ORDER,
-  COMPLETE_ORDER
+  COMPLETE_ORDER,
+  PAGE_TITLE,
+  PAGE_ICON,
+  PAGE_COVER, 
 } from "../store/mutation-types";
 export default {
   data() {
@@ -250,6 +263,11 @@ export default {
     if (this.$store.getters.shippingMethod) {
       this.shipping = this.$store.getters.shippingMethod;
     }
+  },
+  mounted () {
+    this.$store.commit(PAGE_TITLE, 'Checkout');
+    this.$store.commit(PAGE_ICON, 'fa fa-thumbs-up');
+    this.$store.commit(PAGE_COVER, true);
   },
   computed: {
     shipping_options() {

@@ -1,8 +1,7 @@
 <template>
-  <section class="page-wrapper innerpage-section-padding">
     <div id="menu-detail-page">
       <div class="container-fluid">
-          <div class="menu-detail">
+          <div class="menu-detail offset-lg-2 col-lg-8">
               <div class="menu-title">
                   <div class="menu-name">
                       <p>Product Name</p>
@@ -13,13 +12,19 @@
                       <h3>N{{product.price}}</h3>
                   </div>
               </div><!-- end page-title -->
+              </div>
+              <div class="no-back">
+             <div class="row">
+                 <div class="col-sm-12 col-md-6 offset-lg-2 col-lg-4"> 
               <ul id="menu-gallery" class="gallery list-unstyled cS-hidden menu-gallery text-center mb-3">
                   <li :data-thumb="getImage(product)">
                       <div class="p-img">
                           <img :src="getImage(product)" :alt="product.name"/>
                       </div>
                   </li>
-              </ul>                            
+              </ul> 
+               </div> 
+                <div class="col-sm-12 col-md-6 col-lg-4">                            
               <div class="menu-info">                  
                   <div class="mb-3" v-html="product.description"></div>
                   <div class="form mb-3">
@@ -27,11 +32,11 @@
                     <template v-for="(product_option, key) in getOptions()">
                       <div class="form-group" :key="key" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
-                            <label :for="$options.filters.slugify(key)">{{key}}</label>
+                            <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
                             <input type="text" class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)">                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
-                        <label :for="$options.filters.slugify(key)">{{key}}</label>
+                        <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
                         <select class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)" @change="updateIncrement()">
                             <option value="*">Select {{key}}</option>
                                 <template v-for="(value, index) in getValues(product_option.option_id)">
@@ -40,7 +45,7 @@
                             </select>
                       </template>
                        <template v-else-if="product_option.type == 'radio'">
-                         <label :for="key">{{key}}</label>
+                         <label :for="key" class="font-weight-bold">{{key}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
                             <div class="radio" :key="index">
                               <label :for="$options.filters.slugify(key)+index"><input type="radio" :name="$options.filters.slugify(key)" :id="$options.filters.slugify(key)+index" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
@@ -48,7 +53,7 @@
                          </template>
                       </template>
                       <template v-else-if="product_option.type == 'checkbox'">
-                        <label :for="key">{{key}}</label>
+                        <label :for="key" class="font-weight-bold">{{key}}</label>
                         <template v-for="(value, index) in getValues(product_option.option_id)">
                           <div class="checkbox" :key="index">
                             <label :for="$options.filters.slugify(key)+index">
@@ -62,27 +67,27 @@
                         </template>
                       </template>
                       <template v-if="product_option.type == 'textarea'">                         
-                            <label :for="$options.filters.slugify(key)">{{key}}</label>
+                            <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
                             <textarea class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)"></textarea>                         
                       </template>
-                      <div class="comment">{{product_option.comment}}</div>
+                      <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
                        </div>
                     </template>
                       <div class="form-group">
-                            <label>Quantity :</label>
+                            <label class="font-weight-bold">Quantity :</label>
                             <input type="text" class="form-control"  id="quantity" name="quantity" min="1" max="100" v-model="quantity">
                         </div>
                         <div class="form-group">
-                            <label>Total :</label>
+                            <label class="font-weight-bold">Total :</label>
                             <span class="price">N{{price}}</span>
                         </div>                        
-                        <button @click="addToCart" class="btn">Add to cart<span><i class="fa fa-shopping-cart"></i></span></button>
+                        <button @click="addToCart" class="btn btn-orange">Add to cart <span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
                   </div>
-                  <div class="panel-group mb-3">
+                  <div class="panel-group my-3">
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h4 class="panel-title">
+                        <h4 class="panel-title p-3 mb-2 bg-light text-dark">
                           <a data-toggle="collapse" href="#collapse1">Size Examples</a>
                         </h4>
                       </div>
@@ -93,9 +98,10 @@
                   </div>                 
               </div><!-- end menu-info -->              
           </div>
+          </div>
+          </div>
       </div><!-- end container-fluid -->
     </div>
-  </section>
 </template>
 
 <script>
@@ -240,12 +246,12 @@ export default {
   font-size: 20px;
   font-weight: bold;
 }
-.mb-3 {
-  margin-bottom: 3rem;
-}
 .price {
   color: red;
   font-size: 2rem;
   font-weight: 600;
+}
+#menu-gallery li img {
+    max-height: 450px;
 }
 </style>

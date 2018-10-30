@@ -49,12 +49,29 @@ Author:			StarRestaurant
 	z-index: 9999;
 }
 
+body,
+.btn{
+	line-height: 1.42857143;
+}
+
+.btn{
+	font-size:0.875rem;
+}
+
 html,body{
 	height:100%;
 }
 
-p,ul,a,.btn,span,input,select,textarea,label, table, blockquote, small, .cart-item .total, .cart-info h4, .order-name h3, .faq-block .panel-default .panel-title, #coming-soon-page ul li{
+p,ul,a,.btn,span,input,select,textarea,label, table, blockquote, small, .cart-item .total, .cart-info h4, .order-name h3, .faq-block .card .faq-title, #coming-soon-page ul li, .form-profile-img .custom-file-label::after{
 	font-family: 'Open Sans',sans-serif;
+}
+
+h1,h2,h3,h4,h5,input,select,textarea, #mySidenav #web-name h2 span, .header-logo h4 span, .header-log h4 a, .dish-list-text h4 a, #footer h3 span, .order-item-info h4 a, .user-profile-heading h3 span, #coming-soon-page h2 span, #coming-soon-page ul li span, .form-profile-img .custom-file-label{
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.page-heading, .flexslider li h1, .page-cover h3{
+	font-family: 'Great Vibes', cursive;
 }
 
 p,ul{
@@ -64,22 +81,86 @@ p,ul{
 
 p{
 	color:#737373;
+	margin-bottom:10px;
 }
 
 ul{
 	margin-bottom:0px;
 }
 
-h1,h2,h3,h4,h5,input,select,textarea, #mySidenav #web-name h2 span, .header-logo h4 span, .header-log h4 a, .dish-list-text h4 a, #footer h3 span, .order-item-info h4 a, .user-profile-heading h3 span, #coming-soon-page h2 span, #coming-soon-page ul li span{
-	font-family: 'Roboto Condensed', sans-serif;
+.list-inline{
+	margin-left:-5px;	
 }
 
-.page-heading, .flexslider li h1, .page-cover h3{
-	font-family: 'Great Vibes', cursive;
+.list-inline-item:not(:last-child),
+.list-inline-item{
+    margin-right:0px;
+	padding:0px 5px;
 }
 
-h1,h2,h3,h4,h5{
+h1,h2,h3,h4,h5,h6{
 	margin-top:0px;
+    line-height: 1.1;
+	margin-bottom:10px;
+}
+
+.h1,h1{
+	font-size:36px
+}
+
+.h2,h2{
+	font-size:30px
+}
+
+.h3,h3{
+	font-size:24px
+}
+
+.h4,h4{
+	font-size:18px
+}
+
+.h5,h5,.dropdown-menu{
+	font-size:14px
+}
+
+.h6,h6{
+	font-size:12px
+}
+
+hr{
+	margin:20px 0px;	
+}
+
+.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+    padding: 5px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 8px;
+}
+
+.list-group-item.b3-list-group-item{
+	border:0px;
+	padding:0px;
+}
+
+.form-group{
+	margin-bottom:15px;
+}
+
+.form-control,
+select.form-control:not([size]):not([multiple]){
+	height:34px;
+	font-size:14px;
+}
+
+textarea.form-control{
+	height:auto;
+}
+
+label{
+	margin-bottom:5px;
 }
 
 a {
@@ -203,7 +284,7 @@ a:hover{
 .mg-t-10{
 	margin-top:10px;
 }
-		
+
 .page-heading.white-heading,
 .btn-orange,
 .btn-orange:hover,
@@ -229,24 +310,24 @@ a:hover{
 #banner-1,
 #banner-2 p,
 .service-block .fa,
-.menu .nav-tabs li.active a,
+.menu .nav-tabs li a.active,
 .menu .dish-list:hover .btn,
 .menu .dish-list:hover .btn .fa,
 .menu.black-menu .dish-list-text .btn .fa,
 .menu.black-menu .dish-list-text h4 a,
 .menu.black-menu .owl-carousel.owl-theme .owl-controls div,
 #testimonial.text-white .item .reviewer-text blockquote,
-#testimonial.text-white .item .reviewer-text small,
+#testimonial.text-white .item .reviewer-text .blockquote-footer,
 #newsletter p,
-#newsletter form .input-group-btn .btn:hover,
+#newsletter form .input-group-append .btn:hover,
 .page-cover h3,
 .page-cover .breadcrumb li + li:before,
 .page-cover .breadcrumb li a,
 .page-cover .breadcrumb li.active,
-.pages .pagination li:first-child a,
-.pages .pagination li:last-child a,
-.pages .pagination li.active a,
-.pages .pagination li:hover a,
+.pages .pagination li:first-child a.page-link,
+.pages .pagination li:last-child a.page-link,
+.pages .pagination li.active a.page-link,
+.pages .pagination li:hover a.page-link,
 .form-page-connect-social li .btn,
 .form-page-connect-social li .btn.any,
 #filter-buttons button.active,
@@ -260,7 +341,7 @@ a:hover{
 	color:white;
 }
 
-#newsletter form .input-group-btn .btn{
+#newsletter form .input-group-append .btn{
 	background:white;
 }
 
@@ -462,6 +543,7 @@ a:hover{
 #mySidenav .list-group .list-group-item{
 	font-size:14px;
 	color:#212121;
+	padding:10px 15px;
 }
 
 #mySidenav .list-group-item .sidebar-icon{
@@ -543,7 +625,7 @@ a:hover{
 }
 
 .shc-sidebar .cart-info{
-	margin-bottom:50px;
+	margin:30px 0px 50px;
 }
 
 .cart-list li{
@@ -683,17 +765,15 @@ a:hover{
 	font-weight:bold;
 }
 
-.user-prf-sidebar .user-prf-sidebar-links li{
-	border-bottom:1px solid rgba(255,255,255,0.05);
-}
-
-.user-prf-sidebar .user-prf-sidebar-links li a{
+.user-prf-sidebar .user-prf-sidebar-links a{
 	color:#f2f2f2;
 	display:block;
 	padding:10px 15px;
+	border-bottom:1px solid rgba(255,255,255,0.05);
+	font-size:14px;
 }
 
-.user-prf-sidebar .user-prf-sidebar-links li a .fa{
+.user-prf-sidebar .user-prf-sidebar-links a .fa{
 	width:20px;
 	margin-right:10px;
 }
@@ -806,6 +886,7 @@ a:hover{
 
 .header .nav-bar{
 	padding:17px 0px 14px;
+	overflow:hidden;
 }
 
 .header .nav-bar .header-logo h4{
@@ -978,7 +1059,7 @@ a:hover{
 	margin-bottom:15px;
 }
 
-#services .service-block .fa.border{
+#services .service-block .fa.service-icon-border{
 	font-size:25px;
 	border:3px dashed white;
 }
@@ -1011,9 +1092,8 @@ a:hover{
 }
 
 .menu .nav-tabs li{
-	float:none;
-	display:inline-block;
 	margin-bottom:0px;
+	margin:0px 3px;
 }
 
 .menu .nav-tabs li a{
@@ -1021,9 +1101,10 @@ a:hover{
 	border:0px;
 	background:transparent;
 	border-radius:0px;
+	padding:10px 15px;
 }
 
-.menu .nav-tabs li.active a{
+.menu .nav-tabs li a.active{
 	font-weight:bold;
 	border:0px;
 }
@@ -1093,7 +1174,15 @@ a:hover{
 	margin-right:6px;
 }
 
-.menu.box-menu ul li.menu-no-pad-tb{
+.menu.box-menu ul{
+	overflow:hidden;
+	padding:0px 6px;
+}
+
+.menu.box-menu ul li{
+	width:33.33333333%;
+	float:left;
+	height:100%;
 	padding:0px 10px;
 }
 
@@ -1138,6 +1227,13 @@ a:hover{
 	font-size:13px;
 	margin-top:5px;
 	word-wrap:break-word;
+}
+
+@media(min-width:992px){
+	
+	.menu.box-menu ul li{
+		width:16.66666667%;
+	}
 }
 
 /************** BOX-MENU-2 ***************/
@@ -1199,6 +1295,7 @@ a:hover{
 	border-left:0px;
 	margin-bottom:10px;
 	color:grey;
+	padding:10px 20px;
 }
 
 #owl-testimonial .item .reviewer-text .star-rating li{
@@ -1209,10 +1306,11 @@ a:hover{
 	font-size:13px;
 }
 
-#owl-testimonial .item .reviewer-text small{
+#owl-testimonial .item .reviewer-text .blockquote-footer{
 	margin-top:15px;
 	font-weight:bold;
 	font-size:13px;
+	display:block;
 }
 
 #owl-testimonial .item .reviewer-img img{
@@ -1256,11 +1354,18 @@ a:hover{
 }
 
 #newsletter form input,
-#newsletter form .input-group-btn .btn{
+#newsletter form .input-group-append .btn{
 	border-radius:0px;
+	height:46px;
 }
 
-#newsletter form .input-group-btn .btn:hover{
+#newsletter form .input-group-append .btn{
+	font-size:18px;	
+	padding:10px 16px;
+	color:#333;
+}
+
+#newsletter form .input-group-append .btn:hover{
 	background:#222;
 }
 
@@ -1335,7 +1440,7 @@ a:hover{
 }
 
 #footer .footer-social-2{
-	margin:15px 0px 8px;
+	margin:15px 0px;
 }
 
 #footer .footer-social-2 li .fab{
@@ -1383,15 +1488,16 @@ a:hover{
 	font-weight:bold;
 	text-align:center;
 	font-size:28px;
-	margin:19px 0px 10px;
+	padding:19px 0px 10px;
+	margin:0px;
 }
 
-.page-cover h3.mg-b-0{
-	margin-bottom:0px;	
+.page-cover h3.pd-b-0{
+	padding-bottom:0px;	
 }
 
-.page-cover h3.mg-t-0{
-	margin-top:0px;	
+.page-cover h3.pd-t-0{
+	padding-top:0px;	
 }
 
 .page-cover .fa{
@@ -1435,39 +1541,29 @@ a:hover{
    ----------------------------------------------------- */
 
 .pages{
-	text-align:center;
+	margin:60px 0px 25px;
 }
 
-.pages .pagination li a{
-	margin-top:14px;
-}
-
-.pages .pagination li a{
+.pages .pagination li a.page-link{
 	font-size:14px;
 	margin-left:1px;
 	margin-right:1px;
-	padding:6px 14px;
-}
-
-.pages .pagination li:first-child a,
-.pages .pagination li:last-child a{
-	padding:6px 16px;
-}
-
-.pages .pagination li a{
+	margin-top:14px;
+	padding:8px 14px 7px;
 	border-radius:0px;
 	background:#e6e7e8;
 	color:#808285;
 	border:0px;
 }
 
-.pages .pagination li:first-child a,
-.pages .pagination li:last-child a{
+.pages .pagination li:first-child a.page-link,
+.pages .pagination li:last-child a.page-link{
+	padding:8px 16px 7px;
 	background:#4d4d4d;
 }
 
-.pages .pagination li:first-child:hover a,
-.pages .pagination li:last-child:hover a{
+.pages .pagination li:first-child:hover a.page-link,
+.pages .pagination li:last-child:hover a.page-link{
 	background:#404040;
 }
 
@@ -1489,12 +1585,12 @@ a:hover{
 }
 
 .comments-wrapper .comment-block h4{
-	margin-bottom:6px;
+	margin-bottom:8px;
 	font-size:17px;
 }
 
 .comments-wrapper .comment-block .star-rating{
-	margin:0px;
+	margin:4px 0px 0px;
 	font-size:11px;
 	float:right;
 }
@@ -1546,12 +1642,14 @@ a:hover{
 .custom-form select:focus,
 .custom-form textarea:focus{
 	box-shadow:none;
+	background:#f2f2f2;
 }
 
-.custom-form .input-group-addon{
+.custom-form .input-group-text{
 	border:0px;
 	border-radius:0px;
 	background:#f2f2f2;
+	font-size:14px;
 }
 
 .custom-form label{
@@ -1559,12 +1657,6 @@ a:hover{
 	font-size:13px;
 	color:#737373;
 	line-height:1.5em;
-}
-
-.custom-form input[type="checkbox"]{
-	margin-right:8px;
-	position:relative;
-	top:2px;
 }
 
 .custom-form .btn{
@@ -1595,6 +1687,7 @@ a:hover{
 	margin-top:35px;
 	border-top:1px solid #ededed;
 	padding-top:30px;
+	overflow:hidden;
 }
 
 .form-page-connect-social h4{
@@ -1647,6 +1740,10 @@ a:hover{
    ----------------------------------------------------- */
 
 /************ MENU-GRID-PAGE *************/
+
+.menu-grid{
+	overflow:hidden;
+}
 
 .menu-grid .tab-content li{
 	float:left;
@@ -1744,7 +1841,7 @@ a:hover{
 	margin:20px 0px 10px;
 }
 
-.star-rating li{
+.star-rating li.list-inline-item{
 	color:#fecd2d;
 	padding:0px;
 }
@@ -1758,36 +1855,28 @@ a:hover{
 .menu-detail .nav-tabs{
 	margin:45px 0px 20px;
 	border-bottom-color:#212121;
-	text-align:center;
 }
 
 .menu-detail .nav-tabs li{
-	background:none;
 	font-size:16px;
 	text-transform:uppercase;
 	font-weight:bold;
-	border-bottom:3px solid transparent;
-	float:none;
-	display:inline-block;
+	margin-left:3px;
+	margin-right:3px;
 }
 
 .menu-detail .nav-tabs li a{
 	border:0px;
 	color:#212121;
+	padding:11px 15px;
+}
+
+.menu-detail .nav-tabs li a.active{
+	border-bottom:3px solid transparent;
 }
 
 .menu-detail .nav-tabs li a span{
 	margin-right:8px;
-}
-
-.menu-detail .nav-tabs li a:hover{
-	background:none;
-}
-
-.menu-detail .nav-tabs li.active a:hover,
-.menu-detail .nav-tabs li.active a:focus{
-	background:none;
-	border:0px;
 }
 
 /* -----------------------------------------------------
@@ -1895,6 +1984,10 @@ a:hover{
 	margin:15px auto;
 }
 
+#user-profile-page .edit-link a{
+	font-size:14px;	
+}
+
 #user-profile-page .table-responsive{
 	border:0px;
 	margin-top:20px;
@@ -1939,11 +2032,40 @@ a:hover{
 	box-shadow:0px 0px 10px rgba(0,0,0,0.3);
 }
 
-.form-profile-img input{
+.form-profile-img .custom-file{
 	overflow:hidden;
 	width:70%;
 	margin:0 auto;
-	border-left:0px;
+	border:0px;
+	height: 24px;
+	display:block;
+}
+
+.form-profile-img .custom-file-label {
+    height: 24px;
+    padding: 1px 8px;
+    color: #333;
+    background-color: #f2f2f2;
+    border:0px;
+    border-radius:0;
+	margin:0px;
+	font-size:14px;
+	padding-left:80px;
+}
+
+.form-profile-img .custom-file-input{
+	height:22px;
+}
+
+.form-profile-img .custom-file-label::after{
+	height:24px;
+	padding:1px 12px;
+	border-radius:4px;
+	color:white;
+	background-color:#333;
+	border:0px;
+	left:0px;
+	max-width:72px;
 }
 
 /* -----------------------------------------------------
@@ -2126,86 +2248,87 @@ a:hover{
 	font-size:20px;
 }
 
-.order-panel{
+.order-card{
 	border-radius:0px;
 	margin-bottom:15px;
 }
 
-.order-panel .panel-heading{
+.order-card .card-header{
 	background:#f2f2f2;
 	border-left:4px solid;
 	border-radius:0px;
 	border-bottom:0px;
+	padding:10px 15px;
 }
 
-.order-panel .panel-heading .order-title{
+.order-card .card-header .order-title{
 	overflow:hidden;
 }
 
-.order-panel .panel-heading .order-name h3{
+.order-card .card-header .order-name h3{
 	color:#1b1819;
 	margin-bottom:8px;
 	font-size:15px;
 }
 
-.order-panel .panel-heading .order-name h3 span{
+.order-card .card-header .order-name h3 span{
 	font-weight:bold;
 }
 
-.order-panel .panel-heading .order-name ul{
+.order-card .card-header .order-name ul{
 	margin-bottom:0px;
 	font-size:12px;
 	color:grey;
 }
 
-.order-panel .panel-heading .order-name ul li .fa{
+.order-card .card-header .order-name ul li .fa{
 	margin-right:7px;
 	color:grey;
 }
 
-.order-panel .panel-heading .order-title .order-status{
+.order-card .card-header .order-title .order-status{
 	font-size:16px;
 	text-align:center;
 	width:45px;
 }
 
-.order-panel .panel-heading .order-title .order-status .status-text{
+.order-card .card-header .order-title .order-status .status-text{
 	position:relative;
 	top:-2px;
 	font-size:13px;
 }
 
-.order-panel .panel-heading .order-title .order-status.success .fa,
-.order-panel .panel-heading .order-title .order-status.success .status-text{
+.order-card .card-header .order-title .order-status.success .fa,
+.order-card .card-header .order-title .order-status.success .status-text{
 	color:green;
 }
 
-.order-panel .panel-heading .order-title .order-status.fail .fa,
-.order-panel .panel-heading .order-title .order-status.fail .status-text{
+.order-card .card-header .order-title .order-status.fail .fa,
+.order-card .card-header .order-title .order-status.fail .status-text{
 	color:red;
 }
 
-.order-panel .panel-body{
+.order-card .card-body{
 	padding:25px 15px;
 }
 
-.order-panel .panel-body .order-list li{
+.order-card .card-body .order-list li{
 	overflow:hidden;
 }
 
-.order-panel .panel-body .order-list li .order{
+.order-card .card-body .order-list li .order{
 	overflow:hidden;
 }
 
-.order-panel .panel-body .order-item-info p:nth-of-type(1){
+.order-card .card-body .order-item-info p:nth-of-type(1){
 	font-size:14px;
 }
 
-.order-panel .panel-body .order-item-info p:nth-of-type(1) span{
+.order-card .card-body .order-item-info p:nth-of-type(1) span{
 	font-weight:bold;
 }
 
-.order-panel .panel-body .order-list{
+.order-card .card-body .order-list{
 	border-top:0px;
 }
 
@@ -2241,7 +2364,7 @@ a:hover{
 	color:orange;
 }
 
-#testimonial-page .item .reviewer-text small{
+#testimonial-page .item .reviewer-text .blockquote-footer{
 	color:#212121;
 }
 
@@ -2495,39 +2618,40 @@ a:hover{
 	margin:10px 0px 0px;
 }
 
-.faq-block .panel{
+.faq-block .card{
 	box-shadow:none;
 	margin-bottom:15px;
 }
 
-.faq-block .panel:last-child{
+.faq-block .card:last-child{
 	margin-bottom:0px;
 }
 
-.faq-block .panel-default .panel-heading{
+.faq-block .card .card-header{
 	border-bottom:0px;
 	padding:0px;
 	position:relative;
 	overflow:hidden;
 }
 
-.faq-block .panel-default .panel-heading h4{
+.faq-block .card .card-header h4{
 	line-height:1.4em;
+	margin-bottom:0px;
 }
 
-.faq-block .panel-default .panel-heading a{
+.faq-block .card .card-header a{
 	padding:10px 15px;
 	display:block;
 	text-decoration:none;
 }
 
-.faq-block .panel-default .panel-title{
+.faq-block .card .faq-title{
 	padding-right:33px;
 	font-size:14px;
 	color:#4d4d4d;
 }
 
-.faq-block .panel-default .panel-title::before{
+.faq-block .card .faq-title::before{
 	color:white;
 	content:'\f107';
 	font-family:'Font Awesome 5 Free';
@@ -2543,7 +2667,7 @@ a:hover{
 	font-weight:bold;
 }
 
-.faq-block .panel-default .panel-title::after{
+.faq-block .card .faq-title::after{
 	content:'';
 	position:absolute;
 	top:0;
@@ -2554,8 +2678,13 @@ a:hover{
 	transform:skewX(-25deg);
 }
 
-.faq-block .panel-default .panel-body p{
+.faq-block .card .card-body{
+	padding:15px;	
+}
+
+.faq-block .card .card-body p{
 	font-size:13px;
+	margin-bottom:10px;
 }
 
 /************** PRICING PAGE **************/

@@ -4,23 +4,24 @@
       	<div id="contact-page">
           <div class="container-fluid text-center">
               <div class="innerpage-heading">
-                  <h3>Contact us</h3>
-                  <p>Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
-            matter of hours to help you.</p>
+                  <h3 class="page-heading">Contact us</h3>
+                  <hr class="page-heading-line">
+                  <p>Do you have any questions? Please do not hesitate to contact us directly.</p>
               </div><!-- end innerpage-heading -->
-               <div class="row">
+              <div class="no-back">
+             <div class="row">
                   <!--Grid column-->
-                  <div class="col-md-6">                    
+                  <div class="col-md-6 offset-lg-2 col-lg-4 my-3">                    
                     <form id="contact-form" @submit.prevent="processForm">
                           <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form"></vue-form-generator>
                           <!--Grid row-->
                           <div class="text-center text-md-left">
-                            <button type="submit" class="btn">Send</button>
+                            <button type="submit" class="btn btn-orange">Send</button>
                         </div>
                       </form>
                       <div class="status form-group" v-html="status"></div>
-                  </div>
-                  <div class="col-md-6">
+                  </div>                 
+                  <div class="col-md-6 col-lg-4 my-3">
                       <ul class="list-unstyled">
                           <li><i class="fa fa-map-marker fa-2x"></i>
                               <p>Order and pick up point: cutlery restaurant. Odessey
@@ -37,7 +38,8 @@
                           </li>
                       </ul>
                   </div>
-               </div>
+                </div>
+    </div>
           </div><!-- end container-fluid -->
       </div>
     </section>
@@ -45,9 +47,15 @@
 
 <script>
 import VueFormGenerator from "vue-form-generator";
+import { PAGE_TITLE, PAGE_ICON, PAGE_COVER } from "../store/mutation-types";
 import { client } from "../api";
 export default {
   name: "contact",
+  mounted () {
+    this.$store.commit(PAGE_TITLE, 'Contact');
+    this.$store.commit(PAGE_ICON, 'fas fa-phone');
+    this.$store.commit(PAGE_COVER, true);
+  },
   data() {
     return {
       model: {

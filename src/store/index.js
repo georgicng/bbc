@@ -2,8 +2,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
-import { productGetters, manufacturerGetters, cartGetters, orderGetters } from './getters';
-import { productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations } from './mutations';
+import { pageGetters, productGetters, manufacturerGetters, cartGetters, orderGetters } from './getters';
+import { pageMutations, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations } from './mutations';
 import { productActions, manufacturerActions, orderActions } from './actions';
 
 Vue.use(Vuex);
@@ -40,9 +40,12 @@ const store = new Vuex.Store({
     cities: [],
     // all manufacturers
     manufacturers: [],
+    pageTitle: '',
+    pageIcon: '',
+    pageCover: true,
   },
-  mutations: Object.assign({}, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations),
-  getters: Object.assign({}, productGetters, manufacturerGetters, cartGetters, orderGetters),
+  mutations: Object.assign({}, pageMutations, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations),
+  getters: Object.assign({}, pageGetters, productGetters, manufacturerGetters, cartGetters, orderGetters),
   actions: Object.assign({}, productActions, manufacturerActions, orderActions),
   plugins: [vuexLocalStorage.plugin]
 });

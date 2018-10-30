@@ -1,6 +1,10 @@
 //Estas variables (o constantes) nos permiten definir
 //el nombre de una mutacion reemplazando, esto se utiliza
 //para evitar posibles errores tipograficos entre componentes
+export const PAGE_TITLE = 'PAGE_TITLE';
+export const PAGE_ICON = 'PAGE_ICON';
+export const PAGE_COVER = 'PAGE_COVER';
+
 export const ALL_MANUFACTURERS = 'ALL_MANUFACTURER';
 export const ALL_MANUFACTURERS_SUCCESS = 'ALL_MANUFACTURER_SUCCESS';
 export const ALL_MANUFACTURERS_FAILURE = 'ALL_MANUFACTURER_FAILURE';

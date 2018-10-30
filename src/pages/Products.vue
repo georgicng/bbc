@@ -1,23 +1,28 @@
 <template>
-  <div id="menu-page" class="menu-grid">
+  <div id="menu-page" class="page-wrapper innerpage-section-padding">
       <div class="container-fluid text-center menu">
           <div class="innerpage-heading">
-              <h3>Cakes</h3>
+              <h3 class="page-heading">Cakes</h3>
+              <hr class="page-heading-line">
           </div><!-- end innerpage-heading -->
           
-          <div id="breakfast-dishes" class="tab-content">                  
+          <div id="breakfast-dishes" class="no-back">                  
             <product-list :products="products"></product-list>
-
-            <paginate
-              v-model="currentPage"
-              :page-count="total"
-              :page-range="5"
-              :click-handler="changePage"
-              :prev-text="'Prev'"
-              :next-text="'Next'"
-              :container-class="'pagination'"
-              :page-class="'page-item'">
-            </paginate>
+            <nav class="my-3 d-flex justify-content-center">
+              <paginate
+                v-model="currentPage"
+                :page-count="total"
+                :page-range="5"
+                :click-handler="changePage"
+                :prev-text="'Prev'"
+                :next-text="'Next'"
+                :container-class="'pagination'"
+                :page-class="'page-item'"
+                :page-link-class="'page-link'"
+                :prev-link-class="'page-link'"
+                :next-link-class="'page-link'">
+              </paginate>
+            </nav>
           </div>
               
       </div><!-- end container-fluid -->
@@ -25,8 +30,9 @@
 </template>
 
 <script>
-  import Paginate from 'vuejs-paginate'
-  import ProductList from '../components/productos/ProductList.vue'
+  import Paginate from 'vuejs-paginate';
+  import ProductList from '../components/productos/ProductList.vue';
+  import { PAGE_COVER } from "../store/mutation-types";
   export default {
     name: 'products',
     data () {
@@ -34,6 +40,9 @@
       }
     },
     props: ['page', 'filter'],
+    mounted() {
+      this.$store.commit(PAGE_COVER, false);
+    },
     created () {
       this.$store.dispatch('allProducts', { page: this.page });
     },

@@ -3,12 +3,14 @@
 	<div id="tos-page">
         <div class="container-fluid">
             <div class="innerpage-heading  text-center">
-                <h3>Terms and Conditions</h3>
+                <h3 class="page-heading">Terms and Conditions</h3>
+                <hr class="page-heading-line">
                 <p>Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully 
-        before using the http://www.mywebsite.com (change this) website and the My Mobile App (change this) mobile application 
-        (the "Service") operated by My Company (change this) ("us", "we", or "our").</p>
+        before using our website.</p>
             </div><!-- end innerpage-heading -->
-             <div class="row">    
+            <div class="no-back">
+             <div class="row">
+                 <div class="col-sm-12 offset-lg-2 col-lg-8">    
                 <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. 
                     These Terms apply to all visitors, users and others who access or use the Service. By accessing or using the Service you 
                     agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.</p>
@@ -40,7 +42,9 @@
                 </p>
                 <h3>Contact Us</h3>
                 <p>If you have any questions about these Terms, please contact us.</p>
-            </div>            
+            </div> 
+            </div><!-- end container-fluid -->
+    </div>          
         </div><!-- end container-fluid -->
     </div>
    
@@ -48,13 +52,19 @@
 </template>
 
 <script>
+import { PAGE_TITLE, PAGE_ICON, PAGE_COVER } from "../store/mutation-types";
 export default {
-  name: "terms",
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
-  }
+    name: "terms",
+    data() {
+        return {
+        msg: "Welcome to Your Vue.js App"
+        };
+    },
+    mounted () {
+        this.$store.commit(PAGE_TITLE, 'Terms');
+        this.$store.commit(PAGE_ICON, 'fas fa-phone');
+        this.$store.commit(PAGE_COVER, true);
+    },
 };
 </script>
 

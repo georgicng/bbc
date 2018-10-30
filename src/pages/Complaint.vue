@@ -4,10 +4,13 @@
       <div id="complaint-page">
             <div class="container-fluid text-center">
                 <div class="innerpage-heading">
-                    <h3>Lodge a Complaint</h3>
-                    <p>Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
-            matter of hours to help you.</p>
+                    <h3 class="page-heading">Lodge a Complaint</h3>
+                    <hr class="page-heading-line">
+                    <p>Do you have any complaint about your order? Please do let us know, so we can help.</p>
                 </div><!-- end innerpage-heading -->
+                <div class="no-back">
+             <div class="row">
+                 <div class="col-sm-12 offset-lg-2 col-lg-8">
                 <form id="support-ticket"  @submit.prevent="processForm">
                     <!--Grid row-->
                     <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form">
@@ -24,10 +27,12 @@
                                     @file="onFile"
                                     @load="onLoad" />
                         
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-orange">Submit</button>
                 </form>
                 <div class="status form-group" v-html="status"></div>
-                
+                 </div>
+                </div>
+    </div>
             </div><!-- end container-fluid -->
         </div>
                 
@@ -39,6 +44,7 @@
 import { client } from "../api";
 import VueBase64FileUpload from "vue-base64-file-upload";
 import VueFormGenerator from "vue-form-generator";
+import { PAGE_TITLE, PAGE_ICON, PAGE_COVER } from "../store/mutation-types";
 export default {
   name: "complaint",
   data() {
@@ -55,7 +61,7 @@ export default {
         validationErrorClass: "has-error",
         validationSuccessClass: "has-success",
         validateAfterChanged: true,
-        validateAfterLoad: true,
+        validateAfterLoad: false,
       },
       contactSchema: {
         fields: [
@@ -99,6 +105,11 @@ export default {
       status: "",
       file: ""
     };
+  },
+  mounted () {      
+    this.$store.commit(PAGE_ICON, 'fas fa-users');
+    this.$store.commit(PAGE_TITLE, 'Support');
+    this.$store.commit(PAGE_COVER, true);
   },
   components: {
     VueBase64FileUpload,

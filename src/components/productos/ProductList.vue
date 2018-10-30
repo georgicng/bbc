@@ -1,9 +1,9 @@
 <template>
-  <ul class="list-unstyled">
+  <div class="row">
       <template >
         <product-item v-for="(product, index) in products" :product="product" :key="index"></product-item>
       </template>
-  </ul>
+  </div>
 </template>
 
 <script>

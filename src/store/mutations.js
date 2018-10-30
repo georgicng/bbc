@@ -1,5 +1,8 @@
 //Importamos nuestras constantes 
 import {
+  PAGE_TITLE,
+  PAGE_ICON,
+  PAGE_COVER,
   PRODUCT_BY_ID,
   PRODUCT_BY_ID_SUCCESS,
   PRODUCT_BY_ID_FAILURE,
@@ -41,6 +44,19 @@ import {
   ERROR_MSG,
 } from './mutation-types'; 
 import Vue from 'vue';
+
+export const pageMutations = {
+  [PAGE_TITLE]: (state, payload) => {
+    state.pageTitle = payload;
+  },
+  [PAGE_ICON]: (state, payload) => {
+    state.pageIcon = payload;
+  },
+  [PAGE_COVER]: (state, payload) => {
+    state.pageCover = payload;
+  },
+};
+
 export const productMutations = {
   [ALL_PRODUCTS](state) {
     state.showLoader = true;
