@@ -4,7 +4,7 @@
   <div class="sidenav-content">
     <div id="mySidenav" class="sidenav" :class="{ 'to-left-toggle' : showNav }" >
         <div id="web-name">
-            <h2> <span>BBC</span></h2>             	
+            <h2> <img src="static/images/logo.png" class="logo" height="800"></h2>             	
             <ul class="main-menu-social list-inline list-unstyled text-center">
                 <li class="list-inline-item"><a href="#"><span><i class="fab fa-facebook-f"></i></span></a></li>
                 <li class="list-inline-item"><a href="#"><span><i class="fab fa-pinterest"></i></span></a></li>
@@ -45,7 +45,64 @@
             <div class="overlay-black" v-show="showNav || showCart"></div>
             
             <!--========= HEADER =========-->
-            <div class="header">                               
+            <div class="header-lg d-none d-lg-block bg-secondary">
+              <div class="container">
+                <div class="head">
+                  <div class=" logo">
+                    <a href="index.html"><img src="static/images/logo.png" class="logo" height="100"></a>	
+                  </div>
+                </div>
+              </div>
+              <div class="header-top">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-5 offset-md-2  header-login">
+                      <nav class="ml-auto">
+                        <router-link to="/terms">Terms and Conditions</router-link>
+                        <router-link to="/cart">Cart</router-link>
+                        <router-link to="/checkout">Checkout</router-link>
+                      </nav>
+                    </div>                      
+                    <div class="col-sm-5 header-social">		
+                      <nav class="mr-auto">
+                        <a href="#"><span><i class="fab fa-facebook-f"></i></span></a>
+                        <a href="#"><span><i class="fab fa-instagram"></i></span></a>
+                        <a href="#"><span><i class="fab fa-twitter"></i></span></a>
+                        <a href="#"><span><i class="fab fa-google-plus-g"></i></span></a>
+                      </nav>					
+                    </div>
+                  </div>
+                </div>
+              </div>
+                
+              <div class="container">                
+                <div class=" row head-top">                  
+                  <div class="col-sm-8 offset-md-2">
+                    <nav class="navbar navbar-expand navbar-light bg-light" role="navigation">            
+                        <ul class="navbar-nav">
+                          <li class="nav-item"><router-link to="/" class="nav-link">Home</router-link></li>
+                          <li class="nav-item"><router-link to="/categories" class="nav-link">Products</router-link></li>
+                          <li class="nav-item"><router-link to="/about" class="nav-link">About</router-link></li>                          
+                          <li class="nav-item"><router-link to="/contact" class="nav-link">Contact</router-link></li>
+                          <li class="nav-item"><router-link to="/complaint" class="nav-link">Support</router-link></li>
+                        </ul>
+                    </nav>
+                  </div>
+                  <div class="col-sm-2 search-right">                    
+                      <div class="cart box_1">
+                        <a href="checkout.html">
+                        <h3> <div class="total">
+                          <span class="simpleCart_total">$0.00</span></div>
+                          <img src="images/cart.png" alt=""></h3>
+                        </a>
+                        <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
+
+                      </div>					
+                  </div>
+                </div>	
+              </div>	
+            </div>
+            <div class="header d-lg-none">                               
                 <div class="fixed-header">
                 	<div class="container-fluid">
                     	<div class="row">
@@ -85,7 +142,7 @@
                   <li class="list-inline-item"><a href="#"><span><i class="fab fa-twitter"></i></span></a></li>
                   <li class="list-inline-item"><a href="#"><span><i class="fab fa-dribbble"></i></span></a></li>
               </ul>
-              <p class="copyright">© 2018 <a href="#"><span><i class="far fa-star"></i></span>BBC</a>. All rights reserved.</p>
+              <p class="copyright">© 2018 <a href="#">ButterBakes Cakes</a>. All rights reserved.</p>
           </div><!-- end container-fluid -->
       </section>
            <!--====== LOADER =====-->
@@ -99,6 +156,7 @@
 import CartItems from "./components/productos/CartItems";
 import CartTotals from "./components/productos/CartTotals";
 import toastr from "toastr";
+import 'toastr/build/toastr.css';
 import { ERROR_MSG, ADD_TO_CART, PAGE_COVER } from "./store/mutation-types";
 export default {
   name: "app",
@@ -195,5 +253,10 @@ export default {
 }
 .header {
     height: 80px;
+}
+.logo {
+    text-align: center;
+    position: absolute;
+    top: 0;
 }
 </style>

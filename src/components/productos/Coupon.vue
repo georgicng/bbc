@@ -1,8 +1,8 @@
 <template>
   <div class="form-group">
     <label for="coupon">Enter Promo Code</label>
-    <input type="text" class="form-control" id="coupon" v-model="coupon">
-    <button @click="getCoupon">Redeem</button>
+    <input type="text" class="form-control" id="coupon" v-model="coupon" placeholder="test with LICIOUS">
+    <button @click="getCoupon"  class="my-3 btn btn-orange">Redeem</button>
   </div>
 </template>
 

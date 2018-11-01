@@ -352,13 +352,25 @@ export default {
     shippingRate() {
       return this.$store.getters.shippingRate;
     },
+    scriptLoaded: function() {
+        /**
+         * TODO:
+         * Find a fix to move promise away from computed
+         **/
+        /* eslint-disable vue/no-async-in-computed-properties */
+        return new Promise((resolve) => {
+            this.loadScript(() => {
+                resolve()
+            })
+        })
+    }
   },
   methods: {
-    validateFirstTab: function() {
+    validateFirstTab() {
       this.$store.commit(ADD_SHIPPING_ADDRESS, this.model);
       return this.$refs.firstTabForm.validate();
     },
-    validateSecondTab: function() {
+    validateSecondTab() {
       if(this.shipping == 0 || this.shipping == false) {
         return false;
       }
@@ -367,7 +379,7 @@ export default {
       }
       return true;
     },
-    validateThirdTab: function() {
+    validateThirdTab() {
        if (this.tos) {
         return new Promise((resolve, reject) => {
           this.$store.dispatch('confirmOrder', this.$store.state.order)
@@ -382,7 +394,7 @@ export default {
         return false;
       }    
     },
-    onChange: function(prev, next) {
+    onChange(prev, next) {
       if (next == 3) {
         const paymentProvider = this.$store.getters.paymentName(this.payment);
         if (paymentProvider == 'Paystack') {
@@ -401,7 +413,7 @@ export default {
     getKey(key) {
       return this.$store.getters.orderMeta(key);
     },
-    paystackCallback: function(response){
+    paystackCallback(response){
       const payload = {
         order: this.$store.getters.orderID,
         reference: response
@@ -415,9 +427,56 @@ export default {
             console.log('try again');
           });
     },
-    paystackClose: function(){
+    paystackClose(){
       console.log('close');
-    },    
+    },
+    loadScript(callback) {
+        const script = document.createElement('script')
+        script.src = 'https://js.paystack.co/v1/inline.js'
+        document.getElementsByTagName('head')[0].appendChild(script)
+        if (script.readyState) {  // IE
+            script.onreadystatechange = () => {
+                if (script.readyState === 'loaded' || script.readyState === 'complete') {
+                    script.onreadystatechange = null
+                    callback()
+                }
+            }
+        } else {  // Others
+            script.onload = () => {
+                callback()
+            }
+        }
+    },
+    payWithPaystack() {
+        this.scriptLoaded.then(() => {
+            const paystackOptions = {
+                key: this.paystackkey,
+                email: this.email,
+                amount: this.amount,
+                ref: this.reference,
+                callback: (response) => {
+                    this.callback(response)
+                },
+                onClose: () => {
+                    this.close()
+                },
+                metadata: this.metadata,
+                currency: this.currency,
+                plan: this.plan,
+                quantity: this.quantity,
+                subaccount: this.subaccount,
+                transaction_charge: this.transaction_charge,
+                bearer: this.bearer
+            }
+            if (this.embed) {
+                paystackOptions.container = 'paystackEmbedContainer'
+            }
+            const handler = window.PaystackPop.setup(paystackOptions)
+            if (!this.embed) {
+                handler.openIframe()
+            }
+        })
+    },  
     onComplete: function() {
       const payload = {
         order: this.$store.getters.orderID,
@@ -459,7 +518,4 @@ export default {
 </script>
 
 <style scoped>
-.mb-3 {
-  margin-bottom: 3rem;
-}
 </style>
