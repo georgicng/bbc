@@ -12,13 +12,11 @@
              <div class="row">
                   <!--Grid column-->
                   <div class="col-md-6 offset-lg-2 col-lg-4 my-3">                    
-                    <form id="contact-form" @submit.prevent="processForm">
-                          <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form"></vue-form-generator>
+                          <vue-form-generator @validated="onValidated" :model="model" :schema="contactSchema" :options="formOptions" :isNewModel="true" ref="vfg"></vue-form-generator>
                           <!--Grid row-->
                           <div class="text-center text-md-left">
-                            <button type="submit" class="btn btn-orange">Send</button>
+                            <button @click="processForm" :disabled="!valid" class="btn btn-orange">Send</button>
                         </div>
-                      </form>
                       <div class="status form-group" v-html="status"></div>
                   </div>                 
                   <div class="col-md-6 col-lg-4 my-3">
@@ -47,6 +45,7 @@
 
 <script>
 import VueFormGenerator from "vue-form-generator";
+import "vue-form-generator/dist/vfg-core.css"
 import { PAGE_TITLE, PAGE_ICON, PAGE_COVER } from "../store/mutation-types";
 import { client } from "../api";
 export default {
@@ -59,15 +58,14 @@ export default {
   data() {
     return {
       model: {
-        name: "",
-        subject: "",
-        email: "",
-        message: ""
+        name: null,
+        subject: null,
+        email: null,
+        message: null
       },
       formOptions: {
-        validationErrorClass: "has-error",
-        validationSuccessClass: "has-success",
-        validateAfterChanged: true
+        validateAfterChanged: true,
+        validateAfterLoad: true,
       },
       contactSchema: {
         fields: [
@@ -77,8 +75,13 @@ export default {
             placeholder: "Name",
             model: "name",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your name is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -86,8 +89,13 @@ export default {
             placeholder: "Subject",
             model: "subject",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "The subject is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -95,20 +103,32 @@ export default {
             placeholder: "Email",
             model: "email",
             required: true,
-            validator: VueFormGenerator.validators.email,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.email.locale({
+                fieldIsRequired: "Your email is required!",
+                invalidEmail: "Please enter a valid e-mail address!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "textArea",
             placeholder: "Description",
             model: "description",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "The message cannot be empty",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           }
         ]
       },
-      status: ""
+      status: "",
+      valid: false,
     };
   },
   components: {
@@ -116,17 +136,24 @@ export default {
   },
   methods: {
     processForm: function() {
-        if (this.$refs.form.validate()) {
+        if (this.$refs.vfg.validate()) {
           client
             .createItem("enquiries", this.model)
             .then(res => {
               this.model = {};
+              this.valid = false;
               this.status = `Your message has been sent`;
+              this.$router.push('/success');
             })
             .catch(err => {
               this.status = `Could't process your request, please try again`;
             });
         }
+    },
+    onValidated(isValid, errors) {
+      if (isValid) {
+        this.valid = true;
+      }
     }
   }
 };

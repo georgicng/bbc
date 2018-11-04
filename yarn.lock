@@ -7286,6 +7286,10 @@ vue-perfect-scrollbar@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/vue-perfect-scrollbar/-/vue-perfect-scrollbar-0.1.0.tgz#be12c23d1753a013fa81ceb9872cb5fc0b1b4960"
 
+vue-plugin-load-script@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vue-plugin-load-script/-/vue-plugin-load-script-1.1.0.tgz#51a1ad26d9e1774453cee173fdd596994d6d5840"
+
 vue-router@^2.7.0:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"
@@ -7323,6 +7327,10 @@ vuejs-datepicker@^1.5.3:
 vuejs-paginate@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/vuejs-paginate/-/vuejs-paginate-2.0.1.tgz#373ed6d692dec4113d37aa9467f945da3a2bd9af"
+
+vuelidate@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.4.tgz#5a0e54be09ac0192f1aa3387d74b92e0945bf8aa"
 
 vuex-persist@^1.7.2:
   version "1.7.2"

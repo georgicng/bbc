@@ -33,11 +33,11 @@
                       <div class="form-group" :key="key" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
                             <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
-                            <input type="text" class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)">                         
+                            <input type="text" class="form-control" :id="$options.filters.slugify(key)" :name="key">                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
                         <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
-                        <select class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)" @change="updateIncrement()">
+                        <select class="form-control" :id="$options.filters.slugify(key)" :name="key" @change="updateIncrement()">
                             <option value="*">Select {{key}}</option>
                                 <template v-for="(value, index) in getValues(product_option.option_id)">
                                   <option :value="value.id" :key="index">{{value.name}} ...{{getTotal(value.increment)}}</option>
@@ -47,28 +47,27 @@
                        <template v-else-if="product_option.type == 'radio'">
                          <label :for="key" class="font-weight-bold">{{key}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
-                            <div class="radio" :key="index">
-                              <label :for="$options.filters.slugify(key)+index"><input type="radio" :name="$options.filters.slugify(key)" :id="$options.filters.slugify(key)+index" :value="value.id" @change="updateIncrement()">{{value.name}}</label>
+                            <div class="custom-control custom-radio" :key="index">
+                              <input type="radio" class="custom-control-input" :name="key" :id="$options.filters.slugify(key)+index" :value="value.id" @change="updateIncrement()">
+                              <label class="custom-control-label" :for="$options.filters.slugify(key)+index">{{value.name}}</label>
                             </div>
                          </template>
                       </template>
                       <template v-else-if="product_option.type == 'checkbox'">
                         <label :for="key" class="font-weight-bold">{{key}}</label>
                         <template v-for="(value, index) in getValues(product_option.option_id)">
-                          <div class="checkbox" :key="index">
-                            <label :for="$options.filters.slugify(key)+index">
-                              <input type="checkbox" 
-                                :name="$options.filters.slugify(key)" 
+                            <div class="custom-control custom-checkbox" :key="index">
+                              <input type="checkbox" class="custom-control-input"
+                                :name="key" 
                                 :id="$options.filters.slugify(key)+index" 
                                 :value="value.id" @change="updateIncrement()">
-                              {{value.name}}
-                            </label>
-                          </div>
+                              <label class="custom-control-label" :for="$options.filters.slugify(key)+index">{{value.name}}</label>
+                            </div>
                         </template>
                       </template>
                       <template v-if="product_option.type == 'textarea'">                         
                             <label :for="$options.filters.slugify(key)" class="font-weight-bold">{{key}}</label>
-                            <textarea class="form-control" :id="$options.filters.slugify(key)" :name="$options.filters.slugify(key)"></textarea>                         
+                            <textarea class="form-control" :id="$options.filters.slugify(key)" :name="key"></textarea>                         
                       </template>
                       <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
                        </div>
@@ -83,22 +82,23 @@
                         </div>                        
                         <button @click="addToCart" class="btn btn-orange">Add to cart <span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
-                  </div>
-                  <div class="panel-group my-3">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h4 class="panel-title p-3 mb-2 bg-light text-dark">
-                          <a data-toggle="collapse" href="#collapse1">Size Examples</a>
-                        </h4>
-                      </div>
-                      <div id="collapse1" class="panel-collapse collapse">
-                        <div class="panel-body">Insert Images here</div>
-                      </div>
-                    </div>
-                  </div>                 
+                  </div>                
               </div><!-- end menu-info -->              
           </div>
           </div>
+           <div class="row my-4">
+            <div class="offset-lg-2 col-lg-8">
+              <ul class="nav nav-tabs justify-content-center">
+                  <li class="nav-item"><a class="nav-link active" href="#size" data-toggle="tab"><span><i class="fa fa-info"></i></span> Size Examples</a></li>
+              </ul>
+              
+              <div class="tab-content">
+                  <div id="size" class="tab-pane active">
+                      <p>Insert Images here</p>
+                  </div>
+              </div><!-- end tab-content -->  
+            </div>
+            </div>
           </div>
       </div><!-- end container-fluid -->
     </div>
@@ -204,15 +204,15 @@ export default {
         });
       
       //add 1000 if all flavour selected
-      if ($('input[name=flavour]:checked').size() == 3) {
+      if ($('input[name=Flavour]:checked').size() == 3) {
         price += 1000;
       }
 
       //ensure not more than two sizes are selected
-      if($('input[name=color]:checked').length == 3) {
-          $('input[name=color]:not(:checked)').attr('disabled', 'disabled');
+      if($('input[name=Color]:checked').length == 3) {
+          $('input[name=Color]:not(:checked)').attr('disabled', 'disabled');
       } else {
-        $('input[name=color]').removeAttr('disabled');
+        $('input[name=Color]').removeAttr('disabled');
       }
 
       this.increment = price;
@@ -253,5 +253,24 @@ export default {
 }
 #menu-gallery li img {
     max-height: 450px;
+}
+.no-back .nav-tabs li {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.no-back .nav-tabs li a {
+    border: 0px;
+    color: #212121;
+    padding: 11px 15px;
+}
+.no-back .nav-tabs li a.active {
+    border-bottom: 3px solid transparent;
+}
+.no-back .nav-tabs li a.active {
+    border-color: #ee4899;
+    color: #ee4899;
 }
 </style>

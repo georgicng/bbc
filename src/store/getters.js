@@ -81,6 +81,31 @@ export const cartGetters = {
     }
     return state.order.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   },
+  optionDescription: (state, getters) => (productid, options) => {
+    let product = null;
+    
+    if (productid == 12) {
+      product = getters.customProduct;
+    } else {
+      product = getters.productById(productid);
+    }
+    let remark = '';
+    if (options && options.length > 0) {
+      options.forEach((option) => {
+        const item = product.options.data.find((element) => {
+          return element.option_id.data.name == option.name && element.id == option.value;
+        });
+
+        if (item) {
+          remark += `${option.name}: ${item.option_value_id.data.value} <br>`;
+        } else {
+          remark += `${option.name}: ${option.value} <br>`;
+        }
+      });
+      return remark;
+    }
+    return '';
+  },
 };
 
 export const orderGetters = {

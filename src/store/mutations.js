@@ -35,6 +35,9 @@ import {
   ALL_PAYMENT_METHODS,
   ALL_PAYMENT_METHODS_SUCCESS,
   ALL_PAYMENT_METHODS_FAILURE,
+  CHECKOUT_OPTIONS,
+  CHECKOUT_OPTIONS_SUCCESS,
+  CHECKOUT_OPTIONS_FAILURE,
   CONFIRM_ORDER,
   CONFIRM_ORDER_SUCCESS,
   CONFIRM_ORDER_FAILURE,
@@ -150,6 +153,18 @@ export const orderMutations = {
     state.payment_methods = payload;
   },
   [ALL_PAYMENT_METHODS_FAILURE]: (state, payload) => {
+    state.showLoader = false;
+  },
+  [CHECKOUT_OPTIONS]: (state) => {
+    state.showLoader = true;
+  },
+  [CHECKOUT_OPTIONS_SUCCESS]: (state, payload) => {
+    console.log(payload);
+    state.showLoader = false;
+    state.payment_methods = payload.payment_methods;
+    state.shipping_methods = payload.shipping_method;
+  },
+  [CHECKOUT_OPTIONS_FAILURE]: (state, payload) => {
     state.showLoader = false;
   },
   [CONFIRM_ORDER]: (state) => {

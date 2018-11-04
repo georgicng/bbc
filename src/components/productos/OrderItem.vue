@@ -12,9 +12,9 @@
 					<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end order-img -->
 			</div><!-- end order-item -->
-			
+			<div v-html="getOptionDetails(line.productid, line.options)"></div>
 			<div class="total">
-				<p>{{quantity}} x N{{product.price}} = <span>N{{price}}</span></p>
+				<p>{{quantity}} x N{{line.price}} = <span>N{{price}}</span></p>
 			</div><!-- end total -->
 		</div><!-- end order-->
 	</li>
@@ -44,6 +44,9 @@ export default {
   methods: {
     getImage: function(id) {
       return `${API_ROOT}${this.product.image.data.url}`;
+		},
+		getOptionDetails(id, options) {
+			return this.$store.getters.optionDescription(id, options);
 		}
   }
 };

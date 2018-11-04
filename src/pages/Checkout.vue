@@ -4,27 +4,23 @@
        <div class="no-back">
              <div class="row">
                  <div class="col-sm-12 offset-lg-2 col-lg-8"> 
-    <form-wizard @on-complete="onComplete" @on-change="onChange" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
+    <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
           <tab-content title="Shipping Address" icon="ti-user" :before-change="validateFirstTab">
               <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
               </vue-form-generator>
           </tab-content>
-          <tab-content title="Shipping and Payment Method" icon="ti-settings" :before-change="validateSecondTab">
+          <tab-content title="Shipping and Payment Method" icon="ti-truck" :before-change="validateSecondTab">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <h1>Shipping Method</h1>
-                <div class="panel-group my-3" id="accordion">
-                  <template v-for="(value, key, index) in shipping_options">
-                  <div class="panel panel-default mb-3"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
-                    <div class="panel-heading" id="headingOne">
-                      <h4 class="panel-title font-weight-bold">
-                        <a  data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                <div class="card my-3">
+                  <div class="card-header">
+                    Delivery Method
+                  </div>
+                  <template v-for="(value, key) in shipping_options">
+                  <div class="card-body"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
+                      <h4 class="card-title">
                           {{key}}
-                        </a>
                       </h4>
-                    </div>
-                    <div :id="'collapse'+index" class="panel-collapse collapse in show">
-                      <div class="panel-body">
                          <template v-if="key == 'Deliver to me'">                         
                             <template v-for="item in value" v-if="model.city == item.title">
                               <div class="custom-control custom-radio" :key="item.id">
@@ -34,8 +30,9 @@
                               </label>
                               </div>
                             </template>                            
-                            <div class="custom-control checkbox mb-3" v-show="shippingName == 'Deliver to me'">
-                              <h4><input type="checkbox" name="express" id="express" v-model="express" class="custom-control-input"><label class="custom-control-label" for="express">Express Delivery <span class="badge">N1000</span></label></h4>
+                            <div class="custom-control custom-checkbox" v-show="shippingName == 'Deliver to me'">
+                              <input type="checkbox" name="express" id="express" v-model="express" class="custom-control-input">
+                              <label class="custom-control-label" for="express"><h4>Express Delivery <span class="badge">N1000</span></h4></label>
                             </div>
                         </template>
                         <template v-else>
@@ -45,42 +42,59 @@
                               <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                             </label>
                             </div>
-                        </template>                        
-                      </div>
-                    </div>
+                        </template>
                   </div>
                   </template>
+                  <div class="card-body error" v-if="!shipping">Please select a delivery method</div>
                 </div>
-                <h1>Shipping Date</h1>
-                <div class="form-group mb-3">
-                  <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
-                  <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
+                <div class="card my-3">
+                  <div class="card-header">
+                    Delivery Day
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group mb-3">
+                      <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
+                      <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
+                      <div class="error" v-show="!deliveryDate || deliveryDate == ''">Please select a delivery date</div>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
+                      <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
+                        <option value="*">Select delivery time</option>
+                        <option value="12-2">12 Noon - 2 PM</option>
+                        <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
+                      </select>
+                      <div class="error" v-show="!deliveryTime || deliveryTime == '*'">Please select a delivery time</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group mb-3">
-                  <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
-                  <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
-                    <option value="*">Select delivery time</option>
-                    <option value="12-2">12 Noon - 2 PM</option>
-                    <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="text-lilac font-weight-bold">Total Shipping: <span class="label label-default">N{{shippingRate}}</span></label>
-                </div>
+                
               </div>
               <div class="col-md-6 mb-3">
-                <h1>Payment Method</h1>
-                <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
-                  <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
-                  <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
-                    <h3>{{ item.name }}</h3>
-                    <p>{{item.description}}</p>
-                  </label>
-                </div>
+                <div class="counter text-center my-3">
+                  <i class="fa fa-code fa-2x"></i>
+                  <h2 class="timer count-title count-number">N{{shippingRate}}</h2>
+                  <p class="count-text ">Total Shipping</p>
+                </div>              
+                <div class="card my-3">
+                  <div class="card-header">
+                    Payment Method
+                  </div>
+                  <div class="card-body">
+                    <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
+                      <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
+                      <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
+                        <h3>{{ item.name }}</h3>
+                        <p>{{item.description}}</p>
+                      </label>
+                    </div>
+                    <div class="error" v-if="!payment">Please select a payment method</div>
+                  </div>
+                </div>           
               </div>
             </div>
           </tab-content>
-          <tab-content title="Confirm Order" icon="ti-settings" :before-change="validateThirdTab">
+          <tab-content title="Confirm Order" icon="ti-save" :before-change="validateThirdTab">
 
             <div class="innerpage-heading text-center">
                 <h3>Confirm Order</h3>
@@ -90,13 +104,12 @@
               <order-items :orders="orders" />
               <order-totals />              
             </div>
-            <div class="custom-control checkbox my-3">
-              <h4>
+            <div class="custom-control custom-checkbox my-3">
                 <input type="checkbox" name="toc" id="tos" v-model="tos" class="custom-control-input">
                 <label class="custom-control-label" for="tos">
-                  I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link>
+                  <h4>I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link></h4>
                 </label>
-              </h4>
+                <div class="error" v-show="!tos">You are required to agree to the terms and conditions</div>
             </div>
           </tab-content>
           <tab-content title="Complete Order" icon="ti-check">
@@ -105,14 +118,10 @@
                 <p>We need to confirm your Order</p>
             </div>
             <template v-if="paymentProvider == 'Paystack'">
-              <div class="payment-messag">Please click on the button below to make payment and complete the transaction</div>
-                <paystack v-bind="paymentProviderOption">
-                  <i class="fas fa-money-bill-alt"></i>
-                  Make Payment
-                </paystack>
+              <div class="payment-message">Please click on the button below to make payment and complete the transaction</div>
             </template>
              <template v-if="paymentProvider  == 'Bank Transfer'">
-               <div class="payment-messag">Find our bank transfer details below and <strong> click on the complete button to confirm the order</strong></div>
+               <div class="payment-message">Find our bank transfer details below and <strong> click on the complete button to confirm the order</strong></div>
                 <div class="bank-message" v-html="getKey('bank_details')"></div>
             </template>
           </tab-content>
@@ -125,13 +134,13 @@
 </template>
 
 <script>
-import VueFormGenerator from "vue-form-generator"
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
+import VueFormGenerator from "vue-form-generator";
+import "vue-form-generator/dist/vfg-core.css";
 import Datepicker from 'vuejs-datepicker';
 import OrderItems from "../components/productos/OrderItems";
 import OrderTotals from "../components/productos/OrderTotals";
-import paystack from 'vue-paystack';
 import {
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
@@ -148,8 +157,6 @@ import {
 export default {
   data() {
     return {
-      paymentProvider: false,
-      paymentProviderOption: {},
       tos: true,
       model: {
         first_name: "",
@@ -162,8 +169,6 @@ export default {
         alt_city: "",
       },
       formOptions: {
-        validationErrorClass: "has-error",
-        validationSuccessClass: "has-success",
         validateAfterChanged: true
       },
       contactSchema: {
@@ -174,8 +179,13 @@ export default {
             placeholder: "First name",
             model: "first_name",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your first name is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -183,8 +193,13 @@ export default {
             placeholder: "Last name",
             model: "last_name",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your last name is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -192,8 +207,14 @@ export default {
             placeholder: "Email",
             model: "email",
             required: false,
-            validator: VueFormGenerator.validators.email,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.email.locale({
+                fieldIsRequired: "Your email is required!",
+                invalidEmail: "Please enter a valid e-mail address!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -201,8 +222,13 @@ export default {
             placeholder: "Phone",
             model: "phone",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your phone number is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -210,8 +236,13 @@ export default {
             placeholder: "Address",
             model: "address",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your address is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -219,20 +250,30 @@ export default {
             placeholder: "Nearest Landmark",
             model: "landmark",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Please enter a landmark!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "select",
             label: "City",
             model: "city",
             required: true,
-            validator: VueFormGenerator.validators.required,
+            validator: VueFormGenerator.validators.required.locale({
+                fieldIsRequired: "Please select a city!",
+            }),
             values: function () {
-              return this.$store.getters.shippingCities
-            },
+              return this.getCities();
+            }.bind(this),
             default: "Allen",
-            styleClasses: ""
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -243,19 +284,21 @@ export default {
             styleClasses: "",
             visible(model) {
               return model.city == "Other";
+            },
+            onChanged: function(model, errors, field) {
+                this.validate();
             }
           }
         ]
-      }
+      },
     };
   },
   beforeCreate() {
-    this.$store.dispatch("allShippingMethods");
-    this.$store.dispatch("allPaymentMethods");
+    this.$store.dispatch("checkoutOptions");
   },
   created() {
     if (this.$store.getters.shippingInfo) {
-      this.model = this.$store.getters.shippingInfo;
+      this.model = this.shippingInfo();
     }
     if ((this.payment = this.$store.getters.paymentMethod)) {
       this.payment = this.$store.getters.paymentMethod;
@@ -268,6 +311,14 @@ export default {
     this.$store.commit(PAGE_TITLE, 'Checkout');
     this.$store.commit(PAGE_ICON, 'fa fa-thumbs-up');
     this.$store.commit(PAGE_COVER, true);
+    this.$loadScript("https://js.paystack.co/v1/inline.js")
+    .then(() => {
+      this.$set(paystackLoaded, true);
+    })
+    .catch(() => {
+      // Failed to fetch script
+      this.$set(paystackLoaded, false);
+    });
   },
   computed: {
     shipping_options() {
@@ -335,7 +386,7 @@ export default {
     },
     deliveryDate: {
       get () {
-        return this.$store.state.order.delivery_date || '*';
+        return this.$store.state.order.delivery_date || '';
       },
       set (value) {
         this.$store.commit(ADD_DELIVERY_DATE, value)
@@ -343,7 +394,7 @@ export default {
     },
     deliveryTime: {
       get () {
-        return this.$store.state.order.delivery_date || this.getDate();
+        return this.$store.state.order.delivery_time || '*';
       },
       set (value) {
         this.$store.commit(ADD_DELIVERY_TIME, value)
@@ -352,18 +403,9 @@ export default {
     shippingRate() {
       return this.$store.getters.shippingRate;
     },
-    scriptLoaded: function() {
-        /**
-         * TODO:
-         * Find a fix to move promise away from computed
-         **/
-        /* eslint-disable vue/no-async-in-computed-properties */
-        return new Promise((resolve) => {
-            this.loadScript(() => {
-                resolve()
-            })
-        })
-    }
+    paymentProvider() {
+      return this.$store.getters.paymentName(this.payment) || false;
+    },
   },
   methods: {
     validateFirstTab() {
@@ -375,6 +417,12 @@ export default {
         return false;
       }
       if(this.payment == 0 || this.payment == false) {
+        return false;
+      }
+      if(this.deliveryTime == '*' || !this.deliveryTime) {
+        return false;
+      }
+      if(this.deliveryDate == '' || !this.deliveryDate) {
         return false;
       }
       return true;
@@ -394,94 +442,23 @@ export default {
         return false;
       }    
     },
-    onChange(prev, next) {
-      if (next == 3) {
-        const paymentProvider = this.$store.getters.paymentName(this.payment);
-        if (paymentProvider == 'Paystack') {
-          this.$set(this.paymentProviderOption, 'amount', parseFloat(this.total) * 100);
-          this.$set(this.paymentProviderOption, 'email', this.email);
-          this.$set(this.paymentProviderOption, 'paystackkey', this.getKey('test_public_key'));
-          this.$set(this.paymentProviderOption, 'reference', this.reference);
-          this.$set(this.paymentProviderOption, 'callback', this.paystackCallback);
-          this.$set(this.paymentProviderOption, 'close', this.paystackClose);
-          this.$set(this.paymentProviderOption, 'embed', false);
-          console.log('paystack options', this.paymentProviderOption);
-        }
-        this.paymentProvider = paymentProvider;
-      }
-    },
-    getKey(key) {
-      return this.$store.getters.orderMeta(key);
-    },
-    paystackCallback(response){
-      const payload = {
-        order: this.$store.getters.orderID,
-        reference: response
-      };
-        this.$store.dispatch('completeOrder', payload)
-          .then(res => {
-            console.log('goto success', res);
-            this.$router.push('/success');
-          })
-          .catch(err => {
-            console.log('try again');
-          });
-    },
-    paystackClose(){
-      console.log('close');
-    },
-    loadScript(callback) {
-        const script = document.createElement('script')
-        script.src = 'https://js.paystack.co/v1/inline.js'
-        document.getElementsByTagName('head')[0].appendChild(script)
-        if (script.readyState) {  // IE
-            script.onreadystatechange = () => {
-                if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                    script.onreadystatechange = null
-                    callback()
-                }
-            }
-        } else {  // Others
-            script.onload = () => {
-                callback()
-            }
-        }
-    },
-    payWithPaystack() {
-        this.scriptLoaded.then(() => {
-            const paystackOptions = {
-                key: this.paystackkey,
-                email: this.email,
-                amount: this.amount,
-                ref: this.reference,
-                callback: (response) => {
-                    this.callback(response)
-                },
-                onClose: () => {
-                    this.close()
-                },
-                metadata: this.metadata,
-                currency: this.currency,
-                plan: this.plan,
-                quantity: this.quantity,
-                subaccount: this.subaccount,
-                transaction_charge: this.transaction_charge,
-                bearer: this.bearer
-            }
-            if (this.embed) {
-                paystackOptions.container = 'paystackEmbedContainer'
-            }
-            const handler = window.PaystackPop.setup(paystackOptions)
-            if (!this.embed) {
-                handler.openIframe()
-            }
-        })
-    },  
     onComplete: function() {
       const payload = {
-        order: this.$store.getters.orderID,
-        status: 'Pending'
+        order: this.$store.getters.orderID
       };
+      if (this.paymentProvider == 'Paystack') {
+        payload.type = 'paystack';
+        payload.paystackOptions = {
+          amount: parseFloat(this.total) * 100,
+          email: this.email,
+          key: this.getKey('test_public_key'),
+          ref: this.reference,
+        };
+      } else {
+        payload.type = "bank_transfer";
+        payload.status = 'Pending';
+      }
+      console.log('payload', payload);
       this.$store.dispatch('completeOrder', payload)
           .then(res => {
             console.log('goto success');
@@ -490,6 +467,9 @@ export default {
           .catch(err => {
             console.log('try again');
           });
+    },
+    getKey(key) {
+      return this.$store.getters.orderMeta(key);
     },
     getDate() {
       const today = new Date(); 
@@ -504,6 +484,12 @@ export default {
     getShippingName(id) {
       return this.$store.getters.shippingName(id);
     },
+    getCities() {
+      return this.$store.getters.shippingCities;
+    },
+    shippingInfo() {
+      return this.$store.getters.shippingInfo;
+    }
   },
   components: {
     "vue-form-generator": VueFormGenerator.component,
@@ -511,11 +497,41 @@ export default {
     TabContent,
     orderItems: OrderItems,
     orderTotals: OrderTotals,
-    paystack,
     Datepicker
   }
 };
 </script>
 
 <style scoped>
+.error {
+  color: red;
+}
+.counter {
+    background-color:#f5f5f5;
+    padding: 20px 0;
+    border-radius: 5px;
+}
+
+.count-title {
+    font-size: 40px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.count-text {
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.fa-2x {
+    margin: 0 auto;
+    float: none;
+    display: table;
+    color: #4ad1e5;
+}
 </style>

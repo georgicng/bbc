@@ -3,7 +3,6 @@
 		<div class="cart-item">
 				<div class="item-text dish-list-text">
 						<h4><a href="#">{{product.name}}</a></h4>
-						<p>category</p>
 						<h5>Qty: <input type="number" min="1" v-model="quantity" @change="update()" class="form-control"> x N{{line.price}}</h5>
 				</div><!-- end item-text -->
 
@@ -11,6 +10,7 @@
 						<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end item-img -->
 				
+				<div v-html="getOptionDetails(line.productid, line.options)"></div>
 				<h4 class="total">Total: <span>N{{price}}</span></h4>
 				
 				<div class="item-close">
@@ -54,6 +54,9 @@ export default {
 		},
 		update() {
 				this.$store.commit(UPDATE_CART, {index: this.index, quantity: this.quantity})
+		},
+		getOptionDetails(id, options) {
+			return this.$store.getters.optionDescription(id, options);
 		}
   }
 };

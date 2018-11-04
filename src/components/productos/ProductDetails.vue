@@ -73,31 +73,32 @@
                         </div>
                         <button @click="addToCart" class="btn btn-orange">Add to cart <span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
-                    </div>
-                  <div class="panel-group my-3">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h4 class="panel-title p-3 mb-2 bg-light text-dark">
-                          <a data-toggle="collapse" href="#collapse1">Size Examples</a>
-                        </h4>
-                      </div>
-                      <div id="collapse1" class="panel-collapse collapse">
-                        <div class="panel-body">Insert Images here</div>
-                      </div>
-                    </div>
-                  </div>                 
-              </div><!-- end menu-info -->              
+                    </div>               
+              </div><!-- end menu-info -->
+                     
           </div>
           </div>
+          <div class="row my-4">
+            <div class="offset-lg-2 col-lg-8">
+              <ul class="nav nav-tabs justify-content-center">
+                  <li class="nav-item"><a class="nav-link active" href="#size" data-toggle="tab"><span><i class="fa fa-info"></i></span> Size Examples</a></li>
+              </ul>
+              
+              <div class="tab-content">
+                  <div id="size" class="tab-pane active">
+                      <p>Insert Images here</p>
+                  </div>
+              </div><!-- end tab-content -->  
+            </div>
+            </div>
+           
           </div>
       </div><!-- end container-fluid -->
     </div>
 </template>
 
 <script>
-import {
-  ADD_TO_CART
-} from "../../store/mutation-types";
+import { ADD_TO_CART } from "../../store/mutation-types";
 import { API_ROOT } from "../../config";
 export default {
   props: ["product"],
@@ -110,13 +111,18 @@ export default {
   computed: {
     options() {
       //add or item.value != '' or '*' to filter
-      return $('#productform').serializeArray().filter(item => item.name !== 'quantity');
+      return $("#productform")
+        .serializeArray()
+        .filter(item => item.name !== "quantity");
     },
-    price () {
-      return (parseFloat(this.product.price)  + parseFloat(this.increment)) * parseInt(this.quantity);
+    price() {
+      return (
+        (parseFloat(this.product.price) + parseFloat(this.increment)) *
+        parseInt(this.quantity)
+      );
     },
-    unitPrice () {
-      return parseFloat(this.product.price)  + parseFloat(this.increment);
+    unitPrice() {
+      return parseFloat(this.product.price) + parseFloat(this.increment);
     }
   },
   methods: {
@@ -139,7 +145,7 @@ export default {
         price: this.unitPrice,
         options: this.options
       }),
-      this.$router.push("/cart");
+        this.$router.push("/cart");
     },
     getOptions() {
       if (this.product.options && this.product.options.data.length > 0) {
@@ -173,7 +179,9 @@ export default {
     },
     getIncrement(product_option_id) {
       if (this.product.options && this.product.options.data.length > 0) {
-        const item = this.product.options.data.find(obj => obj.id == product_option_id);
+        const item = this.product.options.data.find(
+          obj => obj.id == product_option_id
+        );
         if (item && item.price_increment) {
           return parseFloat(item.price_increment);
         }
@@ -228,6 +236,25 @@ export default {
   font-weight: 600;
 }
 #menu-gallery li img {
-    max-height: 450px;
+  max-height: 450px;
+}
+.no-back .nav-tabs li {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.no-back .nav-tabs li a {
+    border: 0px;
+    color: #212121;
+    padding: 11px 15px;
+}
+.no-back .nav-tabs li a.active {
+    border-bottom: 3px solid transparent;
+}
+.no-back .nav-tabs li a.active {
+    border-color: #ee4899;
+    color: #ee4899;
 }
 </style>

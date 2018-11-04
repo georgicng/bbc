@@ -47,23 +47,15 @@
             <!--========= HEADER =========-->
             <div class="header-lg d-none d-lg-block bg-secondary">
               <div class="container">
-                <div class="head">
-                  <div class=" logo">
+                <div class="row">
+                  <div class="col-lg-2">
                     <a href="index.html"><img src="static/images/logo.png" class="logo" height="100"></a>	
                   </div>
-                </div>
-              </div>
-              <div class="header-top">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-5 offset-md-2  header-login">
+                  <div class="col-lg-8">
+                    <div class="d-flex justify-content-between">
                       <nav class="ml-auto">
-                        <router-link to="/terms">Terms and Conditions</router-link>
-                        <router-link to="/cart">Cart</router-link>
-                        <router-link to="/checkout">Checkout</router-link>
-                      </nav>
-                    </div>                      
-                    <div class="col-sm-5 header-social">		
+                        <router-link to="/terms">Terms</router-link>
+                      </nav>		
                       <nav class="mr-auto">
                         <a href="#"><span><i class="fab fa-facebook-f"></i></span></a>
                         <a href="#"><span><i class="fab fa-instagram"></i></span></a>
@@ -71,15 +63,8 @@
                         <a href="#"><span><i class="fab fa-google-plus-g"></i></span></a>
                       </nav>					
                     </div>
-                  </div>
-                </div>
-              </div>
-                
-              <div class="container">                
-                <div class=" row head-top">                  
-                  <div class="col-sm-8 offset-md-2">
                     <nav class="navbar navbar-expand navbar-light bg-light" role="navigation">            
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav lg-menu">
                           <li class="nav-item"><router-link to="/" class="nav-link">Home</router-link></li>
                           <li class="nav-item"><router-link to="/categories" class="nav-link">Products</router-link></li>
                           <li class="nav-item"><router-link to="/about" class="nav-link">About</router-link></li>                          
@@ -88,20 +73,16 @@
                         </ul>
                     </nav>
                   </div>
-                  <div class="col-sm-2 search-right">                    
-                      <div class="cart box_1">
-                        <a href="checkout.html">
-                        <h3> <div class="total">
-                          <span class="simpleCart_total">$0.00</span></div>
-                          <img src="images/cart.png" alt=""></h3>
-                        </a>
-                        <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
+                  <div class="col-lg-2">
+                    <div class="cart box_1">
+                        <h3><span><i class="fa fa-shopping-cart"></i></span><span class="cart-badge">{{cartItemsCount}}</span></h3>
+                        <p><router-link to="/cart">View Cart</router-link></p>
 
-                      </div>					
+                      </div>	
                   </div>
-                </div>	
-              </div>	
-            </div>
+                </div>
+              </div>
+              </div>
             <div class="header d-lg-none">                               
                 <div class="fixed-header">
                 	<div class="container-fluid">
@@ -258,5 +239,13 @@ export default {
     text-align: center;
     position: absolute;
     top: 0;
+}
+.lg-menu li {
+    border-right: 1px solid #EFEFEF;
+}
+.lg-menu li a {
+    font-size: 0.9em;
+    color: #3A3A3A;
+    padding: 1.6em;
 }
 </style>

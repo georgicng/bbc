@@ -11,9 +11,8 @@
                 <div class="no-back">
              <div class="row">
                  <div class="col-sm-12 offset-lg-2 col-lg-8">
-                <form id="support-ticket"  @submit.prevent="processForm">
                     <!--Grid row-->
-                    <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form">
+                    <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="form" :isNewModel="true">
                     </vue-form-generator>
                     <!--Grid row-->
                                                    
@@ -23,12 +22,13 @@
                                     image-class="v1-image"
                                     input-class="v1-input form-control"
                                     :max-size="customImageMaxSize"
+                                    :disable-preview="true"
                                     @size-exceeded="onSizeExceeded"
                                     @file="onFile"
-                                    @load="onLoad" />
+                                    @load="onLoad"
+                                    ref="file" />
                         
-                    <button type="submit" class="btn btn-orange">Submit</button>
-                </form>
+                    <button @click="processForm" class="btn btn-orange">Submit</button>
                 <div class="status form-group" v-html="status"></div>
                  </div>
                 </div>
@@ -44,6 +44,7 @@
 import { client } from "../api";
 import VueBase64FileUpload from "vue-base64-file-upload";
 import VueFormGenerator from "vue-form-generator";
+import "vue-form-generator/dist/vfg-core.css"
 import { PAGE_TITLE, PAGE_ICON, PAGE_COVER } from "../store/mutation-types";
 export default {
   name: "complaint",
@@ -52,16 +53,14 @@ export default {
       msg: "Welcome to Your Vue.js App",
       customImageMaxSize: 3, // megabytes
       model: {
-        name: "",
-        subject: "",
-        email: "",
-        description: ""
+        name: null,
+        subject: null,
+        email: null,
+        description: null
       },
       formOptions: {
-        validationErrorClass: "has-error",
-        validationSuccessClass: "has-success",
         validateAfterChanged: true,
-        validateAfterLoad: false,
+        validateAfterLoad: true,
       },
       contactSchema: {
         fields: [
@@ -71,8 +70,13 @@ export default {
             placeholder: "Name",
             model: "name",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Your name is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -80,8 +84,13 @@ export default {
             placeholder: "Subject",
             model: "subject",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "The subject is required!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "input",
@@ -89,21 +98,33 @@ export default {
             placeholder: "Email",
             model: "email",
             required: true,
-            validator: VueFormGenerator.validators.email,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.email.locale({
+                fieldIsRequired: "Your email is required!",
+                invalidEmail: "Please enter a valid e-mail address!",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           },
           {
             type: "textArea",
             placeholder: "Description",
             model: "description",
             required: true,
-            validator: VueFormGenerator.validators.string,
-            styleClasses: ""
+            validator: VueFormGenerator.validators.string.locale({
+                fieldIsRequired: "Please describe the issue",
+            }),
+            styleClasses: "",
+            onChanged: function(model, errors, field) {
+                this.validate();
+            }
           }
         ]
       },
       status: "",
-      file: ""
+      file: null,
+      base: null
     };
   },
   mounted () {      
@@ -130,7 +151,7 @@ export default {
     },
     processForm() {
       if (this.$refs.form.validate()){
-        if (this.base) {
+        if (this.base && this.file) {
             client
               .createFile({
                 title: this.file.name,
@@ -143,7 +164,9 @@ export default {
               })
               .then(res => {
                 this.model = {};
+                this.file = null;
                 this.status = `Your message has been sent`;
+                this.$router.push('/success');
               })
               .catch(err => {
                 this.status = `Could't process your request, please try again`;
@@ -154,6 +177,7 @@ export default {
               .then(res => {
                 this.model = {};
                 this.status = `Your message has been sent`;
+                this.$router.push('/success');
               })
               .catch(err => {
                 console.log(err);

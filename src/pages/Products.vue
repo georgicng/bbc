@@ -10,7 +10,7 @@
             <product-list :products="products"></product-list>
             <nav class="my-3 d-flex justify-content-center">
               <paginate
-                v-model="currentPage"
+                v-model="current"
                 :page-count="total"
                 :page-range="5"
                 :click-handler="changePage"
@@ -37,6 +37,7 @@
     name: 'products',
     data () {
       return {
+        current: parseInt(this.page)
       }
     },
     props: ['page', 'filter'],
@@ -53,8 +54,14 @@
       total() {
         return this.$store.getters.productCount / 10;
       },
-      currentPage() {
-        return parseInt(this.page);
+      currentPage: {
+        get () {
+          return parseInt(this.page);
+        },
+        set (value) {
+          this.page = value;
+        }
+
       } 
     },
     components: {

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import LoadScript from 'vue-plugin-load-script';
 import store from '../store';
 // import Hello from '@/components/Hello'
 import HomeRoutes from './home';
@@ -15,7 +16,8 @@ import ComplaintRoutes from './complaint';
 import TermsRoutes from './terms';
 import SuccessRoutes from './success';
 
-Vue.use(Router);
+Vue.use(Router); 
+Vue.use(LoadScript);
 
 Vue.filter('slugify', (value) => {
   const a = 'àáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';
