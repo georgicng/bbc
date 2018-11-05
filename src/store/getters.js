@@ -181,4 +181,25 @@ export const orderGetters = {
     }
     return '';
   },
+  orderRecord: (state, getters) => {
+    const order = {
+      cart: state.order.cart,
+      address: state.order.address,
+      shipping: state.order.shipping,
+      payment: state.order.payment,
+      delivery_date: state.order.delivery_date,
+      delivery_time: state.order.delivery_time,
+      express: state.order.express,
+    };
+
+    if (getters.orderID && getters.orderID > 0) {
+      order.id = getters.orderID;
+    }
+
+    if (state.order.coupon) {
+      order.coupon = state.order.coupon;
+    }
+
+    return order;
+  },
 };

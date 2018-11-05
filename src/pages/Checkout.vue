@@ -158,6 +158,7 @@ export default {
   data() {
     return {
       tos: true,
+      paystackLoaded: false,
       model: {
         first_name: "",
         last_name: "",
@@ -313,11 +314,13 @@ export default {
     this.$store.commit(PAGE_COVER, true);
     this.$loadScript("https://js.paystack.co/v1/inline.js")
     .then(() => {
-      this.$set(paystackLoaded, true);
+      console.log('paystack loaded');
+      this.paystackLoaded = true;
     })
     .catch(() => {
       // Failed to fetch script
-      this.$set(paystackLoaded, false);
+      console.log(`couldn't load paystack`);
+      this.paystackLoaded = false;
     });
   },
   computed: {
@@ -430,7 +433,7 @@ export default {
     validateThirdTab() {
        if (this.tos) {
         return new Promise((resolve, reject) => {
-          this.$store.dispatch('confirmOrder', this.$store.state.order)
+          this.$store.dispatch('confirmOrder', this.$store.getters.orderRecord)
             .then(res => {
               resolve(true);
             })
@@ -446,27 +449,41 @@ export default {
       const payload = {
         order: this.$store.getters.orderID
       };
-      if (this.paymentProvider == 'Paystack') {
-        payload.type = 'paystack';
-        payload.paystackOptions = {
+      if (this.paymentProvider == 'Paystack' && this.paystackLoaded) {
+        const paystackOptions = {
           amount: parseFloat(this.total) * 100,
           email: this.email,
           key: this.getKey('test_public_key'),
           ref: this.reference,
+          callback: (response) => {
+            payload.reference = response;
+            console.log('payload', payload);
+            this.completePayment(payload);
+          },
+          onClose: () => {
+            this.cancelPayment();
+          },
         };
+        window.PaystackPop.setup(paystackOptions).openIframe()
       } else {
-        payload.type = "bank_transfer";
         payload.status = 'Pending';
+        this.completePayment(payload)
       }
-      console.log('payload', payload);
+      
+    },
+    completePayment(payload) {
       this.$store.dispatch('completeOrder', payload)
-          .then(res => {
-            console.log('goto success');
-            this.$router.push('/success');
-          })
-          .catch(err => {
-            console.log('try again');
-          });
+      .then(res => {
+        console.log('goto success');
+        this.$router.push('/success');
+      })
+      .catch(err => {
+        console.log('try again');
+      });
+    },
+    cancelPayament() {
+      //Suggest bank transfer
+      console.log("Paystack closed");
     },
     getKey(key) {
       return this.$store.getters.orderMeta(key);
