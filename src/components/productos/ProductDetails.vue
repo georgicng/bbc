@@ -9,7 +9,7 @@
                   </div>
                   <div class="menu-price">
                       <p>Price from</p>
-                      <h3>NGN {{price}}</h3>
+                      <h3>N{{product.price}}</h3>
                   </div>
               </div><!-- end page-title -->
               </div>
@@ -29,48 +29,57 @@
                   <div class="mb-3" v-html="product.description"></div>
                   <div class="form mb-3">
                   <form @submit.prevent="" id="productform">
-                    <template v-for="(product_option, key) in getOptions()">
-                      <div class="form-group" :key="key" :data-option="product_option.option_id">
+                    <template v-for="product_option in getOptions()">
+                      <div class="form-group" :key="product_option.slug" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
-                            <label :for="key" class="font-weight-bold">{{key}}</label>
-                            <input type="text" class="form-control" :id="key" :name="key">                         
+                            <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                            <input type="text" class="form-control" :id="product_option.slug" :name="product_option.slug">                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
-                        <label :for="key" class="font-weight-bold">{{key}}</label>
-                        <select class="form-control" :id="key" :name="key" @change="updateIncrement()">
-                            <option value="*">Select {{key}}</option>
+                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                        <select class="form-control" :id="product_option.slug" :name="product_option.slug" @change="updateIncrement()">
+                            <option value="*">Select {{product_option.name}}</option>
                                 <template v-for="(value, index) in getValues(product_option.option_id)">
                                   <option :value="value.id" :key="index">{{value.name}} ...{{getTotal(value.increment)}}</option>
                                 </template>
                             </select>
                       </template>
                        <template v-else-if="product_option.type == 'radio'">
-                         <label :for="key" class="font-weight-bold">{{key}}</label>
+                         <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
-                            <div class="radio" :key="index">
-                              <label><input type="radio" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} ...{{getTotal(value.increment)}}</label>
+                            <div class="custom-control custom-radio" :key="index">
+                              <input type="radio" class="custom-control-input" :name="product_option.slug" :id="product_option.slug+index" :value="value.id" @change="updateIncrement()">
+                              <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
                             </div>
                          </template>
                       </template>
                       <template v-else-if="product_option.type == 'checkbox'">
-                        <label :for="key" class="font-weight-bold">{{key}}</label>
+                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
                         <template v-for="(value, index) in getValues(product_option.option_id)">
-                          <div class="checkbox" :key="index">
-                            <label><input type="checkbox" :name="key" :id="key" :value="value.id" @change="updateIncrement()">{{value.name}} ...{{getTotal(value.increment)}}</label>
-                          </div>
+                            <div class="custom-control custom-checkbox" :key="index">
+                              <input type="checkbox" class="custom-control-input"
+                                :name="product_option.slug" 
+                                :id="product_option.slug+index" 
+                                :value="value.id" @change="updateIncrement()">
+                              <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
+                            </div>
                         </template>
                       </template>
                       <template v-if="product_option.type == 'textarea'">                         
-                            <label :for="key" class="font-weight-bold">{{key}}</label>
-                            <textarea class="form-control" :id="key" :name="key"></textarea>                         
+                            <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                            <textarea class="form-control" :id="product_option.slug" :name="product_option.slug"></textarea>                         
                       </template>
                       <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
                        </div>
                     </template>
-                     <div class="form-group">
-                            <label class="font-weight-bold">Total :</label>
-                            <div class="price">N{{price}}</div>
+                      <div class="form-group">
+                            <label class="font-weight-bold">Quantity :</label>
+                            <input type="text" class="form-control"  id="quantity" name="quantity" min="1" max="100" v-model="quantity">
                         </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Total :</label>
+                            <span class="price">N{{price}}</span>
+                        </div>                        
                         <button @click="addToCart" class="btn btn-orange">Add to cart <span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
                     </div>               
@@ -149,41 +158,53 @@ export default {
     },
     getOptions() {
       if (this.product.options && this.product.options.data.length > 0) {
-        return this.product.options.data.reduce((groups, y) => {
-          const name = y.option_id.data.name;
-          if (groups[name] === undefined) {
-            groups[name] = {
-              option_id: y.option_id.data.id,
-              type: y.option_id.data.type,
-              name: name
-            };
-          }
-          return groups;
-        }, {});
+        return this.product.options.data.map((option) => {
+          return {
+            option_id: option.id,
+            type: option.option_id.data.type,
+            name: option.option_id.data.name,
+            slug: option.option_id.data.slug,
+            increment: option.price_increment,
+            comment: option.comment
+          };
+        });
       }
       return {};
     },
     getValues(option_id) {
       if (this.product.options && this.product.options.data.length > 0) {
-        return this.product.options.data
-          .filter(item => item.option_id.data.id == option_id)
-          .map(item => {
+        const item = this.product.options.data
+          .find(item => item.id == option_id || item.option_id.data.slug == option_id);
+        return item.option_values.data.map(item => {
             return {
               id: item.id,
-              name: item.option_value_id.data.value,
+              name: item.option_value.data.value,
               increment: item.price_increment
             };
           });
       }
       return [];
     },
-    getIncrement(product_option_id) {
-      if (this.product.options && this.product.options.data.length > 0) {
-        const item = this.product.options.data.find(
-          obj => obj.id == product_option_id
+    getOptionIncrement(product_option_id) {
+      const options = this.getOptions();
+      if (options && options.length > 0) {
+        const item = options.find(
+          obj => obj.option_id == product_option_id
         );
-        if (item && item.price_increment) {
-          return parseFloat(item.price_increment);
+        if (item && item.increment) {
+          return parseFloat(item.increment);
+        }
+      }
+      return 0;
+    },
+    getValueIncrement(slug, product_option_value_id) {
+      const values = this.getValues(slug);
+      if (values && values.length > 0) {
+        const item = values.find(
+          obj => obj.id == product_option_value_id
+        );
+        if (item && item.increment) {
+          return parseFloat(item.increment);
         }
       }
       return 0;
@@ -195,10 +216,23 @@ export default {
         .find("input:checked, option:selected")
         .each(function() {
           const value = $(this).val();
+          const name = $(this).attr('name')? $(this).attr('name') : $(this).parent().attr('name');
           if (value !== "*" && value !== "") {
-            price += self.getIncrement(value);
+            price += self.getValueIncrement(name, value);
           }
         });
+      //add 1000 if all flavour selected
+      if ($('input[name=flavours]:checked').size() == 3) {
+        price += 1000;
+      }
+
+      //ensure not more than two sizes are selected
+      if($('input[name=colors]:checked').length == 3) {
+          $('input[name=colors]:not(:checked)').attr('disabled', 'disabled');
+      } else {
+        $('input[name=colors]').removeAttr('disabled');
+      }
+
       this.increment = price;
     }
   }

@@ -12,7 +12,7 @@
 					<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end order-img -->
 			</div><!-- end order-item -->
-			<div v-html="getOptionDetails(line.productid, line.options)"></div>
+			<div class="d-flex" v-html="getOptionDetails(line.productid, line.options)"></div>
 			<div class="total">
 				<p>{{quantity}} x N{{line.price}} = <span>N{{price}}</span></p>
 			</div><!-- end total -->

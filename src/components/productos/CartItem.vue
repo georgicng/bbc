@@ -10,7 +10,7 @@
 						<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end item-img -->
 				
-				<div v-html="getOptionDetails(line.productid, line.options)"></div>
+				<div class="d-flex" v-html="getOptionDetails(line.productid, line.options)"></div>
 				<h4 class="total">Total: <span>N{{price}}</span></h4>
 				
 				<div class="item-close">

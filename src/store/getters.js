@@ -22,48 +22,6 @@ export const productGetters = {
     return state.product;
   },
   customProduct: state => state.custom,
-  productOptions: (state, getters) => (id) => {
-    const product = getters.productById(id);
-    if (product.options && product.options.data.length > 0) {
-      return product.options.data.reduce((groups, y) => {
-        const name = y.option_id.data.name;
-        if (groups[name] === undefined) {
-          groups[name] = {
-            option_id: y.option_id.data.id,
-            type: y.option_id.data.type,
-            name,
-          };
-        }
-        return groups;
-      }, {});
-    }
-    return {};
-  },
-  optionValues: (state, getters) => (id, optionId) => {
-    const product = getters.productById(id);
-    if (product.options && product.options.data.length > 0) {
-      return product.options.data
-        .filter(item => item.option_id.data.id == optionId)
-        .map((item) => {
-          return {
-            id: item.id,
-            name: item.option_value_id.data.value,
-            increment: item.price_increment,
-          };
-        });
-    }
-    return [];
-  },
-  optionIncrement: (state, getters) => (id, productOptionId) =>  {
-    const product = getters.productById(id);
-    if (product.options && product.options.data.length > 0) {
-      const item = product.options.data.find(obj => obj.id == productOptionId);
-      if (item && item.price_increment) {
-        return parseFloat(item.price_increment);
-      }
-    }
-    return 0;
-  },
   productCount: state => state.products.total,
 };
 
@@ -91,20 +49,48 @@ export const cartGetters = {
     }
     let remark = '';
     if (options && options.length > 0) {
-      options.forEach((option) => {
-        const item = product.options.data.find((element) => {
-          return element.option_id.data.name == option.name && element.id == option.value;
-        });
+      //get value  from option valu id
+      const optionList = options.map((option) => {
+        let value = option.value;
+        const item = product.options.data.find(element => element.option_id.data.slug == option.name);
 
         if (item) {
-          remark += `${option.name}: ${item.option_value_id.data.value} <br>`;
-        } else {
-          remark += `${option.name}: ${option.value} <br>`;
+          const optionValue = item.option_values.data.find(element => element.id == option.value);
+
+          if (optionValue) {
+            value = optionValue.option_value.data.value;
+          }
         }
+
+        return {
+          name: option.name,
+          value,
+        };
       });
-      return remark;
+
+      //group values related to an option
+      const collate = optionList.reduce((groups, y) => {
+        const found = groups.find(element => element.name == y.name);
+        if (found) {
+          found.value += `, ${y.value}`;
+        } else if (y.value) {
+          groups.push({
+            name: y.name,
+            value: y.value,
+          });
+        }
+        return groups;
+      }, []);
+
+      //return option list
+      collate.forEach((x) => {
+        remark += `<dl class="dlist-inline small p-2">
+          <dt>${x.name}: </dt>
+          <dd>${x.value}</dd>
+        </dl>`;
+      });
     }
-    return '';
+    return remark;
   },
 };
 

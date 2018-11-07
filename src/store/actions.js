@@ -39,7 +39,7 @@ export const productActions = {
     const page = (payload && payload.page) ? payload.page - 1 : 0;
     const offset = page * 10;
     const args = {
-      depth: 2,
+      depth: 3,
       limit: 10,
       'filters[name][neq]': 'custom',
       offset,
@@ -52,14 +52,14 @@ export const productActions = {
   productById({ commit }, payload) {
     commit(PRODUCT_BY_ID);
     client
-      .getItem('products', payload, { depth: 2 })
+      .getItem('products', payload, { depth: 3 })
       .then(res => commit(PRODUCT_BY_ID_SUCCESS, res.data))
       .catch(err => commit(PRODUCT_BY_ID_FAILURE, err));
   },
   customProduct({ commit }) {
     commit(CUSTOM_PRODUCT);
     client
-      .getItem('products', 12, { depth: 2 })
+      .getItem('products', 12, { depth: 3 })
       .then(res => commit(CUSTOM_PRODUCT_SUCCESS, res.data))
       .catch(err => commit(CUSTOM_PRODUCT_FAILURE, err));
   },

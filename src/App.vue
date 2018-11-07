@@ -4,7 +4,7 @@
   <div class="sidenav-content">
     <div id="mySidenav" class="sidenav" :class="{ 'to-left-toggle' : showNav }" >
         <div id="web-name">
-            <h2> <img src="static/images/logo.png" class="logo" height="800"></h2>             	
+            <div class="text-center"> <img src="static/images/logo_icon.png" class="logo" height="100"></div>             	
             <ul class="main-menu-social list-inline list-unstyled text-center">
                 <li class="list-inline-item"><a href="#"><span><i class="fab fa-facebook-f"></i></span></a></li>
                 <li class="list-inline-item"><a href="#"><span><i class="fab fa-pinterest"></i></span></a></li>
@@ -45,25 +45,39 @@
             <div class="overlay-black" v-show="showNav || showCart"></div>
             
             <!--========= HEADER =========-->
-            <div class="header-lg d-none d-lg-block bg-secondary">
+            <div class="header-lg d-none d-lg-block border-bottom">
+              <div class="logo-area">
+                <div class="container">
+                  <div class="logo_wrapper">
+                    <div class="logo">
+                      <a href="index.html"><img src="static/images/logo.png" class="logo" height="100"></a>	
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="header-top">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-lg-5 offset-lg-2">
+                      <nav class="header-login">
+                        <router-link to="/terms">Terms</router-link>
+                      </nav>
+                    </div>
+                    <div class="col-lg-5">	
+                        <nav class="header-social text-right">
+                          <a href="#"><span><i class="fab fa-facebook-f"></i></span></a>
+                          <a href="#"><span><i class="fab fa-instagram"></i></span></a>
+                          <a href="#"><span><i class="fab fa-twitter"></i></span></a>
+                          <a href="#"><span><i class="fab fa-google-plus-g"></i></span></a>
+                        </nav>					
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="container">
                 <div class="row">
-                  <div class="col-lg-2">
-                    <a href="index.html"><img src="static/images/logo.png" class="logo" height="100"></a>	
-                  </div>
-                  <div class="col-lg-8">
-                    <div class="d-flex justify-content-between">
-                      <nav class="ml-auto">
-                        <router-link to="/terms">Terms</router-link>
-                      </nav>		
-                      <nav class="mr-auto">
-                        <a href="#"><span><i class="fab fa-facebook-f"></i></span></a>
-                        <a href="#"><span><i class="fab fa-instagram"></i></span></a>
-                        <a href="#"><span><i class="fab fa-twitter"></i></span></a>
-                        <a href="#"><span><i class="fab fa-google-plus-g"></i></span></a>
-                      </nav>					
-                    </div>
-                    <nav class="navbar navbar-expand navbar-light bg-light" role="navigation">            
+                  <div class="col-lg-8 offset-lg-2">
+                    <nav class="navbar navbar-expand" role="navigation">            
                         <ul class="navbar-nav lg-menu">
                           <li class="nav-item"><router-link to="/" class="nav-link">Home</router-link></li>
                           <li class="nav-item"><router-link to="/categories" class="nav-link">Products</router-link></li>
@@ -74,15 +88,15 @@
                     </nav>
                   </div>
                   <div class="col-lg-2">
-                    <div class="cart box_1">
-                        <h3><span><i class="fa fa-shopping-cart"></i></span><span class="cart-badge">{{cartItemsCount}}</span></h3>
-                        <p><router-link to="/cart">View Cart</router-link></p>
-
-                      </div>	
+                    <div class="search-right text-right">
+                      <div class="cart box_1">
+                        <router-link to="/cart"><i class="fa fa fa-shopping-basket"></i><span class="cart-badge">{{cartItemsCount}}</span></router-link>
+                      </div>
+                    </div>	
                   </div>
                 </div>
               </div>
-              </div>
+            </div>
             <div class="header d-lg-none">                               
                 <div class="fixed-header">
                 	<div class="container-fluid">
@@ -94,7 +108,7 @@
                             
                         	<div class="col">
                                 <div class="header-logo f-none text-center">
-                                    <router-link to="/"><img class="logo" src="static/images/logo.png" width="85"></router-link>
+                                    <router-link to="/"><img class="logo" src="static/images/logo_text.png" height="45"></router-link>
                                 </div><!-- end header-logo -->
                             </div><!-- end columns -->
                             
@@ -213,6 +227,68 @@ export default {
 };
 </script>
 <style>
+.header-lg {
+  background-color: #FFFFFF;
+}
+.header-lg .logo {
+    text-align: center;
+    position: absolute;
+    top: 0;
+}
+.header-lg .logo_wrapper {
+  position: relative;
+}
+.header-lg .header-top {
+    background-color: #2E2E2E;
+    color: #fff;
+    padding: 0.3em 0;
+}
+.header-lg .header-top a {
+    color: #fff;
+}
+.header-login a {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 0.8em;
+    margin: 0 0.5em;
+}
+.header-lg .header-social a {
+    width: 17px;
+    height: 17px;
+    margin: 0 0.3em;
+}
+.header-lg .lg-menu li {
+    border-right: 1px solid #EFEFEF;
+}
+.header-lg .lg-menu .nav-item .nav-link {
+    font-size: 0.9em;
+    color: #3A3A3A;
+    padding: 1.6em;
+}
+.header-lg .search-right {
+    padding: 0.6em 0 0;
+}
+.header-lg .cart {
+    padding: 1rem;
+    font-size: 1.5rem;
+    position: relative;
+}
+.header-lg .cart .cart-badge {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    color: white;
+    background: red;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 5px;
+}
+.header {
+    height: 60px;
+}
+.header .fixed-header {
+  padding: 10px 4px;
+}
 .header-links {
   position: relative;
 }
@@ -232,20 +308,7 @@ export default {
     font-size: 11px;
     background: #ee4899
 }
-.header {
-    height: 80px;
-}
-.logo {
-    text-align: center;
-    position: absolute;
-    top: 0;
-}
-.lg-menu li {
-    border-right: 1px solid #EFEFEF;
-}
-.lg-menu li a {
-    font-size: 0.9em;
-    color: #3A3A3A;
-    padding: 1.6em;
+.dlist-inline dt, .dlist-inline dd {
+    display: inline-block;
 }
 </style>
