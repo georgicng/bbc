@@ -6,6 +6,6 @@ export default {
   component: Products,
   props: route => ({
     page: route.query.page || 1,
-    filter: route.query.filter,
+    category: route.query.category || 0,
   }),
 };

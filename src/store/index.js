@@ -2,9 +2,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersist from 'vuex-persist';
-import { pageGetters, productGetters, manufacturerGetters, cartGetters, orderGetters } from './getters';
-import { pageMutations, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations } from './mutations';
-import { productActions, manufacturerActions, orderActions } from './actions';
+import { pageGetters, productGetters, categoriesGetters, cartGetters, orderGetters } from './getters';
+import { pageMutations, productMutations, cartMutations, orderMutations, categoriesMutations, initialisationMutations } from './mutations';
+import { productActions, categoriesActions, orderActions } from './actions';
 
 Vue.use(Vuex);
 const vuexLocalStorage = new VuexPersist({
@@ -38,15 +38,15 @@ const store = new Vuex.Store({
     shipping_methods: [],
     payment_methods: [],
     cities: [],
-    // all manufacturers
-    manufacturers: [],
+    // all categoriess
+    categories: [],
     pageTitle: '',
     pageIcon: '',
     pageCover: true,
   },
-  mutations: Object.assign({}, pageMutations, productMutations, cartMutations, orderMutations, manufacturerMutations, initialisationMutations),
-  getters: Object.assign({}, pageGetters, productGetters, manufacturerGetters, cartGetters, orderGetters),
-  actions: Object.assign({}, productActions, manufacturerActions, orderActions),
+  mutations: Object.assign({}, pageMutations, productMutations, cartMutations, orderMutations, categoriesMutations, initialisationMutations),
+  getters: Object.assign({}, pageGetters, productGetters, categoriesGetters, cartGetters, orderGetters),
+  actions: Object.assign({}, productActions, categoriesActions, orderActions),
   plugins: [vuexLocalStorage.plugin]
 });
 

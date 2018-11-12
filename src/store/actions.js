@@ -10,9 +10,9 @@ import {
   ALL_PRODUCTS,
   ALL_PRODUCTS_SUCCESS,
   ALL_PRODUCTS_FAILURE,
-  ALL_MANUFACTURERS,
-  ALL_MANUFACTURERS_SUCCESS,
-  ALL_MANUFACTURERS_FAILURE,
+  ALL_CATEGORIES,
+  ALL_CATEGORIES_SUCCESS,
+  ALL_CATEGORIES_FAILURE,
   ALL_PAYMENT_METHODS,
   ALL_SHIPPING_METHODS,
   ALL_SHIPPING_METHODS_SUCCESS,
@@ -38,12 +38,24 @@ export const productActions = {
     commit(ALL_PRODUCTS);
     const page = (payload && payload.page) ? payload.page - 1 : 0;
     const offset = page * 10;
-    const args = {
-      depth: 3,
-      limit: 10,
-      'filters[name][neq]': 'custom',
-      offset,
-    };
+    let args = {};
+    if (payload.category && parseInt(payload.category) > 0) {
+      console.log('category', payload.category);
+      args = {
+        depth: 3,
+        limit: 10,
+        'filters[categories.id][eq]': payload.category,
+        offset,
+      };
+    } else {
+      args = {
+        depth: 3,
+        limit: 10,
+        'filters[name][neq]': 'custom',
+        offset,
+      };
+    }
+    console.log('arg', args);
     client
       .getItems('products', args)
       .then(res => commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total: res.meta.total_entries }))
@@ -65,13 +77,13 @@ export const productActions = {
   },
 };
 
-export const manufacturerActions = {
-  allManufacturers({ commit }) {
-    commit(ALL_MANUFACTURERS);
+export const categoriesActions = {
+  allCategories({ commit }) {
+    commit(ALL_CATEGORIES);
     client
-    .getItems('categories', { depth: 2 })
-    .then(res => commit(ALL_MANUFACTURERS_SUCCESS, res.data))
-    .catch(err => commit(ALL_MANUFACTURERS_FAILURE, err));
+    .getItems('categories', { depth: 1 })
+    .then(res => commit(ALL_CATEGORIES_SUCCESS, res.data))
+    .catch(err => commit(ALL_CATEGORIES_FAILURE, err));
   },
 };
 

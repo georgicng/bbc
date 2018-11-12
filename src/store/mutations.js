@@ -16,9 +16,9 @@ import {
   ALL_PRODUCTS,
   ALL_PRODUCTS_SUCCESS,
   ALL_PRODUCTS_FAILURE,
-  ALL_MANUFACTURERS,
-  ALL_MANUFACTURERS_SUCCESS,
-  ALL_MANUFACTURERS_FAILURE,
+  ALL_CATEGORIES,
+  ALL_CATEGORIES_SUCCESS,
+  ALL_CATEGORIES_FAILURE,
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
   ADD_EXPRESS_SHIPPING,
@@ -67,9 +67,10 @@ export const productMutations = {
   },
   [ALL_PRODUCTS_SUCCESS](state, payload) {
     state.showLoader = false;
-    state.products.entries.push({ page: payload.page, items: payload.items });
+    state.products.entries = payload.items;
     state.products.total = payload.total;
     state.products.current_page = payload.page;
+    state.products.current_category = payload.category;
   },
   [ALL_PRODUCTS_FAILURE](state, payload) {
     state.showLoader = false;
@@ -206,15 +207,15 @@ export const orderMutations = {
   },
 };
 
-export const manufacturerMutations = {
-  [ALL_MANUFACTURERS](state) {
+export const categoriesMutations = {
+  [ALL_CATEGORIES](state) {
     state.showLoader = true;
   },
-  [ALL_MANUFACTURERS_SUCCESS](state, payload) {
+  [ALL_CATEGORIES_SUCCESS](state, payload) {
     state.showLoader = false;
-    state.manufacturers = payload;
+    state.categories = payload;
   },
-  [ALL_MANUFACTURERS_FAILURE](state, payload) {
+  [ALL_CATEGORIES_FAILURE](state, payload) {
     state.showLoader = false;
   },
 };

@@ -1,63 +1,16 @@
 <template>
 	<section class="page-wrapper innerpage-section-padding">
 		<div id="categories-page">
-			<div class="container-fluid">
+			<div class="container-fluid" id="categories">
 				 <div class="row">
-					<div class="code_itemside_img4  my-3 border-0 col-md-6 offset-lg-1 col-lg-5">
-					<div class="card shadow-lg">
-						<router-link :to="'/products'">
-						<figure class="itemside d-flex">
-							<img class="img-bg" height="120" src="static/images/items/men-sm.png">
-							<figcaption class="card-body">
-								<h2 class="title">Cakes for Men </h2>
-								<router-link :to="'/categories'">Shop Now</router-link>
-							</figcaption>
-						</figure>
-						</router-link>
-					</div> <!-- card.// -->
-					</div>
-				
-				<div class="code_itemside_img4 my-3 border-0 col-md-6 col-lg-5">
-				<div class="card shadow-lg ">
-					<router-link :to="'/products'">
-						<figure class="itemside d-flex">
-							<img class="img-bg" height="120" src="static/images/items/women-sm.png">
-							<figcaption class="card-body">
-								<h2 class="title">Cakes for Women </h2>
-								<span>Shop Now</span>
-							</figcaption>
-						</figure>
-					</router-link>
-				</div> <!-- card.// -->
-				</div>
-				</div>
-              	<div class="row">
-				<div class="code_itemside_img4 my-3 border-0 col-md-6 offset-lg-1 col-lg-5">
-				<div class="card shadow-lg">
-					<router-link :to="'/products'">
-						<figure class="itemside d-flex">
-							<img class="img-bg" height="120" src="static/images/items/kid-sm.png">
-							<figcaption class="card-body">
-								<h2 class="title">Cakes for Kids </h2>
-								<span>Shop Now</span>
-							</figcaption>
-						</figure>
-					</router-link>
-				</div> <!-- card.// -->			
-				</div>
-				<div class="code_itemside_img4 my-3 border-0 col-md-6 col-lg-5">
-				<div class="card shadow-lg">
-					<router-link :to="'/custom'">
-						<figure class="itemside d-flex">
-							<img class="img-bg" height="120" src="static/images/items/custom-sm.png">
-							<figcaption class="card-body">
-								<h2 class="title">Custom Cake</h2>
-								<span>Shop Now</span>
-							</figcaption>
-						</figure>
-					</router-link>
-				</div> <!-- card.// -->
-				</div>
+					<template v-for="item in categories">
+						<div :key="item.id" class="col-md-6 col-lg-4 col-xl-3 my-3">
+							<div class="card">
+								<img class="w-100" :src="getImage(item)" alt="Card image cap">
+								<router-link :to="'/products?category='+item.id" class="btn view-btn">{{item.name}}</router-link>
+							</div>
+						</div>
+					</template>
 				 </div>				
 			</div><!-- end container-fluid -->
 		</div>
@@ -67,16 +20,30 @@
 
 <script>
 import { PAGE_COVER } from "../store/mutation-types";
+import { API_ROOT } from "../config";
 export default {
-  name: "categories",
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
-  },
-  mounted() {
-    this.$store.commit(PAGE_COVER, false);
-  },
+	name: "categories",
+	data() {
+		return {
+		msg: "Welcome to Your Vue.js App"
+		};
+	},
+	mounted() {
+		this.$store.commit(PAGE_COVER, false);
+	},
+	created () {
+		this.$store.dispatch('allCategories');
+	},
+	computed: {
+		categories () {
+			return this.$store.getters.allCategories;
+		},
+	},
+	methods: {
+		getImage: function(category) {
+			return `${API_ROOT}${category.image.data.url}`;
+		},
+	}
 };
 </script>
 
@@ -84,5 +51,30 @@ export default {
 <style scoped>
 figure {
     margin: 0 0;
+}
+#categories .card:hover {
+    transition: all 0.3s ease;
+    box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
+}
+
+#categories img {
+
+}
+
+#categories .view-btn {
+    background-color: #e6de08;
+    margin: -25px 0 0 0;
+    border-radius: 0 0 0 0;
+    font-size: 24px;
+    border: #e6de08;
+    color: #000;
+
+}
+#categories .btn:hover {
+	background-color: #ff4444;
+	color: #fff;
+	border: 2px solid #ff4444;
+	transition: all 0.3s ease;
+	box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
 }
 </style>

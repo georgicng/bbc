@@ -40,12 +40,12 @@
         current: parseInt(this.page)
       }
     },
-    props: ['page', 'filter'],
+    props: ['page', 'category'],
     mounted() {
       this.$store.commit(PAGE_COVER, false);
     },
     created () {
-      this.$store.dispatch('allProducts', { page: this.page });
+      this.$store.dispatch('allProducts', { page: this.page, category: this.category });
     },
     computed: {
       products () {
@@ -70,13 +70,13 @@
     },
     methods: {
       changePage (pageNum) {
-        this.$router.push({ path: `/products?page=${pageNum}` });
+        this.$router.push({ path: `/products?page=${pageNum}&category=${this.category}` });
       }
     },
     beforeRouteUpdate (to, from, next) {
       // react to route changes...
       // don't forget to call next()
-      this.$store.dispatch('allProducts', { page: parseInt(to.params.page) })
+      this.$store.dispatch('allProducts', { page: parseInt(to.params.page), category: parseInt(to.params.category) })
       .then(response => {
         next()
       });

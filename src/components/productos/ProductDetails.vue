@@ -33,41 +33,38 @@
                       <div class="form-group" :key="product_option.slug" :data-option="product_option.option_id">
                       <template v-if="product_option.type == 'textbox'">                         
                             <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                            <input type="text" class="form-control" :id="product_option.slug" :name="product_option.slug">                         
+                            <template v-if="product_option.maximum"> 
+                              <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]" :maxlength="product_option.maximum">
+                            </template>
+                            <template v-else> 
+                              <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]">
+                            </template>                         
                       </template>
                       <template v-else-if="product_option.type == 'select'">
                         <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                        <select class="form-control" :id="product_option.slug" :name="product_option.slug" @change="updateIncrement()">
-                            <option value="*">Select {{product_option.name}}</option>
-                                <template v-for="(value, index) in getValues(product_option.option_id)">
-                                  <option :value="value.id" :key="index">{{value.name}} ...{{getTotal(value.increment)}}</option>
-                                </template>
-                            </select>
+                        <multiselect track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
                       </template>
                        <template v-else-if="product_option.type == 'radio'">
                          <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
                           <template v-for="(value, index) in getValues(product_option.option_id)">
                             <div class="custom-control custom-radio" :key="index">
-                              <input type="radio" class="custom-control-input" :name="product_option.slug" :id="product_option.slug+index" :value="value.id" @change="updateIncrement()">
+                              <input type="radio" class="custom-control-input" :name="product_option.slug" :id="product_option.slug+index" :value="value.id">
                               <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
                             </div>
                          </template>
                       </template>
                       <template v-else-if="product_option.type == 'checkbox'">
-                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                        <template v-for="(value, index) in getValues(product_option.option_id)">
-                            <div class="custom-control custom-checkbox" :key="index">
-                              <input type="checkbox" class="custom-control-input"
-                                :name="product_option.slug" 
-                                :id="product_option.slug+index" 
-                                :value="value.id" @change="updateIncrement()">
-                              <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
-                            </div>
+                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label> 
+                         <template v-if="product_option.maximum"> 
+                        <multiselect :multiple="true" track-by="id" label="name" :max="product_option.maximum" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
                         </template>
+                            <template v-else> 
+                              <multiselect :multiple="true" track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
+                            </template>
                       </template>
                       <template v-if="product_option.type == 'textarea'">                         
                             <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                            <textarea class="form-control" :id="product_option.slug" :name="product_option.slug"></textarea>                         
+                            <textarea class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]"></textarea>                         
                       </template>
                       <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
                        </div>
@@ -95,7 +92,29 @@
               
               <div class="tab-content">
                   <div id="size" class="tab-pane active">
-                      <p>Insert Images here</p>
+                      <div id="img-tab" class="nav nav-pills my-5"  role="tablist">
+                        <a href="#inches-6" class="nav-item nav-link active" data-toggle="tab" role="tab">
+                          6 Inches
+                        </a>
+                        <a href="#inches-8" class="nav-item nav-link" data-toggle="tab" role="tab">
+                          8 Inches
+                        </a>
+                        <a href="#inches-10" class="nav-item nav-link" data-toggle="tab" role="tab">
+                          10 Inches
+                        </a>
+                        <a href="#inches-12" class="nav-item nav-link" data-toggle="tab" role="tab">
+                          12 Inches
+                        </a>
+                      </div>
+                      <div class="tab-content my-5">
+                        <div class="tab-pane active" id="inches-6" role="tabpanel">
+                          <h2> 6 Inches Cake</h2>
+                          <img src="//placehold.it/600x600">
+                        </div>
+                        <div class="tab-pane" id="inches-8" role="tabpanel"><img src="//placehold.it/600x600"></div>
+                        <div class="tab-pane" id="inches-10" role="tabpanel"><img src="//placehold.it/600x600"></div>
+                        <div class="tab-pane" id="inches-12" role="tabpanel"><img src="//placehold.it/600x600"></div>
+                      </div>
                   </div>
               </div><!-- end tab-content -->  
             </div>
@@ -109,26 +128,83 @@
 <script>
 import { ADD_TO_CART } from "../../store/mutation-types";
 import { API_ROOT } from "../../config";
+import Multiselect from 'vue-multiselect';
 export default {
   props: ["product"],
+  components: { Multiselect },
   data() {
     return {
       quantity: 1,
-      increment: 0
+      optionValues: {}
     };
+  },
+  mounted() {
+    const options = this.getOptions();
+    if (options) {
+      options.forEach((option) => {
+        switch (option.type) {
+          case 'checkbox':
+              this.$set(this.optionValues, option.slug, []);
+              break;
+          default:
+              this.$set(this.optionValues, option.slug, '');
+        }
+      });
+    }
   },
   computed: {
     options() {
       //add or item.value != '' or '*' to filter
-      return $("#productform")
-        .serializeArray()
-        .filter(item => item.name !== "quantity");
+      const options = [];
+      Object.keys(this.optionValues).forEach((key) => {
+         if (key && this.optionValues[key] instanceof Array && this.optionValues[key].length > 0) {
+            //push every value id
+            this.optionValues[key].forEach((item) => {
+              options.push({name: key, value: item.id});
+            });
+          } else if (this.optionValues[key] !== null && typeof this.optionValues[key] === 'object') {
+            //push object value id
+            options.push({name: key, value: this.optionValues[key].id});
+          } else {
+            //push string value
+            options.push({name: key, value: this.optionValues[key]});
+          }
+        });
+        console.log('options', options);
+        return options;
     },
     price() {
       return (
         (parseFloat(this.product.price) + parseFloat(this.increment)) *
         parseInt(this.quantity)
       );
+    },
+    increment() {
+      let increment = 0;
+      const keys = Object.keys(this.optionValues);
+      if (keys) {
+        keys.forEach((key) => {
+          console.log('key',key);
+            if (key && this.optionValues[key] instanceof Array && this.optionValues[key].length > 0) {
+              this.optionValues[key].forEach((item) => {
+                console.log(item);
+                increment += parseFloat(item.increment);
+              })
+            } else if (this.optionValues[key] !== null && typeof this.optionValues[key] === 'object') {
+              console.log('solo',this.optionValues[key]);
+              if (this.optionValues[key].increment) {                
+                increment += parseFloat(this.optionValues[key].increment);
+              }
+            }
+        });
+      }
+      
+
+      if (this.optionValues['flavours'] && this.optionValues['flavours'].length > 2) {
+        increment += 1000;
+      }
+
+      return increment;
     },
     unitPrice() {
       return parseFloat(this.product.price) + parseFloat(this.increment);
@@ -152,7 +228,8 @@ export default {
         productid: this.product.id,
         quantity: this.quantity,
         price: this.unitPrice,
-        options: this.options
+        options: this.options,
+        product: this.product
       }),
         this.$router.push("/cart");
     },
@@ -165,7 +242,9 @@ export default {
             name: option.option_id.data.name,
             slug: option.option_id.data.slug,
             increment: option.price_increment,
-            comment: option.comment
+            comment: option.comment,
+            maximum: option.maximum ? option.maximum : false,
+            required: option.required
           };
         });
       }
@@ -209,36 +288,11 @@ export default {
       }
       return 0;
     },
-    updateIncrement() {
-      let price = 0;
-      const self = this;
-      $("#productform")
-        .find("input:checked, option:selected")
-        .each(function() {
-          const value = $(this).val();
-          const name = $(this).attr('name')? $(this).attr('name') : $(this).parent().attr('name');
-          if (value !== "*" && value !== "") {
-            price += self.getValueIncrement(name, value);
-          }
-        });
-      //add 1000 if all flavour selected
-      if ($('input[name=flavours]:checked').size() == 3) {
-        price += 1000;
-      }
+  },
 
-      //ensure not more than two sizes are selected
-      if($('input[name=colors]:checked').length == 3) {
-          $('input[name=colors]:not(:checked)').attr('disabled', 'disabled');
-      } else {
-        $('input[name=colors]').removeAttr('disabled');
-      }
-
-      this.increment = price;
-    }
-  }
 };
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
 .product-details {
   border-bottom: 2px solid #f5f5f5;

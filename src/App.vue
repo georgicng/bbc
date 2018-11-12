@@ -24,6 +24,7 @@
               <router-link to="/about" class="list-group-item"><i class="fas fa-users"></i> About</router-link>
               <router-link to="/contact" class="list-group-item"><i class="fas fa-envelope"></i> Contact</router-link>
               <router-link to="/complaint" class="list-group-item"><i class="fas fa-question-circle"></i> Support</router-link>
+              <router-link to="/faq" class="list-group-item"><i class="fas fa-question-circle"></i> FAQ</router-link>
               <router-link to="/terms" class="list-group-item"><i class="far fa-handshake"></i> Terms and Conditions</router-link>                  
             </div><!-- end list-group -->
         </div><!-- end main-menu -->
@@ -84,6 +85,7 @@
                           <li class="nav-item"><router-link to="/about" class="nav-link">About</router-link></li>                          
                           <li class="nav-item"><router-link to="/contact" class="nav-link">Contact</router-link></li>
                           <li class="nav-item"><router-link to="/complaint" class="nav-link">Support</router-link></li>
+                          <li class="nav-item"><router-link to="/faq" class="nav-link">FAQ</router-link></li>
                         </ul>
                     </nav>
                   </div>
@@ -228,12 +230,12 @@ export default {
 </script>
 <style>
 .header-lg {
-  background-color: #FFFFFF;
+  background-color: #f2f2f2;
 }
 .header-lg .logo {
     text-align: center;
     position: absolute;
-    top: 0;
+    top: 3px;
 }
 .header-lg .logo_wrapper {
   position: relative;

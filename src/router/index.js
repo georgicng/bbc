@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import LoadScript from 'vue-plugin-load-script';
+import VueImg from 'v-img';
 import store from '../store';
 // import Hello from '@/components/Hello'
 import HomeRoutes from './home';
@@ -13,11 +14,13 @@ import CheckoutRoutes from './checkout';
 import AboutRoutes from './about';
 import ContactRoutes from './contact';
 import ComplaintRoutes from './complaint';
+import FAQRoutes from './faq';
 import TermsRoutes from './terms';
 import SuccessRoutes from './success';
 
 Vue.use(Router); 
 Vue.use(LoadScript);
+Vue.use(VueImg);
 
 Vue.filter('slugify', (value) => {
   const a = 'àáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';
@@ -48,6 +51,7 @@ const router = new Router({
     AboutRoutes,
     ContactRoutes,
     ComplaintRoutes,
+    FAQRoutes,
     TermsRoutes,
     SuccessRoutes,
   ],

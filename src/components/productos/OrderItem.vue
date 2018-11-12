@@ -12,7 +12,7 @@
 					<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end order-img -->
 			</div><!-- end order-item -->
-			<div class="d-flex" v-html="getOptionDetails(line.productid, line.options)"></div>
+			<div class="d-flex" v-html="getOptionDetails(line.product, line.options)"></div>
 			<div class="total">
 				<p>{{quantity}} x N{{line.price}} = <span>N{{price}}</span></p>
 			</div><!-- end total -->
@@ -32,10 +32,7 @@ export default {
 	},
   computed: {
     product() {
-			if(this.line.productid == 12) {
-				return this.$store.getters.customProduct;
-			}
-			return this.$store.getters.productById(this.line.productid)
+			return this.line.product;
 		},
 		price() {
 			return this.line.price * this.quantity
@@ -45,8 +42,8 @@ export default {
     getImage: function(id) {
       return `${API_ROOT}${this.product.image.data.url}`;
 		},
-		getOptionDetails(id, options) {
-			return this.$store.getters.optionDescription(id, options);
+		getOptionDetails(product, options) {
+			return this.$store.getters.optionDescription(product, options);
 		}
   }
 };

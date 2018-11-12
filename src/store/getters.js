@@ -7,26 +7,27 @@ export const pageGetters = {
 };
 
 export const productGetters = {
-  allProducts: state => state.products.entries.reduce((acc, val) => acc.concat(val.items), []),
-  productByPage: state => (pagenum) => {
-    const page = state.products.entries.find(element => element.page == pagenum);
-    if (page) {
-      return page.items;
+  allProducts: state => state.products.entries,
+  productByPage: state => (pagenum, category) => {
+    if (state.products.current_page == pagenum && state.products.current_category == category) {
+      return state.products.entries;
     }
-    return [];
+    return null;
   },
   productById: (state, getters) => (id) => {
-    if (getters.allProducts.length > 0) {
-      return getters.allProducts.filter(p => p.id == id)[0];
-    }
-    return state.product;
+    if (state.product.id == id) {
+      return state.product;
+    } else if (getters.allProducts.length > 0) {
+      const found = getters.allProducts.find(p => p.id == id);
+      return found ? found : null;
+    }    
   },
   customProduct: state => state.custom,
   productCount: state => state.products.total,
 };
 
-export const manufacturerGetters = {
-  allManufacturers: state => state.manufacturers,
+export const categoriesGetters = {
+  allCategories: state => state.categories,
 };
 
 export const cartGetters = {
@@ -39,14 +40,8 @@ export const cartGetters = {
     }
     return state.order.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   },
-  optionDescription: (state, getters) => (productid, options) => {
-    let product = null;
-    
-    if (productid == 12) {
-      product = getters.customProduct;
-    } else {
-      product = getters.productById(productid);
-    }
+  optionDescription: (state, getters) => (product, options) => {
+
     let remark = '';
     if (options && options.length > 0) {
       //get value  from option valu id
