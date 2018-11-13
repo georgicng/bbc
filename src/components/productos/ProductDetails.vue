@@ -31,43 +31,45 @@
                   <form @submit.prevent="" id="productform">
                     <template v-for="product_option in getOptions()">
                       <div class="form-group" :key="product_option.slug" :data-option="product_option.option_id">
-                      <template v-if="product_option.type == 'textbox'">                         
-                            <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                            <template v-if="product_option.maximum"> 
-                              <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]" :maxlength="product_option.maximum">
-                            </template>
-                            <template v-else> 
-                              <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]">
-                            </template>                         
-                      </template>
-                      <template v-else-if="product_option.type == 'select'">
-                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                        <multiselect track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
-                      </template>
-                       <template v-else-if="product_option.type == 'radio'">
-                         <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                          <template v-for="(value, index) in getValues(product_option.option_id)">
-                            <div class="custom-control custom-radio" :key="index">
-                              <input type="radio" class="custom-control-input" :name="product_option.slug" :id="product_option.slug+index" :value="value.id">
-                              <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
-                            </div>
-                         </template>
-                      </template>
-                      <template v-else-if="product_option.type == 'checkbox'">
-                        <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label> 
-                         <template v-if="product_option.maximum"> 
-                        <multiselect :multiple="true" track-by="id" label="name" :max="product_option.maximum" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
+                        <template v-if="product_option.type == 'textbox'">                         
+                              <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                              <template v-if="product_option.maximum"> 
+                                <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]" :maxlength="product_option.maximum">
+                              </template>
+                              <template v-else> 
+                                <input type="text" class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]">
+                              </template>                         
                         </template>
-                            <template v-else> 
-                              <multiselect :multiple="true" track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
-                            </template>
-                      </template>
-                      <template v-if="product_option.type == 'textarea'">                         
-                            <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
-                            <textarea class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]"></textarea>                         
-                      </template>
-                      <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
-                       </div>
+                        <template v-else-if="product_option.type == 'select'">
+                          <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                          <multiselect track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
+                        </template>
+                        <template v-else-if="product_option.type == 'radio'">
+                          <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                            <template v-for="(value, index) in getValues(product_option.option_id)">
+                              <div class="custom-control custom-radio" :key="index">
+                                <input type="radio" class="custom-control-input" :name="product_option.slug" :id="product_option.slug+index" :value="value.id">
+                                <label class="custom-control-label" :for="product_option.slug+index">{{value.name}}</label>
+                              </div>
+                          </template>
+                        </template>
+                        <template v-else-if="product_option.type == 'checkbox'">
+                          <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label> 
+                          <template v-if="product_option.maximum"> 
+                          <multiselect :multiple="true" track-by="id" label="name" :max="product_option.maximum" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
+                          </template>
+                              <template v-else> 
+                                <multiselect :multiple="true" track-by="id" label="name" v-model="optionValues[product_option.slug]" :options="getValues(product_option.option_id)" :searchable="false"></multiselect>
+                              </template>
+                        </template>
+                        <template v-if="product_option.type == 'textarea'">                         
+                              <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
+                              <textarea class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]"></textarea>                         
+                        </template>
+                        <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
+                    
+                      </div>
+                       
                     </template>
                       <div class="form-group">
                             <label class="font-weight-bold">Quantity :</label>
@@ -76,7 +78,8 @@
                         <div class="form-group">
                             <label class="font-weight-bold">Total :</label>
                             <span class="price">N{{price}}</span>
-                        </div>                        
+                        </div> 
+                        <div class="error" v-show="showErrors" v-html="errorMessages"></div>                      
                         <button @click="addToCart" class="btn btn-orange">Add to cart <span><i class="fa fa-shopping-cart"></i></span></button>
                     </form>
                     </div>               
@@ -135,7 +138,9 @@ export default {
   data() {
     return {
       quantity: 1,
-      optionValues: {}
+      optionValues: {},
+      showErrors: false,
+      errorMessages: ''
     };
   },
   mounted() {
@@ -199,7 +204,6 @@ export default {
         });
       }
       
-
       if (this.optionValues['flavours'] && this.optionValues['flavours'].length > 2) {
         increment += 1000;
       }
@@ -209,6 +213,12 @@ export default {
     unitPrice() {
       return parseFloat(this.product.price) + parseFloat(this.increment);
     }
+  },
+  watch: {
+      options: function(val) {
+          console.log('watch', val);
+          this.showErrors = false;
+      }
   },
   methods: {
     getImage: function(product) {
@@ -224,18 +234,45 @@ export default {
       return parseFloat(increment) + parseFloat(this.product.price);
     },
     addToCart() {
-      this.$store.commit(ADD_TO_CART, {
-        productid: this.product.id,
-        quantity: this.quantity,
-        price: this.unitPrice,
-        options: this.options,
-        product: this.product
-      }),
+      if (this.validate()) {
+        this.$store.commit(
+          ADD_TO_CART,
+          {
+            productid: this.product.id,
+            quantity: this.quantity,
+            price: this.unitPrice,
+            options: this.options,
+            product: this.product
+          }
+        ),
         this.$router.push("/cart");
+      } else {
+        this.showErrors = true;
+      }
+      
+    },
+    validate() {
+      let valid = true;
+      this.errorMessages = '';
+      const options = this.getOptions();
+      if (options) {
+        options.forEach((option) => {
+          if (option.required && !this.optionValues[option.slug]) {
+            if (option.type == 'checkbox' && this.optionValues[option.slug].lenght > 0) {
+
+            }            
+            valid = false;
+            this.errorMessages += `Please specify a ${option.name}<br>`;
+            
+          }
+        });
+      }
+      return valid;
     },
     getOptions() {
       if (this.product.options && this.product.options.data.length > 0) {
-        return this.product.options.data.map((option) => {
+        return this.product.options.data
+        .map((option) => {
           return {
             option_id: option.id,
             type: option.option_id.data.type,
@@ -248,7 +285,7 @@ export default {
           };
         });
       }
-      return {};
+      return [];
     },
     getValues(option_id) {
       if (this.product.options && this.product.options.data.length > 0) {
@@ -344,5 +381,10 @@ export default {
 .no-back .nav-tabs li a.active {
     border-color: #ee4899;
     color: #ee4899;
+}
+.error {
+  color: red;
+  background: #f1ecee;
+  padding: 10px
 }
 </style>

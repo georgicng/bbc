@@ -1,14 +1,16 @@
 <template>
 	<section class="page-wrapper innerpage-section-padding">
 		<div id="categories-page">
-			<div class="container-fluid" id="categories">
+			<div class="container" id="categories">
 				 <div class="row">
 					<template v-for="item in categories">
 						<div :key="item.id" class="col-md-6 col-lg-4 col-xl-3 my-3">
-							<div class="card">
-								<img class="w-100" :src="getImage(item)" alt="Card image cap">
-								<router-link :to="'/products?category='+item.id" class="btn view-btn">{{item.name}}</router-link>
-							</div>
+							<router-link :to="getLink(item)">
+								<div class="card">
+									<img class="w-100" :src="getImage(item)" alt="Card image cap">
+									<div class="btn view-btn">{{item.name}}</div>
+								</div>
+							</router-link>
 						</div>
 					</template>
 				 </div>				
@@ -42,6 +44,14 @@ export default {
 	methods: {
 		getImage: function(category) {
 			return `${API_ROOT}${category.image.data.url}`;
+		},
+		getLink: function(category) {
+			if (category.id == 4) {
+				//const product = category.products.data[0];
+				//return `/details/${product.id}`;
+				return `/custom`;
+			}
+			return `/products?category=${category.id}`;
 		},
 	}
 };

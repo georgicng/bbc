@@ -80,6 +80,7 @@ export const productMutations = {
   },
   [PRODUCT_BY_ID_SUCCESS](state, payload) {
     state.showLoader = false;
+    payload.options.data.sort((a, b) => a.option_id.data.sort - b.option_id.data.sort);
     Vue.set(state, 'product', payload);
   },
   [PRODUCT_BY_ID_FAILURE](state, payload) {
