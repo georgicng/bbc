@@ -1,5 +1,5 @@
 <template>
-  <div class="cart-info text-center">
+  <div class="cart-info text-right">
     <h4>Sub-Total: <span>N{{subtotal}}</span></h4>
     <h4>{{shippingName}}: <span>N{{shipping}}</span></h4>
     <h4 v-show="discount > 0">Discount (coupon): <span>- N{{discount}}</span></h4>

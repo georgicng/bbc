@@ -9,7 +9,7 @@
                   </div>
                   <div class="menu-price">
                       <p>Price from</p>
-                      <h3>N{{product.price}}</h3>
+                      <h3>N{{price}}</h3>
                   </div>
               </div><!-- end page-title -->
               </div>

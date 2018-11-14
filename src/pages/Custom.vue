@@ -4,13 +4,13 @@
     <!--enter-active-class="animated zoomIn"-->
   <!--&gt;-->
   <div class="page-wrapper innerpage-section-padding">
-    <custom-product :product="product"></custom-product>
+    <product-details :product="product" :multi="true"></product-details>
   </div>
   <!--</transition>-->
 </template>
 
 <script>
-  import CustomProduct from '../components/productos/CustomProduct';
+  import ProductDetails from '../components/productos/ProductDetails';
   import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
@@ -25,7 +25,7 @@
       }
     },
     components: {
-      'custom-product': CustomProduct
+      'product-details': ProductDetails
     }
   }
 </script>

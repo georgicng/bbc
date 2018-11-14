@@ -1,135 +1,133 @@
 <template>
   <section class="page-wrapper innerpage-section-padding">
-     <div class="container-fluid">
-       <div class="no-back">
-             <div class="row">
-                 <div class="col-sm-12 offset-lg-2 col-lg-8"> 
-    <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="gray" error-color="#a94442">
-          <tab-content title="Shipping Address" icon="ti-user" :before-change="validateFirstTab">
-              <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
-              </vue-form-generator>
-          </tab-content>
-          <tab-content title="Shipping and Payment Method" icon="ti-truck" :before-change="validateSecondTab">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <div class="card my-3">
-                  <div class="card-header">
-                    Delivery Method
+    <div class="container-fluid">
+      <div class="no-back">
+        <div class="row">
+          <div class="col-sm-12 offset-lg-2 col-lg-8"> 
+            <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="#EE4899" error-color="#a94442">
+              <tab-content title="User Details" icon="ti-user" :before-change="validateAddress">
+                  <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
+                  </vue-form-generator>
+              </tab-content>
+              <tab-content title="Delivery Details" icon="ti-truck" :before-change="validateShipping">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <div class="card my-3" v-bind:class="{ red: !shipping && shippingValid == false }">
+                      <div class="card-header">
+                        Delivery Method
+                      </div>
+                      <template v-for="(value, key) in shipping_options">
+                        <div class="card-body"  :key="key" v-show=" key != 'Deliver to me' || (key == 'Deliver to me'  && model.city != 'Other')">
+                            <h4 class="card-title">
+                                {{key}}
+                            </h4>
+                            <template v-if="key == 'Deliver to me'">                         
+                                <template v-for="item in value" v-if="model.city == item.title">
+                                  <div class="custom-control custom-radio" :key="item.id">
+                                    <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
+                                    <label class="custom-control-label" :for="'customRadio'+item.id">
+                                      <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
+                                    </label>
+                                  </div>
+                                </template>                            
+                                <div class="custom-control custom-checkbox" v-show="shippingName == 'Deliver to me'">
+                                  <input type="checkbox" name="express" id="express" v-model="express" class="custom-control-input">
+                                  <label class="custom-control-label" for="express"><h4>Express Delivery <span class="badge">N1000</span></h4></label>
+                                </div>
+                            </template>
+                            <template v-else>
+                              <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
+                                <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
+                                <label class="custom-control-label" :for="'customRadio'+item.id">
+                                  <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
+                                </label>
+                                </div>
+                            </template>
+                        </div>
+                      </template>
+                      <div class="card-body error" v-if="!shipping && shippingValid == false">Please select a delivery method</div>
+                    </div>
+                    <div class="card my-3" v-bind:class="{ red: (!deliveryDate || !deliveryTime) && shippingValid == false }">
+                      <div class="card-header">
+                        Delivery Day
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group mb-3">
+                          <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
+                          <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
+                          <div class="error" v-show="shippingValid && (!deliveryDate || deliveryDate == '')">Please select a delivery date</div>
+                        </div>
+                        <div class="form-group mb-3">
+                          <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
+                          <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
+                            <option value="">Select delivery time</option>
+                            <option value="12-2">12 Noon - 2 PM</option>
+                            <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
+                          </select>
+                          <div class="error" v-show="shippingValid == false && (!deliveryTime || deliveryTime == '')">Please select a delivery time</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <template v-for="(value, key) in shipping_options">
-                  <div class="card-body"  :key="key" v-show=" key != 'City Shipping' || (key == 'City Shipping'  && model.city != 'Other')">
-                      <h4 class="card-title">
-                          {{key}}
-                      </h4>
-                         <template v-if="key == 'Deliver to me'">                         
-                            <template v-for="item in value" v-if="model.city == item.title">
-                              <div class="custom-control custom-radio" :key="item.id">
-                              <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
-                              <label class="custom-control-label" :for="'customRadio'+item.id">
-                                <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
-                              </label>
-                              </div>
-                            </template>                            
-                            <div class="custom-control custom-checkbox" v-show="shippingName == 'Deliver to me'">
-                              <input type="checkbox" name="express" id="express" v-model="express" class="custom-control-input">
-                              <label class="custom-control-label" for="express"><h4>Express Delivery <span class="badge">N1000</span></h4></label>
-                            </div>
-                        </template>
-                        <template v-else>
-                          <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
-                            <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
-                            <label class="custom-control-label" :for="'customRadio'+item.id">
-                              <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
-                            </label>
-                            </div>
-                        </template>
+                  <div class="col-md-6 mb-3">
+                    <div class="counter text-center my-3">
+                      <i class="fa fa-code fa-2x"></i>
+                      <h2 class="timer count-title count-number">N{{shippingRate}}</h2>
+                      <p class="count-text ">Total Shipping</p>
+                    </div>              
+                    <div class="card my-3" v-bind:class="{ red: !payment && shippingValid == false }">
+                      <div class="card-header">
+                        Payment Method
+                      </div>
+                      <div class="card-body">
+                        <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
+                          <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
+                          <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
+                            <h3>{{ item.name }}</h3>
+                            <p>{{item.description}}</p>
+                          </label>
+                        </div>
+                        <div class="error" v-if="!payment && shippingValid == false">Please select a payment method</div>
+                      </div>
+                    </div>           
                   </div>
-                  </template>
-                  <div class="card-body error" v-if="!shipping">Please select a delivery method</div>
                 </div>
-                <div class="card my-3">
-                  <div class="card-header">
-                    Delivery Day
-                  </div>
-                  <div class="card-body">
-                    <div class="form-group mb-3">
-                      <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
-                      <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
-                      <div class="error" v-show="!deliveryDate || deliveryDate == ''">Please select a delivery date</div>
-                    </div>
-                    <div class="form-group mb-3">
-                      <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
-                      <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
-                        <option value="*">Select delivery time</option>
-                        <option value="12-2">12 Noon - 2 PM</option>
-                        <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
-                      </select>
-                      <div class="error" v-show="!deliveryTime || deliveryTime == '*'">Please select a delivery time</div>
-                    </div>
-                  </div>
+              </tab-content>
+              <tab-content title="Confirm Order" icon="ti-save" :before-change="confirmOrder">
+                <div class="innerpage-heading text-center">
+                    <h3>Confirm Order</h3>
+                    <p>We need to save your order</p>
                 </div>
-                
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="counter text-center my-3">
-                  <i class="fa fa-code fa-2x"></i>
-                  <h2 class="timer count-title count-number">N{{shippingRate}}</h2>
-                  <p class="count-text ">Total Shipping</p>
-                </div>              
-                <div class="card my-3">
-                  <div class="card-header">
-                    Payment Method
-                  </div>
-                  <div class="card-body">
-                    <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
-                      <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
-                      <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
-                        <h3>{{ item.name }}</h3>
-                        <p>{{item.description}}</p>
-                      </label>
-                    </div>
-                    <div class="error" v-if="!payment">Please select a payment method</div>
-                  </div>
-                </div>           
-              </div>
-            </div>
-          </tab-content>
-          <tab-content title="Confirm Order" icon="ti-save" :before-change="validateThirdTab">
-
-            <div class="innerpage-heading text-center">
-                <h3>Confirm Order</h3>
-                <p>We need to save your order</p>
-            </div>
-            <div class="order-list">
-              <order-items :orders="orders" />
-              <order-totals />              
-            </div>
-            <div class="custom-control custom-checkbox my-3">
-                <input type="checkbox" name="toc" id="tos" v-model="tos" class="custom-control-input">
-                <label class="custom-control-label" for="tos">
-                  <h4>I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link></h4>
-                </label>
-                <div class="error" v-show="!tos">You are required to agree to the terms and conditions</div>
-            </div>
-          </tab-content>
-          <tab-content title="Complete Order" icon="ti-check">
-            <div class="innerpage-heading text-center">
-                <h3>Complete Order</h3>
-                <p>We need to confirm your Order</p>
-            </div>
-            <template v-if="paymentProvider == 'Paystack'">
-              <div class="payment-message">Please click on the button below to make payment and complete the transaction</div>
-            </template>
-             <template v-if="paymentProvider  == 'Bank Transfer'">
-               <div class="payment-message">Find our bank transfer details below and <strong> click on the complete button to confirm the order</strong></div>
-                <div class="bank-message" v-html="getKey('bank_details')"></div>
-            </template>
-          </tab-content>
-      </form-wizard>
-       </div>
-             </div>
-    </div>  
-      </div>
+                <div class="order-list">
+                  <order-items :orders="orders" />
+                  <order-totals />              
+                </div>
+                <div class="custom-control custom-checkbox my-3">
+                    <input type="checkbox" name="toc" id="tos" v-model="tos" class="custom-control-input">
+                    <label class="custom-control-label" for="tos">
+                      <h4>I agree to <router-link to="/terms" target='_blank'>Terms of Service</router-link></h4>
+                    </label>
+                    <div class="error" v-show="!tos">You are required to agree to the terms and conditions</div>
+                </div>
+              </tab-content>
+              <tab-content title="Complete Order" icon="ti-check">
+                <div class="innerpage-heading text-center">
+                    <h3>Complete Order</h3>
+                    <p>We need to confirm your Order</p>
+                </div>
+                <template v-if="paymentProvider == 'Paystack'">
+                  <div class="payment-message">Please click on the button below to make payment and complete the transaction</div>
+                </template>
+                <template v-if="paymentProvider  == 'Bank Transfer'">
+                  <div class="payment-message">Find our bank transfer details below and <strong> click on the complete button to confirm the order</strong></div>
+                    <div class="bank-message" v-html="getKey('bank_details')"></div>
+                </template>
+              </tab-content>
+            </form-wizard>
+          </div>
+        </div>
+      </div>  
+    </div>
   </section>
 </template>
 
@@ -159,6 +157,7 @@ export default {
     return {
       tos: true,
       paystackLoaded: false,
+      shippingValid: null,
       model: {
         first_name: "",
         last_name: "",
@@ -314,12 +313,10 @@ export default {
     this.$store.commit(PAGE_COVER, true);
     this.$loadScript("https://js.paystack.co/v1/inline.js")
     .then(() => {
-      console.log('paystack loaded');
       this.paystackLoaded = true;
     })
     .catch(() => {
       // Failed to fetch script
-      console.log(`couldn't load paystack`);
       this.paystackLoaded = false;
     });
   },
@@ -367,7 +364,6 @@ export default {
       },
       set (value) {
         const payload = { id: value, type: this.getShippingName(value) };
-        console.log({payload});
         this.$store.commit(ADD_SHIPPING_METHOD, payload);
       }
     },
@@ -397,7 +393,7 @@ export default {
     },
     deliveryTime: {
       get () {
-        return this.$store.state.order.delivery_time || '*';
+        return this.$store.state.order.delivery_time || '';
       },
       set (value) {
         this.$store.commit(ADD_DELIVERY_TIME, value)
@@ -410,27 +406,35 @@ export default {
       return this.$store.getters.paymentName(this.payment) || false;
     },
   },
+   watch: {
+      express: function(val) {
+        if (val) {
+          this.deliveryDate = new Date();
+        } else {
+          this.deliveryDate = this.getDate();
+        }
+      }
+  },
   methods: {
-    validateFirstTab() {
+    validateAddress() {
       this.$store.commit(ADD_SHIPPING_ADDRESS, this.model);
       return this.$refs.firstTabForm.validate();
     },
-    validateSecondTab() {
-      if(this.shipping == 0 || this.shipping == false) {
-        return false;
+    validateShipping() {
+      if (this.shipping == 0 || this.shipping == false) {
+        this.shippingValid = false;
+      } else if (this.payment == 0 || this.payment == false) {
+        this.shippingValid = false;
+      } else if (this.deliveryTime == '*' || !this.deliveryTime) {
+        this.shippingValid = false;
+      } else if (this.deliveryDate == '' || !this.deliveryDate) {
+        this.shippingValid = false;
+      } else {
+        this.shippingValid = true;
       }
-      if(this.payment == 0 || this.payment == false) {
-        return false;
-      }
-      if(this.deliveryTime == '*' || !this.deliveryTime) {
-        return false;
-      }
-      if(this.deliveryDate == '' || !this.deliveryDate) {
-        return false;
-      }
-      return true;
+      return this.shippingValid;
     },
-    validateThirdTab() {
+    confirmOrder() {
        if (this.tos) {
         return new Promise((resolve, reject) => {
           this.$store.dispatch('confirmOrder', this.$store.getters.orderRecord)
@@ -457,8 +461,7 @@ export default {
           ref: this.reference,
           callback: (response) => {
             payload.reference = response;
-            console.log('payload', payload);
-            this.completePayment(payload);
+            this.completeOrder(payload);
           },
           onClose: () => {
             this.cancelPayment();
@@ -467,23 +470,20 @@ export default {
         window.PaystackPop.setup(paystackOptions).openIframe()
       } else {
         payload.status = 'Pending';
-        this.completePayment(payload)
+        this.completeOrder(payload)
       }
       
     },
-    completePayment(payload) {
+    completeOrder(payload) {
       this.$store.dispatch('completeOrder', payload)
       .then(res => {
-        console.log('goto success');
         this.$router.push('/success');
       })
       .catch(err => {
-        console.log('try again');
       });
     },
     cancelPayament() {
       //Suggest bank transfer
-      console.log("Paystack closed");
     },
     getKey(key) {
       return this.$store.getters.orderMeta(key);
@@ -491,11 +491,12 @@ export default {
     getDate() {
       const today = new Date(); 
       const tomorrow = new Date();
+      //set delivery date to 24 hrs
       tomorrow.setDate(today.getDate()+1);
+      //if order is after clsoing hours (5PM)  or on saturday, make delivery 48hrs
       if (tomorrow.getDay() == 0 || today.getHours() > 17) {
         tomorrow.setDate(today.getDate()+2);
       }
-      console.log('tomorrow', tomorrow);
       return tomorrow;
     },
     getShippingName(id) {
@@ -523,6 +524,11 @@ export default {
 .error {
   color: red;
 }
+
+.card.red {
+  border: 3px solid rgba(239, 45, 45, 0.125) !important;
+}
+
 .counter {
     background-color:#f5f5f5;
     padding: 20px 0;

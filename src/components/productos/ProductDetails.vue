@@ -4,12 +4,12 @@
           <div class="menu-detail offset-lg-2 col-lg-8">
               <div class="menu-title">
                   <div class="menu-name">
-                      <p>Product Name</p>
+                      <p>Name</p>
                       <h3>{{product.name}}</h3>
                   </div>
                   <div class="menu-price">
-                      <p>Price from</p>
-                      <h3>N{{product.price}}</h3>
+                      <p>Price</p>
+                      <h3>N{{price}}</h3>
                   </div>
               </div><!-- end page-title -->
               </div>
@@ -71,7 +71,7 @@
                       </div>
                        
                     </template>
-                      <div class="form-group">
+                      <div class="form-group" v-if="multi">
                             <label class="font-weight-bold">Quantity :</label>
                             <input type="text" class="form-control"  id="quantity" name="quantity" min="1" max="100" v-model="quantity">
                         </div>
@@ -133,7 +133,7 @@ import { ADD_TO_CART } from "../../store/mutation-types";
 import { API_ROOT } from "../../config";
 import Multiselect from 'vue-multiselect';
 export default {
-  props: ["product"],
+  props: ["product", "multi"],
   components: { Multiselect },
   data() {
     return {
@@ -175,7 +175,6 @@ export default {
             options.push({name: key, value: this.optionValues[key]});
           }
         });
-        console.log('options', options);
         return options;
     },
     price() {
@@ -189,14 +188,11 @@ export default {
       const keys = Object.keys(this.optionValues);
       if (keys) {
         keys.forEach((key) => {
-          console.log('key',key);
             if (key && this.optionValues[key] instanceof Array && this.optionValues[key].length > 0) {
               this.optionValues[key].forEach((item) => {
-                console.log(item);
                 increment += parseFloat(item.increment);
               })
             } else if (this.optionValues[key] !== null && typeof this.optionValues[key] === 'object') {
-              console.log('solo',this.optionValues[key]);
               if (this.optionValues[key].increment) {                
                 increment += parseFloat(this.optionValues[key].increment);
               }
@@ -216,16 +212,15 @@ export default {
   },
   watch: {
       options: function(val) {
-          console.log('watch', val);
           this.showErrors = false;
       }
   },
   methods: {
     getImage: function(product) {
-      return `${API_ROOT}${product.image.data.url}`;
+      return `${API_ROOT}${this.product.image.data.url}`;
     },
     getCategory: function(product) {
-      return `${product.category_id.data.name}`;
+      return `${this.product.category_id.data.name}`;
     },
     getTotal: function(increment) {
       if (parseFloat(increment) == 0) {
@@ -266,6 +261,10 @@ export default {
             
           }
         });
+        if (this.multi && !this.quantity) {
+            valid = false;
+            this.errorMessages += `Please specify the quantity<br>`;
+        }
       }
       return valid;
     },
@@ -386,5 +385,14 @@ export default {
   color: red;
   background: #f1ecee;
   padding: 10px
+}
+.multiselect__tag {
+  background: #ee4899;
+}
+.multiselect__option--highlight {
+  background: #ee4899;
+}
+.multiselect__tag-icon:after {
+    color: #000;
 }
 </style>

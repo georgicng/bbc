@@ -14,7 +14,7 @@
   import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
-      if (!this.product.name) {
+      if (!this.product) {
         this.$store.dispatch('productById', this.$route.params['id'])
       }
     },

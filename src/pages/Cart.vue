@@ -3,27 +3,27 @@
     <div id="shopping-cart-page">
         <div class="container-fluid">
             <div class="innerpage-heading text-center">
-                <h3  class="page-heading">Your Cart</h3>
-                <hr class="page-heading-line">
+              <h3  class="page-heading">Your Cart</h3>
+              <hr class="page-heading-line">
             </div><!-- end innerpage-heading -->
             <div class="no-back">
-             <div class="row">
-                 <div class="col-sm-12 offset-lg-2 col-lg-8"> 
-            <template v-if="count > 0">
-              <cart-items :orders="orders" />
-              <coupon v-show="discount <= 0" /> 
-              <cart-totals link="products" /> 
-            </template> 
-            <template v-else>
-              <h1><i class="fab fa-superpowers"></i> Your Cart is Empty</h1>
-              <router-link to="/products" class="btn btn-orange"><i class="fa fa-home"></i> Go Shopping</router-link> 
-            </template>
-            </div>
-             </div>
-    </div>     
+              <div class="row">
+                <div class="col-sm-12 offset-lg-2 col-lg-8"> 
+                  <template v-if="count > 0">
+                    <cart-items :orders="orders" />
+                    <coupon v-show="discount <= 0" /> 
+                    <cart-totals link="products" /> 
+                  </template> 
+                  <template v-else>
+                    <h1><i class="fab fa-superpowers"></i> Your Cart is Empty</h1>
+                    <router-link to="/products" class="btn btn-orange"><i class="fa fa-home"></i> Go Shopping</router-link> 
+                  </template>
+                </div>
+              </div>
+            </div>     
         </div><!-- end container-fluid -->
     </div>
-    </section>
+  </section>
 </template>
 
 <script>

@@ -1,6 +1,5 @@
 <template>
   <div class="cart-info text-right">
-      <h4>Item(s) : <span>{{count}}</span></h4>
       <h4>Sub-total: <span>N{{subtotal}}</span></h4>
       <h4 v-show="discount > 0">Discount (coupon): <span>- N{{discount}}</span></h4>
       <h4>Total: <span>N{{total}}</span></h4>

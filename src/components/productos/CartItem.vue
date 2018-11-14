@@ -50,6 +50,9 @@ export default {
 			this.$store.commit(REMOVE_FROM_CART, this.index)
 		},
 		update() {
+			if (!this.quantity) {
+				this.quantity = 1;
+			}
 				this.$store.commit(UPDATE_CART, {index: this.index, quantity: this.quantity})
 		},
 		getOptionDetails(product, options) {

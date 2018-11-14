@@ -15,14 +15,27 @@ export const productGetters = {
     return null;
   },
   productById: (state, getters) => (id) => {
+    let product = null;
     if (state.product.id == id) {
-      return state.product;
+      product = state.product;
     } else if (getters.allProducts.length > 0) {
       const found = getters.allProducts.find(p => p.id == id);
-      return found ? found : null;
-    }    
+      if (found) {
+        product = found;
+      }
+    }
+    if (product) {
+      product.options.data.sort((a, b) => a.option_id.data.sort - b.option_id.data.sort);
+    }
+    return product;
   },
-  customProduct: state => state.custom,
+  customProduct: (state) => {
+    const product = state.custom ? state.custom : null;
+    if (product) {
+      product.options.data.sort((a, b) => a.option_id.data.sort - b.option_id.data.sort);
+    }
+    return product;
+  },
   productCount: state => state.products.total,
 };
 
@@ -47,6 +60,7 @@ export const cartGetters = {
       //get value  from option valu id
       const optionList = options.map((option) => {
         let value = option.value;
+        let name = option.name;
         const item = product.options.data.find(element => element.option_id.data.slug == option.name);
 
         if (item) {
@@ -55,10 +69,14 @@ export const cartGetters = {
           if (optionValue) {
             value = optionValue.option_value.data.value;
           }
+
+          if (item.option_id) {
+            name = item.option_id.data.name;
+          }
         }
 
         return {
-          name: option.name,
+          name,
           value,
         };
       });
@@ -67,11 +85,11 @@ export const cartGetters = {
       const collate = optionList.reduce((groups, y) => {
         const found = groups.find(element => element.name == y.name);
         if (found) {
-          found.value += `, ${y.value}`;
+          found.value += ` <span class="badge badge-pill badge-secondary">${y.value}</span>`;
         } else if (y.value) {
           groups.push({
             name: y.name,
-            value: y.value,
+            value: `<span class="badge badge-pill badge-secondary">${y.value}</span>`,
           });
         }
         return groups;

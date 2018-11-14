@@ -4,15 +4,14 @@
 			<div class="order-item">
 				<div class="order-item-info">
 					<h4><a href="#">{{product.name}}</a></h4>
-					<p>category</p>
-					<p class="order-item-price"><span>Price : N{{line.price}}</span> , Qty : {{quantity}}</p>
+					<div class="d-flex" v-html="getOptionDetails(line.product, line.options)"></div>
 				</div><!-- end order-item-info -->
 
 				<div class="order-item-img">
 					<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end order-img -->
 			</div><!-- end order-item -->
-			<div class="d-flex" v-html="getOptionDetails(line.product, line.options)"></div>
+			
 			<div class="total">
 				<p>{{quantity}} x N{{line.price}} = <span>N{{price}}</span></p>
 			</div><!-- end total -->
