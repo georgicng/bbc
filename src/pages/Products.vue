@@ -1,6 +1,6 @@
 <template>
   <div id="menu-page" class="page-wrapper innerpage-section-padding">
-      <div class="container-fluid text-center menu">
+      <div class="container text-center menu">
           <div class="innerpage-heading">
               <h3 class="page-heading">Cakes</h3>
               <hr class="page-heading-line">
