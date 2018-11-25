@@ -9,10 +9,10 @@ export const pageGetters = {
 export const productGetters = {
   allProducts: state => state.products.entries,
   productByPage: state => (pagenum, category) => {
-    if (state.products.current_page == pagenum && state.products.current_category == category) {
+    if (state.products.current_page == parseInt(pagenum) && state.products.current_category == parseInt(category)) {
       return state.products.entries;
     }
-    return null;
+    return [];
   },
   productById: (state, getters) => (id) => {
     let product = null;
@@ -97,7 +97,7 @@ export const cartGetters = {
 
       //return option list
       collate.forEach((x) => {
-        remark += `<dl class="dlist-inline small p-2">
+        remark += `<dl class="dlist-inline small">
           <dt>${x.name}: </dt>
           <dd>${x.value}</dd>
         </dl>`;
@@ -111,7 +111,12 @@ export const orderGetters = {
   shippingMethods: state => state.shipping_methods || [],
   shippingCities: (state, getters) => {
     const cities = getters.shippingMethods
-      .filter(x => x.shipping_method.data.id === 3)
+      .filter((x) => {
+        if (x.shipping_method) {
+          return x.shipping_method.data.id === 3;
+        }
+        return false;
+      })
       .map(y => y.title);
     cities.push('Other');
     return cities;
@@ -119,9 +124,11 @@ export const orderGetters = {
   shippingList: (state) => {
     if (state.shipping_methods && state.shipping_methods.length > 0) {
       return state.shipping_methods.reduce((groups, y) => {
-        const val = y.shipping_method.data.name;
-        groups[val] = groups[val] || [];
-        groups[val].push({ id: y.id, title: y.title, cost: y.cost });
+        if (y.shipping_method) {
+          const val = y.shipping_method.data.name;
+          groups[val] = groups[val] || [];
+          groups[val].push({ id: y.id, title: y.title, cost: y.cost });
+        }        
         return groups;
       }, {});
     }

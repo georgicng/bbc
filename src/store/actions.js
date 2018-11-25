@@ -31,16 +31,17 @@ import {
   COMPLETE_ORDER,
   COMPLETE_ORDER_SUCCESS,
   COMPLETE_ORDER_FAILURE,
+  ERROR_MSG,
 } from './mutation-types';
 
 export const productActions = {
   allProducts({ commit }, payload) {
     commit(ALL_PRODUCTS);
     const page = (payload && payload.page) ? payload.page - 1 : 0;
+    const category = (payload && payload.category) ? payload.category : 0;
     const offset = page * 10;
     let args = {};
-    if (payload.category && parseInt(payload.category) > 0) {
-      console.log('category', payload.category);
+    if (parseInt(category) > 0) {
       args = {
         depth: 3,
         limit: 10,
@@ -55,25 +56,81 @@ export const productActions = {
         offset,
       };
     }
-    console.log('arg', args);
     client
       .getItems('products', args)
-      .then(res => commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total: res.meta.total_entries }))
-      .catch(err => commit(ALL_PRODUCTS_FAILURE, err));
+      .then((res) => {
+        if (!res || !res.data || !Array.isArray(res.data)) {
+          throw new Error('No response!');
+        } else if (res.data.length == 0) {
+          commit(ALL_PRODUCTS_FAILURE, err);
+          commit(
+            ERROR_MSG,
+            {
+              title: 'Empty',
+              message: 'There is nothing to list',
+            },
+          );
+        } else {
+          commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total: res.meta.total_entries, category });
+        }
+      })
+      .catch((err) => {
+        commit(ALL_PRODUCTS_FAILURE, err);
+        commit(
+          ERROR_MSG,
+          {
+            title: 'Something Went wrong',
+            message: 'Could not load products',
+          },
+        );
+      });
   },
   productById({ commit }, payload) {
     commit(PRODUCT_BY_ID);
     client
       .getItem('products', payload, { depth: 3 })
-      .then(res => commit(PRODUCT_BY_ID_SUCCESS, res.data))
-      .catch(err => commit(PRODUCT_BY_ID_FAILURE, err));
+      .then((res) => {
+        if (!res.data) {
+          throw new Error('No response!');
+        } else if (Array.isArray(res.data) && res.data.length == 0) {
+          commit(PRODUCT_BY_ID_FAILURE, err);
+          commit(
+            ERROR_MSG,
+            {
+              title: 'Product not found',
+              message: 'The selected product does not exist',
+            },
+          );
+        } else {
+          commit(PRODUCT_BY_ID_SUCCESS, res.data);
+        }
+      })
+      .catch((err) => {
+        commit(PRODUCT_BY_ID_FAILURE, err);
+        commit(
+          ERROR_MSG,
+          {
+            title: 'Something Went wrong',
+            message: 'Could not load product details',
+          },
+        );
+      });
   },
   customProduct({ commit }) {
     commit(CUSTOM_PRODUCT);
     client
       .getItem('products', 12, { depth: 3 })
       .then(res => commit(CUSTOM_PRODUCT_SUCCESS, res.data))
-      .catch(err => commit(CUSTOM_PRODUCT_FAILURE, err));
+      .catch((err) => {
+        commit(CUSTOM_PRODUCT_FAILURE, err);
+        commit(
+          ERROR_MSG,
+          {
+            title: 'Something Went wrong',
+            message: 'Could not load product details',
+          },
+        );
+      });
   },
 };
 
@@ -83,7 +140,16 @@ export const categoriesActions = {
     client
     .getItems('categories', { depth: 1 })
     .then(res => commit(ALL_CATEGORIES_SUCCESS, res.data))
-    .catch(err => commit(ALL_CATEGORIES_FAILURE, err));
+    .catch((err) => {
+      commit(ALL_CATEGORIES_FAILURE, err);
+      commit(
+        ERROR_MSG,
+        {
+          title: 'Something Went wrong',
+          message: 'Could not load product categories',
+        },
+      );
+    });
   },
 };
 
@@ -107,7 +173,16 @@ export const orderActions = {
     client
     .getApi('checkout_options')
     .then(res => commit(CHECKOUT_OPTIONS_SUCCESS, res))
-    .catch(err => commit(CHECKOUT_OPTIONS_FAILURE, err));
+    .catch((err) => {
+      commit(CHECKOUT_OPTIONS_FAILURE, err);
+      commit(
+        ERROR_MSG,
+        {
+          title: 'Something Went wrong',
+          message: 'Could not start the checkout process, please go back to try again',
+        },
+      );
+    });
   },
   getCouponValue({ commit }, payload) {
     const query = {
@@ -118,20 +193,47 @@ export const orderActions = {
     client
     .getItems('coupons', query)
     .then(res => commit(GET_COUPON_VALUE_SUCCESS, res.data))
-    .catch(err => commit(GET_COUPON_VALUE_FAILURE, err));
+    .catch((err) => {
+      commit(GET_COUPON_VALUE_FAILURE, err);
+      commit(
+        ERROR_MSG,
+        {
+          title: 'Something Went wrong',
+          message: 'Could not process coupon',
+        },
+      );
+    });
   },
   confirmOrder({ commit }, payload) {
     commit(CONFIRM_ORDER);
     client
     .postApi('orders', payload)
     .then(res => commit(CONFIRM_ORDER_SUCCESS, res))
-    .catch(err => commit(CONFIRM_ORDER_FAILURE, err));
+    .catch((err) => {
+      commit(CONFIRM_ORDER_FAILURE, err);
+      commit(
+        ERROR_MSG,
+        {
+          title: 'Something Went wrong',
+          message: 'Could not confirm order',
+        },
+      );
+    });
   },
   completeOrder({ commit }, payload) {
     commit(COMPLETE_ORDER);
     client
     .postApi(`orders/${payload.order}`, payload)
     .then(res => commit(COMPLETE_ORDER_SUCCESS, res))
-    .catch(err => commit(COMPLETE_ORDER_FAILURE, err));
+    .catch((err) => {
+      commit(COMPLETE_ORDER_FAILURE, err);
+      commit(
+        ERROR_MSG,
+        {
+          title: 'Something Went wrong',
+          message: 'Could not complete order, please go back to try again',
+        },
+      );
+    });
   },
 };

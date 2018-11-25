@@ -33,7 +33,7 @@ export default {
 	mounted() {
 		this.$store.commit(PAGE_COVER, false);
 	},
-	created () {
+	beforeCreate() {
 		this.$store.dispatch('allCategories');
 	},
 	computed: {

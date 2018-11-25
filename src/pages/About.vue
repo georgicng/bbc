@@ -3,7 +3,7 @@
     <div id="contact-page">
         <div class="container-fluid">
             <div class="innerpage-heading text-center">
-                <h3 class="page-heading">ABOUT us</h3>
+                <h3>About Us</h3>
                 <hr class="page-heading-line">
                 <p>Welcome to the world of beautiful buttercream cakes</p>
             </div><!-- end innerpage-heading -->

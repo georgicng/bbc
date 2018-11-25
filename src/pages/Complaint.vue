@@ -4,7 +4,7 @@
       <div id="complaint-page">
             <div class="container-fluid text-center">
                 <div class="innerpage-heading">
-                    <h3 class="page-heading">Lodge a Complaint</h3>
+                    <h3>Lodge a Complaint</h3>
                     <hr class="page-heading-line">
                     <p>Do you have any complaint about your order? Please do let us know, so we can help.</p>
                 </div><!-- end innerpage-heading -->
@@ -180,7 +180,6 @@ export default {
                 this.$router.push('/success');
               })
               .catch(err => {
-                console.log(err);
                 this.status = `Could't process your request, please try again`;
               });
           }

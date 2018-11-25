@@ -4,7 +4,7 @@
       <div id="complaint-page">
             <div class="container-fluid text-center">
                 <div class="innerpage-heading">
-                    <h3 class="page-heading">Complaint Desk</h3>
+                    <h3>Complaint Desk</h3>
                     <hr class="page-heading-line">
                     <p>Find answers to your questions below.</p>
                 </div><!-- end innerpage-heading -->
@@ -28,7 +28,7 @@ export default {
   components: {
     VueFaqAccordion
   },
-  beforeMount() {
+  beforeCreate() {
      client
         .getItems('faq')
         .then(res => {

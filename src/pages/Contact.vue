@@ -4,7 +4,7 @@
       	<div id="contact-page">
           <div class="container-fluid text-center">
               <div class="innerpage-heading">
-                  <h3 class="page-heading">Contact us</h3>
+                  <h3>Contact us</h3>
                   <hr class="page-heading-line">
                   <p>Do you have any questions? Please do not hesitate to contact us directly.</p>
               </div><!-- end innerpage-heading -->

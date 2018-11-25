@@ -2,7 +2,7 @@
   <div id="menu-page" class="page-wrapper innerpage-section-padding">
       <div class="container text-center menu">
           <div class="innerpage-heading">
-              <h3 class="page-heading">Cakes</h3>
+              <h3>Cakes</h3>
               <hr class="page-heading-line">
           </div><!-- end innerpage-heading -->
           
@@ -44,12 +44,14 @@
     mounted() {
       this.$store.commit(PAGE_COVER, false);
     },
-    created () {
-      this.$store.dispatch('allProducts', { page: this.page, category: this.category });
+    created() {
+      const page = this.page ? parseInt(this.page) : 1;
+      const category = this.category ? parseInt(this.category) : 0;
+      this.$store.dispatch('allProducts', { page, category });
     },
     computed: {
       products () {
-        return this.$store.getters.productByPage(this.page);
+        return this.$store.getters.productByPage(this.page, this.category);
       },
       total() {
         return this.$store.getters.productCount / 10;
@@ -76,7 +78,9 @@
     beforeRouteUpdate (to, from, next) {
       // react to route changes...
       // don't forget to call next()
-      this.$store.dispatch('allProducts', { page: parseInt(to.params.page), category: parseInt(to.params.category) })
+      const page = to.query.page ? parseInt(to.query.page) : 1;
+      const category = to.query.category ? parseInt(to.query.category) : 0;
+      this.$store.dispatch('allProducts', { page, category })
       .then(response => {
         next()
       });

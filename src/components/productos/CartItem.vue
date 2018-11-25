@@ -10,7 +10,7 @@
 						<a href="#"><img :src="getImage(product)" class="img-responsive" :alt="product.name"></a>
 				</div><!-- end item-img -->
 				
-				<div class="d-flex" v-html="getOptionDetails(line.product, line.options)"></div>
+				<div class="d-flex flex-wrap" v-html="getOptionDetails(line.product, line.options)"></div>
 				<h4 class="total">Total: <span>N{{price}}</span></h4>
 				
 				<div class="item-close">
@@ -86,5 +86,9 @@ export default {
   flex-grow: 2;
   font-size: 20px;
   font-weight: bold;
+}
+.dlist-inline {
+    margin: 2px;
+    padding: 2px;
 }
 </style>

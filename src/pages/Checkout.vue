@@ -58,12 +58,13 @@
                           <div class="error" v-show="shippingValid == false && (!deliveryDate || deliveryDate == '')">Please select a delivery date</div>
                         </div>
                         <div class="form-group mb-3">
-                          <label  for="delivery_date" class="font-weight-bold">Delivery Time</label>
-                          <select v-model="deliveryTime" name="delivery_date" id="delivery_date" class="form-control">
+                          <label  for="delivery_time" class="font-weight-bold">Delivery Time</label>
+                          <select v-model="deliveryTime" name="delivery_time" id="delivery_time" class="form-control">
                             <option value="">Select delivery time</option>
                             <option value="12-2">12 Noon - 2 PM</option>
                             <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
                           </select>
+                          <small>For store pickups, you can call in to arrange an earlier time if need be</small>
                           <div class="error" v-show="shippingValid == false && (!deliveryTime || deliveryTime == '')">Please select a delivery time</div>
                         </div>
                       </div>

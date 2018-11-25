@@ -22,6 +22,7 @@
     "vee-validate": "^2.0.0-rc.18",
     "vue": "^2.4.2",
     "vue-base64-file-upload": "^1.0.4",
+    "vue-error-page": "^1.1.7",
     "vue-faq-accordion": "^1.2.1",
     "vue-form-generator": "^2.3.1",
     "vue-form-wizard": "^0.8.4",

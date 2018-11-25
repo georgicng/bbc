@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import LoadScript from 'vue-plugin-load-script';
 import VueImg from 'v-img';
+import ErrorPage from 'vue-error-page';
 import store from '../store';
 // import Hello from '@/components/Hello'
 import HomeRoutes from './home';
@@ -18,9 +19,11 @@ import FAQRoutes from './faq';
 import TermsRoutes from './terms';
 import SuccessRoutes from './success';
 
-Vue.use(Router); 
+Vue.use(Router);
 Vue.use(LoadScript);
 Vue.use(VueImg);
+window.eventBus = new Vue();
+Vue.use(ErrorPage, { tagName: 'app-view', bus: 'eventBus' });
 
 Vue.filter('slugify', (value) => {
   const a = 'àáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';

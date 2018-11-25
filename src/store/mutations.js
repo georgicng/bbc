@@ -160,7 +160,6 @@ export const orderMutations = {
     state.showLoader = true;
   },
   [CHECKOUT_OPTIONS_SUCCESS]: (state, payload) => {
-    console.log(payload);
     state.showLoader = false;
     state.payment_methods = payload.payment_methods;
     state.shipping_methods = payload.shipping_method;

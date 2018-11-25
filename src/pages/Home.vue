@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="card-banner my-3 col-md-6 offset-lg-2 col-lg-4">
                   <router-link :to="'/categories'">
-                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/slide1.jpg');"> 
+                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/cake.jpg');"> 
                       <div class="text-bottom"><h2 class="title">Order a Cake</h2></div>
                     </div>  
                   </router-link>                
@@ -13,7 +13,7 @@
               
                 <div class="card-banner my-3 col-md-6 col-lg-4">
                   <router-link :to="'/terms'">
-                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/slide2.jpg');">
+                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/terms.jpg');">
                       <div class="text-bottom"><h2 class="title">Terms and Conditions</h2></div>
                     </div>  
                   </router-link>               
@@ -22,7 +22,7 @@
               <div class="row">
                 <div class="card-banner my-3 col-md-6 offset-lg-2 col-lg-4">
                   <router-link :to="'/complaint'">
-                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/slide3.jpg');"> 
+                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/complaint.jpg');"> 
                       <div class="text-bottom"><h2 class="title">Lodge a Complaint</h2></div>
                     </div>  
                   </router-link>               
@@ -30,7 +30,7 @@
               
                 <div class="card-banner my-3 col-md-6 col-lg-4">
                   <router-link :to="'/contact'">
-                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/banner-request.jpg');"> 
+                    <div class="card-body" style="height:250px; background-image: url('static/images/banners/contact.jpg');"> 
                       <div class="text-bottom"><h2 class="title">Contact Us</h2></div>
                     </div>
                   </router-link>        

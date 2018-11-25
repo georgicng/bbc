@@ -3,7 +3,7 @@
     <div id="shopping-cart-page">
         <div class="container-fluid">
             <div class="innerpage-heading text-center">
-              <h3  class="page-heading">Your Cart</h3>
+              <h3>Your Cart</h3>
               <hr class="page-heading-line">
             </div><!-- end innerpage-heading -->
             <div class="no-back">

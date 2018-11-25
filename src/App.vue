@@ -19,13 +19,20 @@
                 <button class="btn btn-default" id="sidenav-close" @click="openNav(false)">&times;</button>
             </div><!-- end sidenav-closebtn -->                    
             <div class="list-group panel">
-              <router-link to="/" class="list-group-item"><i class="fa fa-home"></i> Home</router-link>
-              <router-link to="/categories" class="list-group-item"><i class="fas fa-shopping-bag"></i> Products</router-link>
-              <router-link to="/about" class="list-group-item"><i class="fas fa-users"></i> About</router-link>
-              <router-link to="/contact" class="list-group-item"><i class="fas fa-envelope"></i> Contact</router-link>
-              <router-link to="/complaint" class="list-group-item"><i class="fas fa-question-circle"></i> Support</router-link>
-              <router-link to="/faq" class="list-group-item"><i class="fas fa-question-circle"></i> FAQ</router-link>
-              <router-link to="/terms" class="list-group-item"><i class="far fa-handshake"></i> Terms and Conditions</router-link>                  
+              <router-link to="/" class="list-group-item"><span><i class="fa fa-home sidebar-icon"></i></span> Home</router-link>
+              <a href="#menu-categories" class="list-group-item" data-toggle="collapse"><span><i class="fas fa-shopping-bag sidebar-icon"></i></span> Product Categories <span><i class="fa fa-caret-down arrow"></i></span></a>
+              <div class="sub-menu collapse" id="menu-categories" data-parent="#main-menu" style="">
+                  <router-link to="/products" class="list-group-item">All Products</router-link>
+                  <router-link to="/products?category=1" class="list-group-item">Buttercream Cakes</router-link>
+                  <router-link to="/products?category=3" class="list-group-item">Cakes for Kids</router-link>
+                  <router-link to="/products?category=5" class="list-group-item">Cream Cakes</router-link>
+                  <router-link to="/custom" class="list-group-item">Quick Order Cakes</router-link>
+              </div>
+              <router-link to="/about" class="list-group-item"><span><i class="fas fa-users sidebar-icon"></i></span> About</router-link>
+              <router-link to="/contact" class="list-group-item"><span><i class="fas fa-envelope sidebar-icon"></i></span> Contact</router-link>
+              <router-link to="/complaint" class="list-group-item"><span><i class="fa fa-life-ring sidebar-icon"></i></span> Support</router-link>
+              <router-link to="/faq" class="list-group-item"><span><i class="fas fa-question-circle sidebar-icon"></i></span> FAQ</router-link>
+              <router-link to="/terms" class="list-group-item"><span><i class="far fa-handshake sidebar-icon"></i></span> Terms and Conditions</router-link>                  
             </div><!-- end list-group -->
         </div><!-- end main-menu -->
     </div><!-- end mySidenav -->
@@ -59,15 +66,16 @@
               <div class="header-top">
                 <div class="container">
                   <div class="row">
-                    <div class="col-lg-5 offset-lg-2">
-                      <nav class="header-login">
-                        <router-link to="/terms">Terms</router-link>
+                    <div class="col-lg-6 offset-lg-2">
+                      <nav class="header-login d-flex">
+                        <a href="tel:+2348149750282"><i class="fa fa-phone"></i> +2348149750282</a>
+                        <a href="mailto:butterbakescakes@gmail.com"><i class="fa fa-envelope"></i> butterbakescakes@gmail.com</a>
                       </nav>
                     </div>
-                    <div class="col-lg-5">	
+                    <div class="col-lg-4">	
                         <nav class="header-social text-right">
                           <a href="#"><span><i class="fab fa-facebook-f"></i></span></a>
-                          <a href="#"><span><i class="fab fa-instagram"></i></span></a>
+                          <a href="//instagram.com/butterbakesng" target="_blank"><span><i class="fab fa-instagram"></i></span></a>
                           <a href="#"><span><i class="fab fa-twitter"></i></span></a>
                           <a href="#"><span><i class="fab fa-google-plus-g"></i></span></a>
                         </nav>					
@@ -86,6 +94,7 @@
                           <li class="nav-item"><router-link to="/contact" class="nav-link">Contact</router-link></li>
                           <li class="nav-item"><router-link to="/complaint" class="nav-link">Support</router-link></li>
                           <li class="nav-item"><router-link to="/faq" class="nav-link">FAQ</router-link></li>
+                           <li class="nav-item"><router-link to="/terms" class="nav-link">Terms</router-link></li>
                         </ul>
                     </nav>
                   </div>
@@ -125,10 +134,10 @@
         
         <div class="page-cover" v-if="pageCover">
             <div class="container-fluid">
-                <h3><span class="cover-left-icon float-left"><i :class="pageIcon"></i></span>{{pageTitle}}<span class="cover-right-icon float-right"><i :class="pageIcon"></i></span></h3>
+                <h3><span class="d-none cover-left-icon float-left"><i :class="pageIcon"></i></span>{{pageTitle}}<span class="d-none cover-right-icon float-right"><i :class="pageIcon"></i></span></h3>
             </div><!-- end container-fluid -->
         </div>
-        <router-view></router-view>
+        <app-view></app-view>
         <section id="footer" class="pd-t-b-30"> 
           <div class="container-fluid text-center">
 
@@ -152,6 +161,7 @@
 <script>
 import CartItems from "./components/productos/CartItems";
 import CartTotals from "./components/productos/CartTotals";
+import Error from './pages/Error';
 import toastr from "toastr";
 import 'toastr/build/toastr.css';
 import { ERROR_MSG, ADD_TO_CART, PAGE_COVER } from "./store/mutation-types";
@@ -164,17 +174,17 @@ export default {
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
         case ERROR_MSG:
-          toastr.error(mutation.payload.content, mutation.payload.title);
-          break;
-        case ADD_TO_CART:
-          toastr.success("Product added to cart");
+          //toastr.error(mutation.payload.content, mutation.payload.title);
+          this.$_error(Error, {
+              message: mutation.payload.message,
+              title: mutation.payload.title
+          });
           break;
       }
     });
   },
   mounted() {
-    // Cache Selectors
-	  
+    // Cache Selectors 
     this.$store.commit('loader', false);
     this.$store.commit(PAGE_COVER, false);
   },
@@ -241,7 +251,7 @@ export default {
   position: relative;
 }
 .header-lg .header-top {
-    background-color: #2E2E2E;
+    background-color: #2F2C2D;
     color: #fff;
     padding: 0.3em 0;
 }
@@ -249,23 +259,28 @@ export default {
     color: #fff;
 }
 .header-login a {
-    display: inline-block;
     text-decoration: none;
-    font-size: 0.8em;
-    margin: 0 0.5em;
+    font-size: 0.9em;
+    padding: 0.2em 1.6rem;
 }
 .header-lg .header-social a {
     width: 17px;
     height: 17px;
     margin: 0 0.3em;
 }
+
+.header-lg .navbar {
+    padding: 0;
+    margin: 2px 0;
+}
+
 .header-lg .lg-menu li {
     border-right: 1px solid #EFEFEF;
 }
 .header-lg .lg-menu .nav-item .nav-link {
-    font-size: 0.9em;
+    font-size: 1em;
     color: #3A3A3A;
-    padding: 1.6em;
+    padding: 1.8em 1.6em;
 }
 .header-lg .search-right {
     padding: 0.6em 0 0;
@@ -310,7 +325,16 @@ export default {
     font-size: 11px;
     background: #ee4899
 }
+
+.innerpage-section-padding p {
+	font-size: 1rem;
+}
+
 .dlist-inline dt, .dlist-inline dd {
     display: inline-block;
+}
+
+#footer{
+	background: #2F2C2D;
 }
 </style>

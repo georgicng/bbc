@@ -4,7 +4,7 @@
 			<div class="order-item">
 				<div class="order-item-info">
 					<h4><a href="#">{{product.name}}</a></h4>
-					<div class="d-flex" v-html="getOptionDetails(line.product, line.options)"></div>
+					<div class="d-flex flex-wrap" v-html="getOptionDetails(line.product, line.options)"></div>
 				</div><!-- end order-item-info -->
 
 				<div class="order-item-img">
@@ -49,5 +49,8 @@ export default {
 </script>
 
 <style>
-
+.dlist-inline {
+    margin: 2px;
+    padding: 2px;
+}
 </style>

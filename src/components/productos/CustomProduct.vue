@@ -170,10 +170,8 @@ export default {
       if (this.product.options && this.product.options.data.length > 0) {
         const item = this.product.options.data
           .find(item => item.id == option_id || item.option_id.data.slug == option_id);
-        console.log('item', item);
         if(item && item.option_values.data.length > 0) {
           return item.option_values.data.map(item => {
-          console.log('value', item);
             return {
               id: item.id,
               name: item.option_value.data.value,
@@ -216,7 +214,6 @@ export default {
         .each(function() {
           const value = $(this).val();
           const name = $(this).attr('name')? $(this).attr('name') : $(this).parent().attr('name');
-          console.log('name', name, 'value', value);
           if (value !== "*" && value !== "") {
             price += self.getValueIncrement(name, value);
           }
