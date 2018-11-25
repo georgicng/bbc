@@ -14,14 +14,14 @@
   import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
-        this.$store.dispatch('customProduct')
+        this.$store.dispatch('customProduct');
     },
     mounted() {
       this.$store.commit(PAGE_COVER, false);
     },
     computed: {
       product () {
-        return this.$store.getters.customProduct
+        return this.$store.getters.customProduct;
       }
     },
     components: {

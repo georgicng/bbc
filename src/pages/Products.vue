@@ -37,7 +37,7 @@
     name: 'products',
     data () {
       return {
-        current: parseInt(this.page)
+        current: this.page,
       }
     },
     props: ['page', 'category'],
@@ -45,8 +45,8 @@
       this.$store.commit(PAGE_COVER, false);
     },
     created() {
-      const page = this.page ? parseInt(this.page) : 1;
-      const category = this.category ? parseInt(this.category) : 0;
+      const page = this.page;
+      const category = this.category;
       this.$store.dispatch('allProducts', { page, category });
     },
     computed: {
@@ -58,7 +58,7 @@
       },
       currentPage: {
         get () {
-          return parseInt(this.page);
+          return this.page;
         },
         set (value) {
           this.page = value;
@@ -76,10 +76,17 @@
       }
     },
     beforeRouteUpdate (to, from, next) {
-      // react to route changes...
-      // don't forget to call next()
-      const page = to.query.page ? parseInt(to.query.page) : 1;
-      const category = to.query.category ? parseInt(to.query.category) : 0;
+      let page = 1;
+      let category = 0;
+
+      if (to.query.page) {
+        page = parseInt(to.query.page);
+      }
+
+      if (to.query.category) {
+        category = parseInt(to.query.category)
+      }
+
       this.$store.dispatch('allProducts', { page, category })
       .then(response => {
         next()

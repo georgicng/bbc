@@ -23,7 +23,11 @@
     },
     methods: {
       getImage: function (product) {
-        return `${API_ROOT}${product.image.data.url}`
+        if (product.image) {
+          return `${API_ROOT}${product.image.data.url}`;
+        } else {
+          return 'static/images/no-image.png';
+        }
       }
     }
   }

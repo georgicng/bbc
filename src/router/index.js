@@ -4,7 +4,6 @@ import LoadScript from 'vue-plugin-load-script';
 import VueImg from 'v-img';
 import ErrorPage from 'vue-error-page';
 import store from '../store';
-// import Hello from '@/components/Hello'
 import HomeRoutes from './home';
 import CategoriesRoutes from './categories';
 import ProductsRoutes from './products';
@@ -58,6 +57,9 @@ const router = new Router({
     TermsRoutes,
     SuccessRoutes,
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {

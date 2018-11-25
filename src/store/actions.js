@@ -41,7 +41,7 @@ export const productActions = {
     const category = (payload && payload.category) ? payload.category : 0;
     const offset = page * 10;
     let args = {};
-    if (parseInt(category) > 0) {
+    if (category > 0) {
       args = {
         depth: 3,
         limit: 10,
@@ -62,7 +62,7 @@ export const productActions = {
         if (!res || !res.data || !Array.isArray(res.data)) {
           throw new Error('No response!');
         } else if (res.data.length == 0) {
-          commit(ALL_PRODUCTS_FAILURE, err);
+          commit(ALL_PRODUCTS_FAILURE, res);
           commit(
             ERROR_MSG,
             {
@@ -93,7 +93,7 @@ export const productActions = {
         if (!res.data) {
           throw new Error('No response!');
         } else if (Array.isArray(res.data) && res.data.length == 0) {
-          commit(PRODUCT_BY_ID_FAILURE, err);
+          commit(PRODUCT_BY_ID_FAILURE, res);
           commit(
             ERROR_MSG,
             {
@@ -120,7 +120,22 @@ export const productActions = {
     commit(CUSTOM_PRODUCT);
     client
       .getItem('products', 12, { depth: 3 })
-      .then(res => commit(CUSTOM_PRODUCT_SUCCESS, res.data))
+      .then((res) => {
+        if (!res.data) {
+          throw new Error('No response!');
+        } else if (Array.isArray(res.data) && res.data.length == 0) {
+          commit(CUSTOM_PRODUCT_FAILURE, res);
+          commit(
+            ERROR_MSG,
+            {
+              title: 'Product not found',
+              message: 'The selected product does not exist',
+            },
+          );
+        } else {
+          commit(CUSTOM_PRODUCT_SUCCESS, res.data);
+        }
+      })
       .catch((err) => {
         commit(CUSTOM_PRODUCT_FAILURE, err);
         commit(

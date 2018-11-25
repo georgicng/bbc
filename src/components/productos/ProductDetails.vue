@@ -15,7 +15,7 @@
               </div>
               <div class="no-back">
              <div class="row">
-                 <div class="col-sm-12 col-md-6 offset-lg-2 col-lg-4"> 
+                 <div class="col-sm-12 col-md-6 offset-lg-2 col-lg-4  mb-4"> 
               <ul id="menu-gallery" class="gallery list-unstyled cS-hidden menu-gallery text-center">
                   <li :data-thumb="getImage(product)">
                       <div class="p-img">
@@ -24,10 +24,9 @@
                   </li>
               </ul> 
               </div> 
-                <div class="col-sm-12 col-md-6 col-lg-4">                         
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">                         
               <div class="menu-info">                  
-                  <div class="mb-3" v-html="product.description"></div>
-                  <div class="form mb-3">
+                  <div class="form">
                   <form @submit.prevent="" id="productform">
                     <template v-for="product_option in getOptions()">
                       <div class="form-group" :key="product_option.slug" :data-option="product_option.option_id">
@@ -90,12 +89,16 @@
           <div class="row my-4">
             <div class="offset-lg-2 col-lg-8">
               <ul class="nav nav-tabs justify-content-start">
-                  <li class="nav-item"><a class="nav-link active" href="#size" data-toggle="tab">Size Examples</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#description" data-toggle="tab">Description</a></li>
+                <li class="nav-item"><a class="nav-link" href="#size" data-toggle="tab">Size Examples</a></li>
               </ul>
               
               <div class="tab-content">
-                  <div id="size" class="tab-pane active">
-                      <div id="img-tab" class="nav nav-pills my-5 justify-content-center"  role="tablist">
+                <div id="description" class="tab-pane active">
+                  <div class="my-4" v-html="product.description"></div>
+                </div>
+                  <div id="size" class="tab-pane">
+                      <div id="img-tab" class="nav nav-pills my-4 justify-content-center"  role="tablist">
                         <a href="#inches-6" class="nav-item nav-link active" data-toggle="tab" role="tab">
                           6 Inches
                         </a>
@@ -239,7 +242,11 @@ export default {
   },
   methods: {
     getImage: function(product) {
-      return `${API_ROOT}${this.product.image.data.url}`;
+      if (product.image) {
+        return `${API_ROOT}${product.image.data.url}`;
+      } else {
+        return 'static/images/no-image.png';
+      }
     },
     getCategory: function(product) {
       return `${this.product.category_id.data.name}`;

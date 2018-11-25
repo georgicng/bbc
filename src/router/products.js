@@ -4,8 +4,18 @@ export default {
   path: '/products',
   name: 'Products',
   component: Products,
-  props: route => ({
-    page: route.query.page || 1,
-    category: route.query.category || 0,
-  }),
+  props: (route) => {
+    let page = 1;
+    let category = 0;
+
+    if (route.query.page) {
+      page = parseInt(route.query.page);
+    }
+
+    if (route.query.category) {
+      category = parseInt(route.query.category);
+    }
+
+    return { page, category };
+  },
 };

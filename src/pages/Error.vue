@@ -2,27 +2,23 @@
     <section class="page-wrapper innerpage-section-padding">
       <div id="complaint-page">
             <div class="container-fluid">
-                <div class="innerpage-heading  text-center">
-                    <h3>Oops!</h3>
-                    <hr class="page-heading-line">
-                    <p>{{ payload.title}}</p>
-                </div><!-- end innerpage-heading -->
-                <div class="no-back">
-                  <div class="row">
+                <div class="row">
                     <div class="col-sm-12 offset-lg-2 col-lg-8">
-                        <div class="jumbotron">
-                            <p class="lead">{{ payload.message }}</p>
+                        <div class="jumbotron text-center mt-4">
+                            <h1 class="display-4">Oops!</h1>
+                            <p class="lead">{{ payload.title }}</p>
+                            <hr class="my-4">
+                            <p>{{ payload.message }}</p>
                             <p class="lead">
                                 <router-link to="/" exact class="btn btn-primary btn-lg">
-                                    <span class="glyphicon glyphicon-home"></span> Go to home page
+                                    Go to home page
                                 </router-link>
-                                <a @click="$router.go(-1)" class="btn btn-default btn-lg">
-                                    <span class="glyphicon glyphicon-envelope"></span> Go Back 
+                                <a @click="$router.go(-1)" class="btn btn-danger text-white btn-lg">
+                                    Go Back 
                                 </a>
                             </p>                        
                         </div>
                     </div>
-                  </div>
                 </div>
             </div><!-- end container-fluid -->
         </div>                
@@ -31,6 +27,6 @@
 
 <script>
 export default {
-    props: ['payload']
+  props: ["payload"]
 };
 </script>

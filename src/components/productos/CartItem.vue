@@ -43,8 +43,12 @@ export default {
 		}
   },
   methods: {
-    getImage: function(id) {
-      return `${API_ROOT}${this.product.image.data.url}`;
+    getImage: function(product) {
+      if (product.image) {
+        return `${API_ROOT}${product.image.data.url}`;
+      } else {
+        return 'static/images/no-image.png';
+      }
 		},
 		remove() {
 			this.$store.commit(REMOVE_FROM_CART, this.index)
