@@ -9,10 +9,10 @@ export const pageGetters = {
 export const productGetters = {
   allProducts: state => state.products.entries,
   productByPage: state => (pagenum, category) => {
-    if (state.products.current_page == parseInt(pagenum) && state.products.current_category == parseInt(category)) {
+    if (state.products.current_page == pagenum && state.products.current_category == category) {
       return state.products.entries;
     }
-    return [];
+    return null;
   },
   productById: (state, getters) => (id) => {
     let product = null;
@@ -41,6 +41,15 @@ export const productGetters = {
 
 export const categoriesGetters = {
   allCategories: state => state.categories,
+  categoryName: (state, getters) => (id) => {
+    if (getters.allCategories.length > 0) {
+      const category = getters.allCategories.find(item => item.id == id);
+      if (category) {
+        return category.name;
+      }
+    }
+    return 'Cakes';
+  },
 };
 
 export const cartGetters = {
@@ -167,6 +176,16 @@ export const orderGetters = {
     }
     return '';
   },
+  paymentMode: (state, getters) => (id) => {
+    let mode = null;
+    if (state.payment_methods && state.payment_methods.length > 0) {
+      const method = getters.paymentMethods.find(item => item.id == id);
+      if (method) {
+        mode = method.mode;
+      }
+    }
+    return mode;
+  },
   tax: state => state.order.tax || 0,
   discount: (state, getters) => {
     if (state.order.coupon && state.coupon) {
@@ -188,8 +207,19 @@ export const orderGetters = {
     return '';
   },
   orderRecord: (state, getters) => {
+    const items = state.order.cart.map((item) => {
+      const line = {
+        productid: item.productid,
+        quantity: item.quantity,
+        price: item.price,
+      };
+      if (item.options) {
+        line.options = item.options;
+      }
+      return line;
+    });
     const order = {
-      cart: state.order.cart,
+      cart: items,
       address: state.order.address,
       shipping: state.order.shipping,
       payment: state.order.payment,

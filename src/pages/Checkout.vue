@@ -347,10 +347,14 @@ export default {
       return this.$store.getters.orderTotal;
     },
     email() {
-      return this.model.email || "no-reply@bakercake.ng";
+      return this.model.email || "customer@butterbakescakes.com";
     },
-    paystack() {
-      return this.$store.getters.meta("paystack");
+    paystack_key() {
+      const mode = this.$store.getters.paymentMode(this.payment);
+      if (this.payment == 2 && mode == 'live') {
+        return this.getKey("live_public_key");
+      }
+      return this.getKey("test_public_key");
     },
     reference() {
       return this.$store.getters.orderReference;
@@ -470,11 +474,14 @@ export default {
         const paystackOptions = {
           amount: parseFloat(this.total) * 100,
           email: this.email,
-          key: this.getKey("test_public_key"),
+          key: this.paystack_key,
           ref: this.reference,
           callback: response => {
-            payload.reference = response;
-            this.completeOrder(payload);
+            if(response.status == "success") {              
+              payload.reference = response.reference;
+              payload.payment = "Paystack";
+              this.completeOrder(payload);
+            }
           },
           onClose: () => {
             this.cancelPayment();
@@ -482,7 +489,8 @@ export default {
         };
         window.PaystackPop.setup(paystackOptions).openIframe();
       } else {
-        payload.status = "Pending";
+        payload.payment = "Transfer";
+        payload.confirm = true;
         this.completeOrder(payload);
       }
     },

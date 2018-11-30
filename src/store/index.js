@@ -11,7 +11,10 @@ const vuexLocalStorage = new VuexPersist({
   key: 'vuex', // The key to store the state on in the storage provider.
   storage: window.localStorage, // or window.sessionStorage or localForage
   // Function that passes the state and returns the state with only the objects you want to store.
-  // reducer: state => state,
+  reducer: state => ({
+    order: state.order,
+    orders: state.orders,
+  }), // reducer: state => state,
   // Function that passes a mutation and lets you decide if it should update the state in localStorage.
   // filter: mutation => (true)
 });
@@ -20,6 +23,7 @@ const store = new Vuex.Store({
   state: {
     //order items
     order: { cart: [], shipping: 0, payment: 0, express: false, coupon: false },
+    orders: [],
     // ajax loader
     showLoader: true,
     // sidebar
@@ -29,7 +33,7 @@ const store = new Vuex.Store({
     // selected product
     product: {},
     // custom product
-    custom: {},
+    custom: null,
     // all products
     products: {
       total: 0,
@@ -40,6 +44,9 @@ const store = new Vuex.Store({
     cities: [],
     // all categoriess
     categories: [],
+    menus: [],
+    pages: [],
+    settings: {},
     pageTitle: '',
     pageIcon: '',
     pageCover: true,

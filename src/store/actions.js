@@ -37,21 +37,22 @@ import {
 export const productActions = {
   allProducts({ commit }, payload) {
     commit(ALL_PRODUCTS);
+    const show = 20;
     const page = (payload && payload.page) ? payload.page - 1 : 0;
     const category = (payload && payload.category) ? payload.category : 0;
-    const offset = page * 10;
+    const offset = page * show;
     let args = {};
     if (category > 0) {
       args = {
         depth: 3,
-        limit: 10,
+        limit: show,
         'filters[categories.id][eq]': payload.category,
         offset,
       };
     } else {
       args = {
         depth: 3,
-        limit: 10,
+        limit: show,
         'filters[name][neq]': 'custom',
         offset,
       };
@@ -71,7 +72,8 @@ export const productActions = {
             },
           );
         } else {
-          commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total: res.meta.total_entries, category });
+          const total = res.meta.query_total || res.meta.total_entries;
+          commit(ALL_PRODUCTS_SUCCESS, { page: page + 1, items: res.data, total, category });
         }
       })
       .catch((err) => {
@@ -239,7 +241,20 @@ export const orderActions = {
     commit(COMPLETE_ORDER);
     client
     .postApi(`orders/${payload.order}`, payload)
-    .then(res => commit(COMPLETE_ORDER_SUCCESS, res))
+    .then((res) => {
+      if (!res.status || res.status != 'success') {
+        commit(COMPLETE_ORDER_FAILURE, res);
+        commit(
+          ERROR_MSG,
+          {
+            title: "Couldn't complete your order",
+            message: res.message,
+          },
+        );
+      } else {
+        commit(COMPLETE_ORDER_SUCCESS, res.data);
+      }
+    })
     .catch((err) => {
       commit(COMPLETE_ORDER_FAILURE, err);
       commit(

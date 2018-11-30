@@ -2,27 +2,29 @@
   <div id="menu-page" class="page-wrapper innerpage-section-padding">
       <div class="container text-center menu">
           <div class="innerpage-heading">
-              <h3>Cakes</h3>
+              <h3>{{categoryName}}</h3>
               <hr class="page-heading-line">
           </div><!-- end innerpage-heading -->
           
           <div id="breakfast-dishes" class="no-back">                  
             <product-list :products="products"></product-list>
-            <nav class="my-3 d-flex justify-content-center">
-              <paginate
-                v-model="current"
-                :page-count="total"
-                :page-range="5"
-                :click-handler="changePage"
-                :prev-text="'Prev'"
-                :next-text="'Next'"
-                :container-class="'pagination'"
-                :page-class="'page-item'"
-                :page-link-class="'page-link'"
-                :prev-link-class="'page-link'"
-                :next-link-class="'page-link'">
-              </paginate>
-            </nav>
+            <template v-if="total > 1">
+              <nav class="my-3 d-flex justify-content-center">
+                <paginate
+                  v-model="current"
+                  :page-count="total"
+                  :page-range="5"
+                  :click-handler="changePage"
+                  :prev-text="'Prev'"
+                  :next-text="'Next'"
+                  :container-class="'pagination'"
+                  :page-class="'page-item'"
+                  :page-link-class="'page-link'"
+                  :prev-link-class="'page-link'"
+                  :next-link-class="'page-link'">
+                </paginate>
+              </nav>
+            </template>
           </div>
               
       </div><!-- end container-fluid -->
@@ -45,16 +47,21 @@
       this.$store.commit(PAGE_COVER, false);
     },
     created() {
-      const page = this.page;
-      const category = this.category;
-      this.$store.dispatch('allProducts', { page, category });
+      if (!this.products) {
+        const page = this.page;
+        const category = this.category;
+        this.$store.dispatch('allProducts', { page, category });
+      }
     },
     computed: {
       products () {
         return this.$store.getters.productByPage(this.page, this.category);
       },
       total() {
-        return this.$store.getters.productCount / 10;
+        return this.$store.getters.productCount / 20;
+      },
+      categoryName() {
+        return this.$store.getters.categoryName(this.category);
       },
       currentPage: {
         get () {

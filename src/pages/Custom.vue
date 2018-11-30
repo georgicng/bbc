@@ -14,7 +14,9 @@
   import { PAGE_COVER } from "../store/mutation-types";
   export default {
     created () {
+      if (!this.product) {
         this.$store.dispatch('customProduct');
+      }
     },
     mounted() {
       this.$store.commit(PAGE_COVER, false);

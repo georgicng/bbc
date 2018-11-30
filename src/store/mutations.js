@@ -63,14 +63,13 @@ export const pageMutations = {
 export const productMutations = {
   [ALL_PRODUCTS](state) {
     state.showLoader = true;
-    // this[]
   },
   [ALL_PRODUCTS_SUCCESS](state, payload) {
     state.showLoader = false;
-    state.products.entries = payload.items;
-    state.products.total = payload.total;
-    state.products.current_page = payload.page;
-    state.products.current_category = payload.category;
+    Vue.set(state.products, 'entries', payload.items);
+    Vue.set(state.products, 'total', payload.total);
+    Vue.set(state.products, 'current_page', payload.page);
+    Vue.set(state.products, 'current_category', payload.category);
   },
   [ALL_PRODUCTS_FAILURE](state, payload) {
     state.showLoader = false;
@@ -90,7 +89,7 @@ export const productMutations = {
   },
   [CUSTOM_PRODUCT_SUCCESS](state, payload) {
     state.showLoader = false;
-    Vue.set(state, 'custom', payload);
+    state.custom = payload;
   },
   [CUSTOM_PRODUCT_FAILURE](state, payload) {
     state.showLoader = false;
@@ -185,8 +184,11 @@ export const orderMutations = {
   },
   [COMPLETE_ORDER_SUCCESS]: (state, payload) => {
     state.showLoader = false;
-    Vue.set(state, 'order', { id: 0, cart: [], shipping: 0, payment: 0, total: 0, meta: {} });
-    delete state.coupon;
+    Vue.set(state, 'order', { cart: [], shipping: 0, payment: 0, express: false, coupon: false });
+    if (state.coupon) {
+      delete state.coupon;
+    }
+    state.orders.push(payload);
   },
   [COMPLETE_ORDER_FAILURE]: (state, payload) => {
     state.showLoader = false;

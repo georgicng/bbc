@@ -27,14 +27,16 @@ export default {
 	name: "categories",
 	data() {
 		return {
-		msg: "Welcome to Your Vue.js App"
+			msg: "Welcome to Your Vue.js App"
 		};
 	},
 	mounted() {
 		this.$store.commit(PAGE_COVER, false);
 	},
-	beforeCreate() {
-		this.$store.dispatch('allCategories');
+	created() {
+		if (!this.categories || this.categories.length < 1 ) {
+			this.$store.dispatch('allCategories');
+		}		
 	},
 	computed: {
 		categories () {
@@ -43,7 +45,11 @@ export default {
 	},
 	methods: {
 		getImage: function(category) {
-			return `${API_ROOT}${category.image.data.url}`;
+			if (category.image) {
+				return `${API_ROOT}${category.image.data.url}`;
+			} else {
+				return 'static/images/no-image.png';
+			}
 		},
 		getLink: function(category) {
 			if (category.id == 4) {
