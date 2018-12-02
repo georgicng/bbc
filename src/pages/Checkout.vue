@@ -4,7 +4,7 @@
       <div class="no-back">
         <div class="row">
           <div class="col-sm-12 offset-lg-2 col-lg-8"> 
-            <form-wizard @on-complete="onComplete" title="Checkout" subtitle="Complete your order" color="#EE4899" error-color="#a94442">
+            <form-wizard @on-complete="onComplete" @on-change="onChange" title="Checkout" subtitle="Complete your order" color="#EE4899" error-color="#a94442" ref="vfw">
               <tab-content title="User Details" icon="ti-user" :before-change="validateAddress">
                   <vue-form-generator :model="model" :schema="contactSchema" :options="formOptions" ref="firstTabForm">
                   </vue-form-generator>
@@ -24,8 +24,8 @@
                             <template v-if="key == 'Deliver to me'">                         
                                 <template v-for="item in value" v-if="model.city == item.title">
                                   <div class="custom-control custom-radio" :key="item.id">
-                                    <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
-                                    <label class="custom-control-label" :for="'customRadio'+item.id">
+                                    <input type="radio" v-model="shipping" :id="'shippingRadio'+item.id"  :value="item.id" class="custom-control-input">
+                                    <label class="custom-control-label" :for="'shippingRadio'+item.id">
                                       <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                                     </label>
                                   </div>
@@ -37,8 +37,8 @@
                             </template>
                             <template v-else>
                               <div v-for="item in value"  class="custom-control custom-radio" :key="item.id">
-                                <input type="radio" v-model="shipping" :id="'customRadio'+item.id"  :value="item.id" class="custom-control-input">
-                                <label class="custom-control-label" :for="'customRadio'+item.id">
+                                <input type="radio" v-model="shipping" :id="'shippingRadio'+item.id"  :value="item.id" class="custom-control-input">
+                                <label class="custom-control-label" :for="'shippingRadio'+item.id">
                                   <h4>{{ item.title }} <span class="badge">N{{item.cost}}</span></h4>
                                 </label>
                                 </div>
@@ -61,8 +61,8 @@
                           <label  for="delivery_time" class="font-weight-bold">Delivery Time</label>
                           <select v-model="deliveryTime" name="delivery_time" id="delivery_time" class="form-control">
                             <option value="">Select delivery time</option>
-                            <option value="12-2">12 Noon - 2 PM</option>
-                            <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5">3 PM - 5 PM</option>
+                            <option value="12-2 PM">12 Noon - 2 PM</option>
+                            <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5 PM">3 PM - 5 PM</option>
                           </select>
                           <small>For store pickups, you can call in to arrange an earlier time if need be</small>
                           <div class="error" v-show="shippingValid == false && (!deliveryTime || deliveryTime == '')">Please select a delivery time</div>
@@ -82,8 +82,8 @@
                       </div>
                       <div class="card-body">
                         <div v-for="item in payment_options"  class="custom-control custom-radio panel my-3" :key="item.id">
-                          <input type="radio" v-model="payment" :id="'customRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
-                          <label class="custom-control-label panel-body" :for="'customRadio'+item.id">                    
+                          <input type="radio" v-model="payment" :id="'paymentRadio'+item.id" name="paymentRadio" :value="item.id" class="custom-control-input">
+                          <label class="custom-control-label panel-body" :for="'paymentRadio'+item.id">                    
                             <h3>{{ item.name }}</h3>
                             <p>{{item.description}}</p>
                           </label>
@@ -219,7 +219,7 @@ export default {
             inputType: "text",
             placeholder: "Email",
             model: "email",
-            required: false,
+            required: true,
             validator: VueFormGenerator.validators.email.locale({
               fieldIsRequired: "Your email is required!",
               invalidEmail: "Please enter a valid e-mail address!"
@@ -432,8 +432,18 @@ export default {
     }
   },
   methods: {
+    scrollToTop() {
+      const vfw = this.$refs.vfw.$el;
+      vfw.scrollIntoView();
+    },
+    onChange(prev, next) {
+      this.scrollToTop();
+    },
     validateAddress() {
       this.$store.commit(ADD_SHIPPING_ADDRESS, this.model);
+      if (!this.$refs.firstTabForm.validate()) {
+        this.scrollToTop();
+      }
       return this.$refs.firstTabForm.validate();
     },
     validateShipping() {
@@ -447,6 +457,9 @@ export default {
         this.shippingValid = false;
       } else {
         this.shippingValid = true;
+      }
+      if (!this.shippingValid) {
+        this.scrollToTop();
       }
       return this.shippingValid;
     },

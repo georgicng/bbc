@@ -9,7 +9,7 @@
       <div class="card-body">
         <div class="form-group">
           <label for="coupon">Enter Promo Code</label>
-          <input type="text" class="form-control" id="coupon" v-model="coupon" placeholder="test with LICIOUS">
+          <input type="text" class="form-control" id="coupon" v-model="coupon">
           <button @click="getCoupon"  class="my-3 btn btn-orange">Redeem</button>
         </div>
       </div>
