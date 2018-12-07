@@ -78,12 +78,12 @@ figure {
 }
 
 #categories .view-btn {
-    background-color: #e6de08;
+    background-color: #ee4899;
     margin: -25px 0 0 0;
     border-radius: 0 0 0 0;
     font-size: 24px;
-    border: #e6de08;
-    color: #000;
+    border: #ee4899;
+    color: #fff;
 
 }
 #categories .btn:hover {

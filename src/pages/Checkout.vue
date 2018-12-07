@@ -1,7 +1,7 @@
 <template>
   <section class="page-wrapper innerpage-section-padding">
     <div class="container-fluid">
-      <div class="no-back">
+      <div id="checkout-page" class="no-back">
         <div class="row">
           <div class="col-sm-12 offset-lg-2 col-lg-8"> 
             <form-wizard @on-complete="onComplete" @on-change="onChange" title="Checkout" subtitle="Complete your order" color="#EE4899" error-color="#a94442" ref="vfw">
@@ -54,15 +54,16 @@
                       <div class="card-body">
                         <div class="form-group mb-3">
                           <label for="delivery_date" class="font-weight-bold">Delivery Date</label>
-                          <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
+                          <datepicker v-model="deliveryDate" :disabledDates="disabledDates" :disabled="express" :format="'dd/MM/yyyy'" name="delivery_date" id="delivery_date" input-class="form-control"></datepicker>
                           <div class="error" v-show="shippingValid == false && (!deliveryDate || deliveryDate == '')">Please select a delivery date</div>
                         </div>
                         <div class="form-group mb-3">
                           <label  for="delivery_time" class="font-weight-bold">Delivery Time</label>
                           <select v-model="deliveryTime" name="delivery_time" id="delivery_time" class="form-control">
                             <option value="">Select delivery time</option>
-                            <option value="12-2 PM">12 Noon - 2 PM</option>
-                            <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5 PM">3 PM - 5 PM</option>
+                            <option value="11-1 PM">11AM - 1PM</option>
+                            <option value="1-3 PM">1-3 PM</option>
+                            <option v-show="shippingName != 'Deliver to pick up partner'" value="3-5 PM">3-5 PM</option>
                           </select>
                           <small>For store pickups, you can call in to arrange an earlier time if need be</small>
                           <div class="error" v-show="shippingValid == false && (!deliveryTime || deliveryTime == '')">Please select a delivery time</div>
@@ -483,24 +484,28 @@ export default {
       const payload = {
         order: this.$store.getters.orderID
       };
-      if (this.paymentProvider == "Paystack" && this.paystackLoaded) {
-        const paystackOptions = {
-          amount: parseFloat(this.total) * 100,
-          email: this.email,
-          key: this.paystack_key,
-          ref: this.reference,
-          callback: response => {
-            if(response.status == "success") {              
-              payload.reference = response.reference;
-              payload.payment = "Paystack";
-              this.completeOrder(payload);
+      if (this.paymentProvider == "Paystack") {
+        if (this.paystackLoaded) {
+          const paystackOptions = {
+            amount: parseFloat(this.total) * 100,
+            email: this.email,
+            key: this.paystack_key,
+            ref: this.reference,
+            callback: response => {
+              if(response.status == "success") {              
+                payload.reference = response.reference;
+                payload.payment = "Paystack";
+                this.completeOrder(payload);
+              }
+            },
+            onClose: () => {
+              this.cancelPayment();
             }
-          },
-          onClose: () => {
-            this.cancelPayment();
-          }
-        };
-        window.PaystackPop.setup(paystackOptions).openIframe();
+          };
+          window.PaystackPop.setup(paystackOptions).openIframe();
+        } else {
+          //show error and recommend use of pay by bank
+        }        
       } else {
         payload.payment = "Transfer";
         payload.confirm = true;
@@ -516,7 +521,7 @@ export default {
         .catch(err => {});
     },
     cancelPayament() {
-      //Suggest bank transfer
+      //show error and Suggest bank transfer
     },
     getKey(key) {
       return this.$store.getters.orderMeta(key);
@@ -598,5 +603,10 @@ export default {
 .order-list .cart-info h4:before,
 .order-list .cart-info h4::after {
   content: none;
+}
+
+#checkout-page .card-header {
+  background-color: rgb(238, 72, 153);
+  color: #fff;
 }
 </style>

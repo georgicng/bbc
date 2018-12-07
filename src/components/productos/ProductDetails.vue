@@ -65,7 +65,7 @@
                               <label :for="product_option.slug" class="font-weight-bold">{{product_option.name}}</label>
                               <textarea class="form-control" :id="product_option.slug" v-model="optionValues[product_option.slug]"></textarea>                         
                         </template>
-                        <div class="small mark" v-if="product_option.comment">{{product_option.comment}}</div>
+                        <div class="small mark mt-2" v-if="product_option.comment">{{product_option.comment}}</div>
                     
                       </div>
                        

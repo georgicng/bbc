@@ -20,9 +20,10 @@
             </div><!-- end sidenav-closebtn -->                    
             <div class="list-group panel">
               <router-link to="/" class="list-group-item"><span><i class="fa fa-home sidebar-icon"></i></span> Home</router-link>
-              <a href="#menu-categories" class="list-group-item" data-toggle="collapse"><span><i class="fas fa-shopping-bag sidebar-icon"></i></span> Product Categories <span><i class="fa fa-caret-down arrow"></i></span></a>
+              <a href="#menu-categories" class="list-group-item" data-toggle="collapse"><span><i class="fas fa-shopping-bag sidebar-icon"></i></span> Products <span><i class="fa fa-caret-down arrow"></i></span></a>
               <div class="sub-menu collapse" id="menu-categories" data-parent="#main-menu" style="">
                   <router-link to="/products" class="list-group-item">All Products</router-link>
+                  <router-link to="/categories" class="list-group-item">All Categories</router-link>
                   <router-link to="/products?category=1" class="list-group-item">Buttercream Cakes</router-link>
                   <router-link to="/products?category=3" class="list-group-item">Cakes for Kids</router-link>
                   <router-link to="/products?category=5" class="list-group-item">Cream Cakes</router-link>
@@ -89,7 +90,17 @@
                     <nav class="navbar navbar-expand" role="navigation">            
                         <ul class="navbar-nav lg-menu">
                           <li class="nav-item"><router-link to="/" class="nav-link">Home</router-link></li>
-                          <li class="nav-item"><router-link to="/categories" class="nav-link">Products</router-link></li>
+                          <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" id="categoryMenuLink" data-toggle="dropdown">Products</a>
+                            <div class="dropdown-menu">                              
+                                <router-link to="/products" class="list-group-item">All Products</router-link>
+                                <router-link to="/categories" class="list-group-item">All Categories</router-link>
+                                <router-link to="/products?category=1" class="list-group-item">Buttercream Cakes</router-link>
+                                <router-link to="/products?category=3" class="list-group-item">Cakes for Kids</router-link>
+                                <router-link to="/products?category=5" class="list-group-item">Cream Cakes</router-link>
+                                <router-link to="/custom" class="list-group-item">Quick Order Cakes</router-link>
+                            </div>
+                          </li>
                           <li class="nav-item"><router-link to="/about" class="nav-link">About</router-link></li>                          
                           <li class="nav-item"><router-link to="/contact" class="nav-link">Contact</router-link></li>
                           <li class="nav-item"><router-link to="/complaint" class="nav-link">Support</router-link></li>
@@ -282,6 +293,9 @@ export default {
     color: #3A3A3A;
     padding: 1.8em 1.6em;
 }
+.header-lg .lg-menu .nav-item a:hover, .header-lg .lg-menu .nav-item .router-link-exact-active {
+    color: #E24585;
+}
 .header-lg .search-right {
     padding: 0.6em 0 0;
 }
@@ -299,6 +313,11 @@ export default {
     border-radius: 50%;
     font-size: 10px;
     padding: 5px;
+}
+.header-lg .dropdown-menu {
+    min-width: 12rem;
+    padding: 0;
+    border: 0;
 }
 .header {
     height: 60px;
@@ -324,6 +343,11 @@ export default {
     text-align: center;
     font-size: 11px;
     background: #ee4899
+}
+
+#mySidenav #main-menu .router-link-exact-active {
+    background-color: #E24585;
+    color: #fff;
 }
 
 .innerpage-section-padding p {

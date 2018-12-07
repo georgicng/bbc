@@ -223,7 +223,7 @@ export const orderGetters = {
       address: state.order.address,
       shipping: state.order.shipping,
       payment: state.order.payment,
-      delivery_date: state.order.delivery_date,
+      delivery_date: new Date(state.order.delivery_date).toLocaleDateString('en-NG'),
       delivery_time: state.order.delivery_time,
       express: state.order.express,
     };
